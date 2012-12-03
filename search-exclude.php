@@ -1,27 +1,27 @@
 <?php
 /*
 Plugin Name: Search Exclude
-Description: Exclude any page or post from search results by checking off the checkbox.
-Version: 0.1
+Description: Exclude any page or post from the WordPress search results by checking off the checkbox.
+Version: 1.0
 Author: Roman Pronskiy
 Author URI: http://pronskiy.com
 */
 
-
 /*
-    Copyright Roman Pronskiy, 2012
-    My plugins are created for WordPress, an open source software
-    released under the GNU public license
-    <http://www.gnu.org/licenses/gpl.html>. Therefore any part of
-    my plugins which constitute a derivitive work of WordPress are also
-    licensed under the GPL 3.0. My plugins are comprised of several
-    different file types, including: php, cascading style sheets,
-    javascript, as well as several image types including GIF, JPEG, and
-    PNG. All PHP and JS files are released under the GPL 3.0 unless
-    specified otherwise within the file itself. If specified as
-    otherwise the files are licensed or dual licensed (as stated in
-    the file) under the MIT <http://www.opensource.org/licenses/mit-license.php>,
-    a compatible GPL license.
+Copyright (c) 2012 Roman Pronskiy
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 class SearchExclude
@@ -41,12 +41,51 @@ class SearchExclude
         add_filter('pre_get_posts',array($this, 'searchFilter'));
     }
 
-    function activate()
+    /**
+     * @param $postId int the ID of the post
+     * @param $value bool indicates whether post should be excluded from the search results or not
+     */
+    protected function savePostIdToSearchExclude($postId, $value)
+    {
+        $excluded = $this->getExcluded();
+
+        $indSep = array_search($postId, $excluded);
+        if ($value) {
+            if (false === $indSep) {
+                $excluded[] = $postId;
+            }
+        }
+        else {
+            if (false !== $indSep) {
+                unset($excluded[$indSep]);
+            }
+        }
+        $this->saveExcluded($excluded);
+    }
+
+    /**
+     * @param $excluded array IDs of posts to be saved for excluding from the search results
+     */
+    protected function saveExcluded($excluded)
+    {
+        update_option('sep_exclude', $excluded);
+    }
+
+    protected function getExcluded()
     {
         $excluded = get_option('sep_exclude');
+        if (false === $excluded) {
+            $excluded = array();
+        }
+        return $excluded;
+    }
 
-        if (false === $excluded || !is_array($excluded)) {
-            update_option('sep_exclude', array());
+    function activate()
+    {
+        $excluded = $this->getExcluded();
+
+        if (empty($excluded)) {
+            $this->saveExcluded(array());
         }
     }
 
@@ -57,28 +96,11 @@ class SearchExclude
 
     public function metabox( $post )
     {
-        $excluded = get_option('sep_exclude');
+        $excluded = $this->getExcluded();
         $exclude = (false === array_search($post->ID, $excluded)) ? false : true;
 
         wp_nonce_field( 'sep_metabox_nonce', 'metabox_nonce' );
-        ?>
-        <div class="misc-pub-section">
-            <label for="sep_exclude">
-                <input type="hidden" name="sep[hidden]" id="sep_hidden" value="1" />
-                <input type="checkbox" name="sep[exclude]" id="sep_exclude" value="1" <?php echo ($exclude) ? 'checked' : ''; ?> />
-                Exclude from Search Results
-            </label>
-        </div>
-        <?php
-    }
-
-    public function saveOptions()
-    {
-        if (isset($_POST['search_exclude_submit'])) {
-
-            $excluded = $_POST['sep_exclude'];
-            update_option('sep_exclude', $excluded);
-        }
+        include(__DIR__ . '/metabox.php');
     }
 
     public function adminMenu()
@@ -95,8 +117,7 @@ class SearchExclude
     public function searchFilter($query)
     {
         if ($query->is_search) {
-            $excluded = get_option('sep_exclude');
-            $query->set('post__not_in', $excluded);
+            $query->set('post__not_in', $this->getExcluded());
         }
         return $query;
     }
@@ -108,93 +129,30 @@ class SearchExclude
         $sep = $_POST['sep'];
         $exclude = (isset($sep['exclude'])) ? $sep['exclude'] : 0 ;
 
-        update_post_meta($post_id, 'sep_exclude', $exclude);
+        $this->savePostIdToSearchExclude($post_id, $exclude);
 
-
-
-        if (false === $excluded) {
-            $excluded = array();
-        }
-
-        $indSep = array_search($post_id, $excluded);
-        if (false === $indSep) {
-            $excluded[] = $post_id;
-        }
-        else {
-            unset($excluded[$indSep]);;
-        }
-
-
-        update_option('sep_exclude', $excluded);
         return $post_id;
-    }
-
-    protected function savePostIdToSearchExclude($postId, $value)
-    {
-        $excluded = get_option('sep_exclude');
-
-        $indSep = array_search($postId, $excluded);
-        if ($value) {
-            if (false === $indSep) {
-                $excluded[] = $postId;
-            }
-        }
-        else {
-            if (false !== $indSep) {
-                unset($excluded[$indSep]);
-            }
-        }
-
     }
 
     public function options()
     {
-        ?>
-    <div class="wrap">
-        <?php screen_icon(); ?>
-        <h2>Search Exclude</h2>
-        <?php
-
-        $excluded = get_option('sep_exclude');
-
-        if (empty($excluded)) {
-            ?>
-            <p>No items excluded from search results yet.</p>
-            <?php
-        }
-        else {
-            $query = new WP_Query( array('post_type' => 'any', 'post__in' => $excluded, 'order'=>'ASC', 'nopaging' => true) );
-            ?>
-
-            <form method="post" action="options-general.php?page=search_exclude" enctype="multipart/form-data">
-                <table cellspacing="0" class="wp-list-table widefat fixed pages">
-                    <thead>
-                    <tr>
-                        <th style="" class="check-column" id="cb" scope="col"></th><th style="" class="column-title manage-column" id="title" scope="col"><span>Title</span></th><th style="" class="manage-column column-type" id="type" scope="col"><span>Type</span>
-                    </tr>
-                    </thead>
-
-                    <tbody id="the-list">
-                        <?php while ( $query->have_posts() ) : $query->the_post();?>
-                    <tr valign="top" class="post-<?php the_ID()?> page type-page status-draft author-self" >
-                        <th class="check-column" scope="row"><input type="checkbox" value="<?php the_ID()?>" name="sep_exclude[]" checked="checked"></th>
-                        <td class="post-title page-title column-title"><strong><a title="Edit “<?php the_title()?>”" href="/wp-admin/post.php?post=<?php the_ID()?>&action=edit" class="row-title"><?php the_title()?></a></strong>
-                        <td class="author column-author"><?php echo get_post_type();?></td>
-                    </tr>
-                        <?php endwhile; ?>
-                    </tbody>
-                </table>
-
-                <p class="submit"><input type="submit" name="search_exclude_submit" class="button-primary" value="<?php _e('Save Changes') ?>" /></p>
-            </form>
-            <?php
-        }
-        ?>
-    </div>
-    <?php
+        $excluded = $this->getExcluded();
+        $query = new WP_Query( array(
+            'post_type' => 'any',
+            'post__in' => $excluded,
+            'order'=>'ASC',
+            'nopaging' => true,
+        ));
+        include(__DIR__ . '/options.php');
     }
 
+    public function saveOptions()
+    {
+        if (isset($_POST['search_exclude_submit'])) {
+
+            $excluded = $_POST['sep_exclude'];
+            $this->saveExcluded($excluded);
+        }
+    }
 }
 $sep = new SearchExclude();
-
-?>
