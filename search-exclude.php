@@ -2,7 +2,7 @@
 /*
 Plugin Name: Search Exclude
 Description: Exclude any page or post from the WordPress search results by checking off the checkbox.
-Version: 1.0
+Version: 1.0.2
 Author: Roman Pronskiy
 Author URI: http://pronskiy.com
 */
@@ -36,7 +36,7 @@ class SearchExclude
         register_activation_hook( __FILE__, array($this, 'activate') );
         add_action('admin_init', array($this, 'saveOptions') );
         add_action('admin_menu', array($this, 'adminMenu'));
-        add_action('save_post', array($this, 'postSave'));
+        add_action('post_updated', array($this, 'postSave'));
         add_action('add_meta_boxes', array($this, 'addMetabox') );
         add_filter('pre_get_posts',array($this, 'searchFilter'));
     }
@@ -74,7 +74,8 @@ class SearchExclude
     protected function getExcluded()
     {
         $excluded = get_option('sep_exclude');
-        if (false === $excluded) {
+
+        if (!is_array($excluded)) {
             $excluded = array();
         }
         return $excluded;
@@ -97,10 +98,10 @@ class SearchExclude
     public function metabox( $post )
     {
         $excluded = $this->getExcluded();
-        $exclude = (false === array_search($post->ID, $excluded)) ? false : true;
+        $exclude = !(false === array_search($post->ID, $excluded));
 
         wp_nonce_field( 'sep_metabox_nonce', 'metabox_nonce' );
-        include(__DIR__ . '/metabox.php');
+        include(dirname(__FILE__) . '/metabox.php');
     }
 
     public function adminMenu()
@@ -117,7 +118,7 @@ class SearchExclude
     public function searchFilter($query)
     {
         if ($query->is_search) {
-            $query->set('post__not_in', $this->getExcluded());
+            $query->set('post__not_in', array_merge($query->get('post__not_in'), $this->getExcluded()));
         }
         return $query;
     }
@@ -137,13 +138,14 @@ class SearchExclude
     public function options()
     {
         $excluded = $this->getExcluded();
+
         $query = new WP_Query( array(
             'post_type' => 'any',
             'post__in' => $excluded,
             'order'=>'ASC',
             'nopaging' => true,
         ));
-        include(__DIR__ . '/options.php');
+        include(dirname(__FILE__) . '/options.php');
     }
 
     public function saveOptions()
@@ -155,4 +157,4 @@ class SearchExclude
         }
     }
 }
-$sep = new SearchExclude();
+$pluginSearchExclude = new SearchExclude();
