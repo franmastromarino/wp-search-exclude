@@ -5,10 +5,6 @@ Search Exclude – WordPress plugin that lets you hide any page, post or whateve
 
 You can also view the list of all the items that are excluded from search on the plugin settings page.
 
-![Editing post](https://ps.w.org/search-exclude/assets/screenshot-1.png?rev=87537)
-
-![List of all exluded](https://ps.w.org/search-exclude/assets/screenshot-2.png?rev=877537)
-
 
 ### Changelog
 
