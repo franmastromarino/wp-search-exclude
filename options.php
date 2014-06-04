@@ -1,5 +1,4 @@
 <div class="wrap">
-    <?php screen_icon(); ?>
     <h2>Search Exclude</h2>
     <?php if (empty($excluded)):?>
         <p>No items excluded from the search results yet.</p>
@@ -17,7 +16,7 @@
                     <?php while ( $query->have_posts() ) : $query->the_post();?>
                 <tr valign="top" class="post-<?php the_ID()?> page type-page status-draft author-self" >
                     <th class="check-column" scope="row"><input type="checkbox" value="<?php the_ID()?>" name="sep_exclude[]" checked="checked"></th>
-                    <td class="post-title page-title column-title"><strong><a title="Edit “<?php the_title()?>”" href="/wp-admin/post.php?post=<?php the_ID()?>&action=edit" class="row-title"><?php the_title()?></a></strong>
+                    <td class="post-title page-title column-title"><strong><a title="Edit “<?php the_title()?>”" href="<?php echo site_url()?>/wp-admin/post.php?post=<?php the_ID()?>&action=edit" class="row-title"><?php the_title()?></a></strong></td>
                     <td class="author column-author"><?php echo get_post_type();?></td>
                 </tr>
                     <?php endwhile; ?>

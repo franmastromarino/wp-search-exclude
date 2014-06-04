@@ -2,8 +2,8 @@
 Contributors: pronskiy
 Tags: admin, plugin, search
 Requires at least: 3.3
-Tested up to: 3.8
-Stable tag: 1.0.3
+Tested up to: 3.9
+Stable tag: 1.0.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -27,6 +27,10 @@ You can also view the list of all the items that are excluded from search on the
 2. screenshot-2.png
 
 == Changelog ==
+
+= 1.0.4 =
+* Fixed links on settings page with list of excluded items
+* Tested up to WP 3.9
 
 = 1.0.3 =
 * Added support for excluding attachments from search results

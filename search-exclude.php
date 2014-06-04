@@ -2,7 +2,7 @@
 /*
 Plugin Name: Search Exclude
 Description: Exclude any page or post from the WordPress search results by checking off the checkbox.
-Version: 1.0.3
+Version: 1.0.4
 Author: Roman Pronskiy
 Author URI: http://pronskiy.com
 */
