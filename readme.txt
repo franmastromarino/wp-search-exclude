@@ -1,9 +1,9 @@
 === Search Exclude ===
-Contributors: pronskiy
+Contributors: pronskiy, williamdodson
 Tags: admin, plugin, search
 Requires at least: 3.3
 Tested up to: 3.9
-Stable tag: 1.0.4
+Stable tag: 1.0.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -27,6 +27,9 @@ You can also view the list of all the items that are excluded from search on the
 2. screenshot-2.png
 
 == Changelog ==
+
+= 1.0.5 =
+* Not excluding items from search results on admin interface
 
 = 1.0.4 =
 * Fixed links on settings page with list of excluded items

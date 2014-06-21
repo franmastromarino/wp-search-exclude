@@ -8,6 +8,9 @@ You can also view the list of all the items that are excluded from search on the
 
 ### Changelog
 
+#### 1.0.5
+* Not excluding items from search results on admin interface
+
 #### 1.0.4
 * Fixed links on settings page with list of excluded items
 * Tested up to WP 3.9
