@@ -2,7 +2,7 @@
 /*
 Plugin Name: Search Exclude
 Description: Exclude any page or post from the WordPress search results by checking off the checkbox.
-Version: 1.0.5
+Version: 1.0.6
 Author: Roman Pronskiy
 Author URI: http://pronskiy.com
 Plugin URI: http://wordpress.org/plugins/search-exclude/
@@ -119,7 +119,7 @@ class SearchExclude
 
     public function searchFilter($query)
     {
-        if ((!is_admin() || DOING_AJAX) && $query->is_search) {
+        if ((!is_admin() || (defined('DOING_AJAX') && DOING_AJAX)) && $query->is_search) {
             $query->set('post__not_in', array_merge($query->get('post__not_in'), $this->getExcluded()));
         }
         return $query;

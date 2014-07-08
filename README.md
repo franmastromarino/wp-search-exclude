@@ -8,6 +8,9 @@ You can also view the list of all the items that are excluded from search on the
 
 ### Changelog
 
+#### 1.0.6
+* Fixed search filtering for AJAX requests
+
 #### 1.0.5
 * Not excluding items from search results on admin interface
 
