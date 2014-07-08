@@ -119,7 +119,7 @@ class SearchExclude
 
     public function searchFilter($query)
     {
-        if (!is_admin() && $query->is_search) {
+        if ((!is_admin() || DOING_AJAX) && $query->is_search) {
             $query->set('post__not_in', array_merge($query->get('post__not_in'), $this->getExcluded()));
         }
         return $query;
