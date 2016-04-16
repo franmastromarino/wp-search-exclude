@@ -1,8 +1,8 @@
 <?php
 /*
 Plugin Name: Search Exclude
-Description: Exclude any page or post from the WordPress search results by checking off the checkbox.
-Version: 1.0.6
+Description: Hide any page or post from the WordPress search results by checking off the checkbox.
+Version: 1.2.2
 Author: Roman Pronskiy
 Author URI: http://pronskiy.com
 Plugin URI: http://wordpress.org/plugins/search-exclude/
@@ -27,6 +27,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class SearchExclude
 {
+    protected $excluded;
+
     public function __construct()
     {
         $this->registerHooks();
@@ -40,27 +42,66 @@ class SearchExclude
         add_action('post_updated', array($this, 'postSave'));
         add_action('edit_attachment', array($this, 'postSave'));
         add_action('add_meta_boxes', array($this, 'addMetabox') );
-        add_filter('pre_get_posts',array($this, 'searchFilter'));
+        add_filter('pre_get_posts', array($this, 'searchFilter'));
+
+        add_filter('bbp_has_replies_query', array($this, 'flagBbPress'));
+
+        add_filter('manage_posts_columns', array($this, 'addColumn'));
+        add_filter('manage_pages_columns', array($this, 'addColumn'));
+        add_action('manage_posts_custom_column', array($this, 'populateColumnValue'), 10, 2);
+        add_action('manage_pages_custom_column', array($this, 'populateColumnValue'), 10, 2);
+        add_action('bulk_edit_custom_box', array($this, 'addBulkEditCustomBox'));
+        add_action('quick_edit_custom_box', array($this, 'addQuickEditCustomBox'));
+        add_action('admin_print_scripts-edit.php', array($this, 'enqueueEditScripts'));
+        add_action('wp_ajax_search_exclude_save_bulk_edit', array($this, 'saveBulkEdit'));
+        add_action('admin_enqueue_scripts', array($this, 'addStyle'));
+
+        /**
+         * Hook can be used outside of the plugin.
+         *
+         * You can pass any post/page/custom_post ids in the array with first parameter.
+         * The second parameter specifies states of visibility in search to be set.
+         * Pass true if you want to hide posts/pages, or false - if you want show them in the search results.
+         *
+         * Example:
+         * Let's say you want "Exclude from Search Results" checkbox to be checked off by default
+         * for newly created posts, but not pages. In this case you can add following code
+         * to your theme's function.php:
+         *
+         * <code>
+         * add_filter('default_content', 'excludeNewPostByDefault', 10, 2);
+         * function excludeNewPostByDefault($content, $post)
+         * {
+         *      if ('post' === $post->post_type) {
+         *          do_action('searchexclude_hide_from_search', array($post->ID), true);
+         *      }
+         * }
+         * </code>
+         *
+         * @param array $postIds array of post IDs
+         * @param bool $hide
+         */
+        add_action('searchexclude_hide_from_search', array($this, 'savePostIdsToSearchExclude'), 10, 2);
     }
 
     /**
      * @param $postId int the ID of the post
-     * @param $value bool indicates whether post should be excluded from the search results or not
+     * @param $exclude bool indicates whether post should be excluded from the search results or not
      */
-    protected function savePostIdToSearchExclude($postId, $value)
+    protected function savePostIdToSearchExclude($postId, $exclude)
     {
+        $this->savePostIdsToSearchExclude(array(intval($postId)), $exclude);
+    }
+
+    public function savePostIdsToSearchExclude($postIds, $exclude)
+    {
+        $exclude  = (bool) $exclude;
         $excluded = $this->getExcluded();
 
-        $indSep = array_search($postId, $excluded);
-        if ($value) {
-            if (false === $indSep) {
-                $excluded[] = $postId;
-            }
-        }
-        else {
-            if (false !== $indSep) {
-                unset($excluded[$indSep]);
-            }
+        if ($exclude) {
+            $excluded = array_unique(array_merge($excluded, $postIds));
+        } else {
+            $excluded = array_diff($excluded, $postIds);
         }
         $this->saveExcluded($excluded);
     }
@@ -71,19 +112,86 @@ class SearchExclude
     protected function saveExcluded($excluded)
     {
         update_option('sep_exclude', $excluded);
+        $this->excluded = $excluded;
     }
 
     protected function getExcluded()
     {
-        $excluded = get_option('sep_exclude');
-
-        if (!is_array($excluded)) {
-            $excluded = array();
+        if (null === $this->excluded) {
+            $this->excluded = get_option('sep_exclude');
+            if (!is_array($this->excluded)) {
+                $this->excluded = array();
+            }
         }
-        return $excluded;
+
+        return $this->excluded;
     }
 
-    function activate()
+    protected function isExcluded($postId)
+    {
+        return false !== array_search($postId, $this->getExcluded());
+    }
+
+    protected function view($view, $params = array())
+    {
+        extract($params);
+        include(dirname(__FILE__) . '/views/' . $view . '.php');
+    }
+
+    public function saveBulkEdit()
+    {
+        $postIds = !empty($_POST['post_ids']) ? $_POST[ 'post_ids' ] : false;
+        $exclude = isset($_POST['sep_exclude']) && '' !== $_POST['sep_exclude']  ? $_POST[ 'sep_exclude' ] : null;
+        if (is_array($postIds) && null !== $exclude) {
+            $this->savePostIdsToSearchExclude($postIds, $exclude);
+        }
+    }
+
+    public function enqueueEditScripts()
+    {
+        wp_enqueue_script(
+            'search-exclude-admin-edit',
+            plugin_dir_url( __FILE__ ) . 'js/search_exclude.js',
+            array( 'jquery', 'inline-edit-post' ),
+            '',
+            true
+        );
+    }
+
+    public function addStyle()
+    {
+        wp_register_style('search-exclude-stylesheet', plugins_url('/css/style.css', __FILE__ ));
+        wp_enqueue_style('search-exclude-stylesheet');
+    }
+
+    public function addQuickEditCustomBox($columnName)
+    {
+        if ('search_exclude' == $columnName) {
+            $this->view('quick_edit');
+        }
+    }
+
+    public function addBulkEditCustomBox($columnName)
+    {
+        if ('search_exclude' == $columnName) {
+            $this->view('bulk_edit');
+        }
+    }
+
+    public function addColumn($columns)
+    {
+        $columns['search_exclude'] = 'Search Exclude';
+        return $columns;
+    }
+
+    public function populateColumnValue($columnName, $postId)
+    {
+        if ('search_exclude' == $columnName) {
+            $this->view('column_cell', array('exclude' => $this->isExcluded($postId), 'postId' => $postId));
+        }
+    }
+
+    public function activate()
     {
         $excluded = $this->getExcluded();
 
@@ -94,16 +202,18 @@ class SearchExclude
 
     public function addMetabox()
     {
-        add_meta_box( 'sep_metabox_id', 'Search Exclude', array($this, 'metabox'), null);
+        $currentScreen = get_current_screen();
+        /* Do not show meta box on service pages */
+        if (empty($currentScreen->post_type)) {
+            return;
+        }
+        add_meta_box('sep_metabox_id', 'Search Exclude', array($this, 'metabox'), null, 'side');
     }
 
-    public function metabox( $post )
+    public function metabox($post)
     {
-        $excluded = $this->getExcluded();
-        $exclude = !(false === array_search($post->ID, $excluded));
-
         wp_nonce_field( 'sep_metabox_nonce', 'metabox_nonce' );
-        include(dirname(__FILE__) . '/metabox.php');
+        $this->view('metabox', array('exclude' => $this->isExcluded($post->ID)));
     }
 
     public function adminMenu()
@@ -111,7 +221,7 @@ class SearchExclude
         add_options_page(
             'Search Exclude',
             'Search Exclude',
-            10,
+            'manage_options',
             'search_exclude',
             array($this, 'options')
         );
@@ -119,28 +229,55 @@ class SearchExclude
 
     public function searchFilter($query)
     {
-        if ((!is_admin() || (defined('DOING_AJAX') && DOING_AJAX)) && $query->is_search) {
-            $query->set('post__not_in', array_merge($query->get('post__not_in'), $this->getExcluded()));
+        $exclude =
+            (!is_admin() || (defined('DOING_AJAX') && DOING_AJAX))
+            && $query->is_search
+            && !$this->isBbPress($query);
+
+        $exclude = apply_filters('searchexclude_filter_search', $exclude, $query);
+
+        if ($exclude) {
+            $query->set('post__not_in', array_merge(array(), $this->getExcluded()));
         }
+
         return $query;
     }
 
-    public function postSave( $post_id )
+    public function isBbPress($query)
     {
-        if (!isset($_POST['sep'])) return $post_id;
+        return $query->get('___s2_is_bbp_has_replies');
+    }
+
+    /**
+     * Flags a WP Query has being a `bbp_has_replies()` query.
+     * @attaches-to ``add_filter('bbp_has_replies_query');``
+     *
+     * @param array $args Query arguments passed by the filter.
+     *
+     * @return array The array of ``$args``.
+     *
+     * @see Workaround for bbPress and the `s` key. See: <http://bit.ly/1obLpv4>
+     */
+    public function flagBbPress($args)
+    {
+        return array_merge($args, array('___s2_is_bbp_has_replies' => true));
+    }
+
+    public function postSave($postId)
+    {
+        if (!isset($_POST['sep'])) return $postId;
 
         $sep = $_POST['sep'];
         $exclude = (isset($sep['exclude'])) ? $sep['exclude'] : 0 ;
 
-        $this->savePostIdToSearchExclude($post_id, $exclude);
+        $this->savePostIdToSearchExclude($postId, $exclude);
 
-        return $post_id;
+        return $postId;
     }
 
     public function options()
     {
         $excluded = $this->getExcluded();
-
         $query = new WP_Query( array(
             'post_type' => 'any',
             'post_status' => 'any',
@@ -148,7 +285,13 @@ class SearchExclude
             'order'=>'ASC',
             'nopaging' => true,
         ));
-        include(dirname(__FILE__) . '/options.php');
+        $this->view(
+            'options',
+            array(
+                'excluded' => $excluded,
+                'query' => $query,
+            )
+        );
     }
 
     public function saveOptions()

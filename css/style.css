@@ -1,0 +1,9 @@
+.fixed .column-search_exclude {
+    width: 12%;
+}
+.fixed .column-search_exclude div {
+    text-align: center;
+}
+.inline-edit-row fieldset label span.title.search-exclude-label {
+    width: 11em;
+}
