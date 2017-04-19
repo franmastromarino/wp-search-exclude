@@ -1,0 +1,42 @@
+# Codeception Test Suite Configuration
+
+# Suite for WordPress acceptance tests.
+# Perform tests using or simulating a browser.
+
+
+class_name: AcceptanceTester
+modules:
+    enabled:
+        - \Helper\Acceptance
+        - WPDb
+#        - WPBrowser
+        - WPWebDriver
+        - WPCLI
+    config:
+        WPDb:
+            dsn: 'mysql:host=localhost;dbname=wordpress'
+            user: wp
+            password: secret
+#            dump: tests/_data/dump.sql
+#            populate: true
+#            cleanup: true
+            url: 'search-exclude.local'
+            tablePrefix: wp_
+        WPBrowser:
+            url: 'http://search-exclude.local'
+            adminUsername: search-exclude
+            adminPassword: secret
+            adminPath: /wp-admin
+        WPWebDriver:
+            url: 'http://search-exclude.local'
+            browser: phantomjs
+            port: 4444
+            restart: true
+            wait: 2
+            window_size: 1024x768
+            adminUsername: search-exclude
+            adminPassword: secret
+            adminUrl: /wp-admin
+        WPCLI:
+            path: /opt/search-exclude/www
+            throw: true
