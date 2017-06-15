@@ -44,6 +44,9 @@ class SearchExclude
         add_action('add_meta_boxes', array($this, 'addMetabox') );
         add_filter('pre_get_posts', array($this, 'searchFilter'));
 
+        // buddypress global search support
+        add_filter('BBoss_Global_Search_Posts_sql', array($this, 'bGSsearchFilter'));
+
         add_filter('bbp_has_replies_query', array($this, 'flagBbPress'));
 
         add_filter('manage_posts_columns', array($this, 'addColumn'));
@@ -241,6 +244,16 @@ class SearchExclude
         }
 
         return $query;
+    }
+
+    public function bGSsearchFilter($sql)
+    {
+        $excluded = $this->getExcluded();
+        if ( ! empty( $excluded ) ) {
+            $sql .= ' AND id NOT IN (' . implode( ',', $excluded ) . ')';
+        }
+
+        return $sql;
     }
 
     public function isBbPress($query)
