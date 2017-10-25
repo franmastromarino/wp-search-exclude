@@ -29,7 +29,6 @@ env:
     - WP_ADMIN_USERNAME="admin"
     - WP_ADMIN_PASSWORD="admin"
   matrix:
-    - WP_VERSION=4.6.7
     - WP_VERSION=4.7.6
     - WP_VERSION=latest
 
