@@ -2,41 +2,35 @@
 
 # Suite for WordPress acceptance tests.
 # Perform tests using or simulating a browser.
-
-
 class_name: AcceptanceTester
 modules:
     enabled:
         - \Helper\Acceptance
         - WPDb
-#        - WPBrowser
         - WPWebDriver
         - WPCLI
     config:
         WPDb:
-            dsn: 'mysql:host=localhost;dbname=wordpress'
-            user: wp
-            password: secret
-#            dump: tests/_data/dump.sql
-#            populate: true
-#            cleanup: true
-            url: 'search-exclude.local'
+            dsn: 'mysql:host=localhost;dbname=test'
+            user: root
+            password:
+            url: 127.0.0.1:8888
             tablePrefix: wp_
         WPBrowser:
-            url: 'http://search-exclude.local'
-            adminUsername: search-exclude
-            adminPassword: secret
+            url: http://127.0.0.1:8888
+            adminUsername: admin
+            adminPassword: admin
             adminPath: /wp-admin
         WPWebDriver:
-            url: 'http://search-exclude.local'
+            url: http://127.0.0.1:8888
             browser: phantomjs
             port: 4444
             restart: true
             wait: 2
-            window_size: 1024x768
-            adminUsername: search-exclude
-            adminPassword: secret
+            window_size: 1280x720
+            adminUsername: admin
+            adminPassword: admin
             adminUrl: /wp-admin
         WPCLI:
-            path: /opt/search-exclude/www
+            path: /tmp/wordpress
             throw: true

@@ -82,6 +82,7 @@ class SearchExclude
          * @param bool $hide
          */
         add_action('searchexclude_hide_from_search', array($this, 'savePostIdsToSearchExclude'), 10, 2);
+        add_action('wp_head', array($this, 'excludeFromSearchEngines'));
     }
 
     /**
@@ -130,6 +131,14 @@ class SearchExclude
     protected function isExcluded($postId)
     {
         return false !== array_search($postId, $this->getExcluded());
+    }
+
+    public function excludeFromSearchEngines()
+    {
+        global $post;
+        if (false !== array_search($post->ID, get_option('sep_exclude', array())) && get_option('sep_exclude_from_search_engines')) {
+            echo '<meta name="robots" content="noindex,nofollow" />', "\n";
+        }
     }
 
     protected function view($view, $params = array())
@@ -289,6 +298,7 @@ class SearchExclude
             'options',
             array(
                 'excluded' => $excluded,
+                'exclude_from_search_engines' => get_option('sep_exclude_from_search_engines'),
                 'query' => $query,
             )
         );
@@ -297,12 +307,12 @@ class SearchExclude
     public function saveOptions()
     {
         if (isset($_POST['search_exclude_submit'])) {
-
             $excluded = $_POST['sep_exclude'];
             $this->saveExcluded($excluded);
+
+            $excluded = $_POST['sep_exclude_from_search_engines'];
+            update_option('sep_exclude_from_search_engines', $excluded);
         }
     }
 }
-//echo basename(dirname(__FILE__)).'/'.basename(__FILE__), PHP_EOL;
-//die;
 $pluginSearchExclude = new SearchExclude();
