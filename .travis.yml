@@ -1,0 +1,80 @@
+sudo: required
+
+language: php
+
+notifications:
+  email: false
+
+php:
+  - 5.6
+  - 7.0
+  - 7.1
+  - nightly
+
+services:
+  - mysql
+
+cache:
+  apt: true
+  directories:
+    - vendor
+    - $HOME/.composer/cache/files
+
+env:
+  global:
+    - WP_FOLDER="/tmp/wordpress"
+    - WP_URL="http://127.0.0.1:8888"
+    - WP_DOMAIN="127.0.0.1:8888"
+    - DB_NAME="test"
+    - TEST_DB_NAME="wploader"
+    - WP_TABLE_PREFIX="wp_"
+    - WP_ADMIN_USERNAME="admin"
+    - WP_ADMIN_PASSWORD="admin"
+  matrix:
+    - WP_VERSION=4.6.7
+    - WP_VERSION=4.7.6
+    - WP_VERSION=latest
+
+before_install:
+  # create the databases that will be used in the tests
+  - mysql -e "create database IF NOT EXISTS $DB_NAME;" -uroot
+  - mysql -e "create database IF NOT EXISTS $TEST_DB_NAME;" -uroot
+  # set up folders
+  - mkdir -p $WP_FOLDER
+  - mkdir tools
+  # install wp-cli in the `tools` folder
+  - wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar -P $(pwd)/tools/
+  - chmod +x tools/wp-cli.phar && mv tools/wp-cli.phar tools/wp
+  # append the `tools` folder to the PATH
+  - export PATH=$PATH:$(pwd)/tools
+  # prepend the `vendor/bin` folder the PATH
+  - export PATH=vendor/bin:$PATH
+
+install:
+  - php -S "$WP_DOMAIN" -t "$WP_FOLDER" >/dev/null 2>&1 &
+  # Start up the webdriver
+  - phantomjs --webdriver=4444 >/dev/null 2>&1 &
+
+  - composer install --prefer-dist
+  # install WordPress
+  - cd $WP_FOLDER
+  - wp core download --version=$WP_VERSION
+  - wp config create --dbname="$DB_NAME" --dbuser="root" --dbpass="" --dbhost="127.0.0.1" --dbprefix="$WP_TABLE_PREFIX"
+  - wp core install --url="$WP_URL" --title="Test" --admin_user="$WP_ADMIN_USERNAME" --admin_password="$WP_ADMIN_PASSWORD" --admin_email="admin@search.com" --skip-email
+  # update WordPress database to avoid prompts
+  - wp core update-db
+  # copy the plugin in the WordPress plugin folder
+  - cp -r $TRAVIS_BUILD_DIR/src $WP_FOLDER/wp-content/plugins/wp-search-exclude
+  # show the plugins folder contents to make sure the plugin folder is there
+  - ls $WP_FOLDER/wp-content/plugins
+  # activate the plugin
+  - wp plugin activate wp-search-exclude
+  # make sure the plugin is active on the site
+  - wp plugin list --status=active
+  # get back to the build folder
+  - cd $TRAVIS_BUILD_DIR
+  # open up the site folder to allow the PHP application to read/write/execute on it
+  - sudo chmod -R 777 $WP_FOLDER
+
+script:
+  - vendor/bin/codecept run
