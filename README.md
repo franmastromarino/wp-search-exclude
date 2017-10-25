@@ -1,4 +1,4 @@
-WordPress Search Exclude
+WordPress Search Exclude [![Build Status](https://travis-ci.org/dfatt/wp-search-exclude.svg?branch=dev-ci)](https://travis-ci.org/dfatt/wp-search-exclude)
 =================
 
 Search Exclude – WordPress plugin that lets you hide any page, post or whatever from the search results. Just check off the corresponding checkbox on post/page edit page.
