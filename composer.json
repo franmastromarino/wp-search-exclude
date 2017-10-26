@@ -1,5 +1,10 @@
 {
     "require-dev": {
         "lucatume/wp-browser": "^1.19"
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "sudo ln -s vendor/wp-cli/wp-cli/bin/wp /usr/local/bin/wp"
+        ]
     }
 }

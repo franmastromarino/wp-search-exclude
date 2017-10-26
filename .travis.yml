@@ -28,7 +28,6 @@ env:
     - WP_TABLE_PREFIX="wp_"
     - WP_ADMIN_USERNAME="admin"
     - WP_ADMIN_PASSWORD="admin"
-    - PATH="$TRAVIS_BUILD_DIR/vendor/bin:$PATH"
   matrix:
     - WP_VERSION=4.7.6
     - WP_VERSION=latest
