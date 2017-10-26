@@ -28,6 +28,7 @@ env:
     - WP_TABLE_PREFIX="wp_"
     - WP_ADMIN_USERNAME="admin"
     - WP_ADMIN_PASSWORD="admin"
+    - PATH="$TRAVIS_BUILD_DIR/vendor/bin:$PATH"
   matrix:
     - WP_VERSION=4.7.6
     - WP_VERSION=latest
@@ -45,7 +46,6 @@ install:
   - php -S "$WP_DOMAIN" -t "$WP_FOLDER" >/dev/null 2>&1 &
   # Start up the webdriver
   - phantomjs --webdriver=4444 >/dev/null 2>&1 &
-
   - composer install --prefer-dist
   # install WordPress
   - cd $WP_FOLDER
