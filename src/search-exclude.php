@@ -136,7 +136,7 @@ class SearchExclude
     public function excludeFromSearchEngines()
     {
         global $post;
-        if (false !== array_search($post->ID, get_option('sep_exclude', array())) && get_option('sep_exclude_from_search_engines')) {
+        if ($this->isExcluded($post->ID) && get_option('sep_exclude_from_search_engines')) {
             echo '<meta name="robots" content="noindex,nofollow" />', "\n";
         }
     }
