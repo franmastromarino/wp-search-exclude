@@ -38,12 +38,6 @@ before_install:
   - mysql -e "create database IF NOT EXISTS $TEST_DB_NAME;" -uroot
   # set up folders
   - mkdir -p $WP_FOLDER
-  - mkdir tools
-  # install wp-cli in the `tools` folder
-  - wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar -P $(pwd)/tools/
-  - chmod +x tools/wp-cli.phar && mv tools/wp-cli.phar tools/wp
-  # append the `tools` folder to the PATH
-  - export PATH=$PATH:$(pwd)/tools
   # prepend the `vendor/bin` folder the PATH
   - export PATH=vendor/bin:$PATH
 
@@ -54,18 +48,18 @@ install:
   - composer install --prefer-dist
   # install WordPress
   - vendor/bin/wp core download --version=$WP_VERSION --path=$WP_FOLDER
-  - wp config create --dbname="$DB_NAME" --dbuser="root" --dbpass="" --dbhost="127.0.0.1" --dbprefix="$WP_TABLE_PREFIX"
-  - wp core install --url="$WP_URL" --title="Test" --admin_user="$WP_ADMIN_USERNAME" --admin_password="$WP_ADMIN_PASSWORD" --admin_email="admin@search.com" --skip-email
+  - vendor/bin/wp config create --path=$WP_FOLDER --dbname="$DB_NAME" --dbuser="root" --dbpass="" --dbhost="127.0.0.1" --dbprefix="$WP_TABLE_PREFIX"
+  - vendor/bin/wp core install --path=$WP_FOLDER --url="$WP_URL" --title="Test" --admin_user="$WP_ADMIN_USERNAME" --admin_password="$WP_ADMIN_PASSWORD" --admin_email="admin@search.com" --skip-email
   # update WordPress database to avoid prompts
-  - wp core update-db
+  - vendor/bin/wp core update-db --path=$WP_FOLDER
   # copy the plugin in the WordPress plugin folder
   - cp -r $TRAVIS_BUILD_DIR/src $WP_FOLDER/wp-content/plugins/wp-search-exclude
   # show the plugins folder contents to make sure the plugin folder is there
   - ls $WP_FOLDER/wp-content/plugins
   # activate the plugin
-  - wp plugin activate wp-search-exclude
+  - vendor/bin/wp plugin activate wp-search-exclude --path=$WP_FOLDER
   # make sure the plugin is active on the site
-  - wp plugin list --status=active
+  - vendor/bin/wp plugin list --status=active --path=$WP_FOLDER
   # get back to the build folder
   - cd $TRAVIS_BUILD_DIR
   # open up the site folder to allow the PHP application to read/write/execute on it
