@@ -28,6 +28,7 @@ env:
     - WP_TABLE_PREFIX="wp_"
     - WP_ADMIN_USERNAME="admin"
     - WP_ADMIN_PASSWORD="admin"
+    - WP_CLI = $TRAVIS_BUILD_DIR/src/vendor/bin
 
   matrix:
     - WP_VERSION=4.7.6
@@ -49,19 +50,19 @@ install:
   - composer install --prefer-dist
   # install WordPress
   - cd $WP_FOLDER
-  - venor/bin/wp core download --version=$WP_VERSION
-  - venor/bin/wp config create --dbname="$DB_NAME" --dbuser="root" --dbpass="" --dbhost="127.0.0.1" --dbprefix="$WP_TABLE_PREFIX"
-  - venor/bin/wp core install --url="$WP_URL" --title="Test" --admin_user="$WP_ADMIN_USERNAME" --admin_password="$WP_ADMIN_PASSWORD" --admin_email="admin@search.com" --skip-email
+  - $WP_CLI/wp core download --version=$WP_VERSION
+  - $WP_CLI/wp config create --dbname="$DB_NAME" --dbuser="root" --dbpass="" --dbhost="127.0.0.1" --dbprefix="$WP_TABLE_PREFIX"
+  - $WP_CLI/wp core install --url="$WP_URL" --title="Test" --admin_user="$WP_ADMIN_USERNAME" --admin_password="$WP_ADMIN_PASSWORD" --admin_email="admin@search.com" --skip-email
   # update WordPress database to avoid prompts
-  - venor/bin/wp core update-db
+  - $WP_CLI/wp core update-db
   # copy the plugin in the WordPress plugin folder
   - cp -r $TRAVIS_BUILD_DIR/src $WP_FOLDER/wp-content/plugins/wp-search-exclude
   # show the plugins folder contents to make sure the plugin folder is there
   - ls $WP_FOLDER/wp-content/plugins
   # activate the plugin
-  - venor/bin/wp plugin activate wp-search-exclude
+  - $WP_CLI/wp plugin activate wp-search-exclude
   # make sure the plugin is active on the site
-  - venor/bin/wp plugin list --status=active
+  - $WP_CLI/wp plugin list --status=active
   # get back to the build folder
   - cd $TRAVIS_BUILD_DIR
   # open up the site folder to allow the PHP application to read/write/execute on it
