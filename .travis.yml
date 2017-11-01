@@ -50,12 +50,12 @@ install:
   - composer install --prefer-dist
   # install WordPress
   - cd $WP_FOLDER
+  - ls
   - $WP_CLI/wp core download --version=$WP_VERSION
   - $WP_CLI/wp config create --dbname="$DB_NAME" --dbuser="root" --dbpass="" --dbhost="127.0.0.1" --dbprefix="$WP_TABLE_PREFIX"
   - $WP_CLI/wp core install --url="$WP_URL" --title="Test" --admin_user="$WP_ADMIN_USERNAME" --admin_password="$WP_ADMIN_PASSWORD" --admin_email="admin@search.com" --skip-email
   # update WordPress database to avoid prompts
   - $WP_CLI/wp core update-db
-  - ls
   # copy the plugin in the WordPress plugin folder
   - cp -r $TRAVIS_BUILD_DIR/src $WP_FOLDER/wp-content/plugins/wp-search-exclude
   # show the plugins folder contents to make sure the plugin folder is there
