@@ -2,7 +2,7 @@
 /*
 Plugin Name: Search Exclude
 Description: Hide any page or post from the WordPress search results by checking off the checkbox.
-Version: 1.2.2
+Version: 1.2.4
 Author: Roman Pronskiy
 Author URI: http://pronskiy.com
 Plugin URI: http://wordpress.org/plugins/search-exclude/
@@ -140,6 +140,7 @@ class SearchExclude
 
     public function saveBulkEdit()
     {
+        $this->checkPermissions();
         $postIds = !empty($_POST['post_ids']) ? $this->filterPostIds($_POST[ 'post_ids' ]) : false;
         $exclude = isset($_POST['sep_exclude']) && '' !== $_POST['sep_exclude']
             ? filter_var($_POST['sep_exclude'], FILTER_VALIDATE_BOOLEAN)
@@ -309,12 +310,19 @@ class SearchExclude
 
         check_admin_referer( 'search_exclude_submit' );
 
-        if ( !current_user_can('edit_others_pages') ) {
-            wp_die( 'Not enough permissions', '', ['response' => 401, 'exit' => true] );
-        }
+        $this->checkPermissions();
 
         $excluded = $this->filterPostIds($_POST['sep_exclude']);
         $this->saveExcluded($excluded);
+    }
+
+    private function checkPermissions()
+    {
+        $capability = apply_filters('searchexclude_filter_permissions', 'edit_others_pages');
+
+        if ( !current_user_can($capability) ) {
+            wp_die( 'Not enough permissions', '', ['response' => 401, 'exit' => true] );
+        }
     }
 }
 $pluginSearchExclude = new SearchExclude();
