@@ -2,14 +2,14 @@
 /*
 Plugin Name: Search Exclude
 Description: Hide any page or post from the WordPress search results by checking off the checkbox.
-Version: 1.2.4
+Version: 1.2.5
 Author: Roman Pronskiy
 Author URI: http://pronskiy.com
 Plugin URI: http://wordpress.org/plugins/search-exclude/
 */
 
 /*
-Copyright (c) 2012-2015 Roman Pronskiy
+Copyright (c) 2012-2019 Roman Pronskiy
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -140,6 +140,7 @@ class SearchExclude
 
     public function saveBulkEdit()
     {
+        check_ajax_referer( 'search_exclude_bulk_edit', '_wpnonce_search_exclude_bulk_edit' );
         $this->checkPermissions();
         $postIds = !empty($_POST['post_ids']) ? $this->filterPostIds($_POST[ 'post_ids' ]) : false;
         $exclude = isset($_POST['sep_exclude']) && '' !== $_POST['sep_exclude']

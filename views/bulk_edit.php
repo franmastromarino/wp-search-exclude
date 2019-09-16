@@ -9,6 +9,7 @@
                     <option value="0">Show</option>
                 </select>
             </label>
+            <?php wp_nonce_field( 'search_exclude_bulk_edit', '_wpnonce_search_exclude_bulk_edit'); ?>
         </div>
     </div>
 </fieldset>
