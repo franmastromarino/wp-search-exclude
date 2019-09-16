@@ -9,7 +9,7 @@ Plugin URI: http://wordpress.org/plugins/search-exclude/
 */
 
 /*
-Copyright (c) 2012 Roman Pronskiy
+Copyright (c) 2012-2015 Roman Pronskiy
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
