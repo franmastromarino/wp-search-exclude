@@ -63,6 +63,9 @@ function filterForProducts($exclude, $query)
 
 ### Changelog
 
+#### 1.2.3
+* Security release. All users are encouraged to update.
+
 #### 1.2.2
 * Added action searchexclude_hide_from_search
 * Added filter searchexclude_filter_search

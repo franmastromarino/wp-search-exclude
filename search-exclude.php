@@ -140,11 +140,18 @@ class SearchExclude
 
     public function saveBulkEdit()
     {
-        $postIds = !empty($_POST['post_ids']) ? $_POST[ 'post_ids' ] : false;
-        $exclude = isset($_POST['sep_exclude']) && '' !== $_POST['sep_exclude']  ? $_POST[ 'sep_exclude' ] : null;
+        $postIds = !empty($_POST['post_ids']) ? $this->filterPostIds($_POST[ 'post_ids' ]) : false;
+        $exclude = isset($_POST['sep_exclude']) && '' !== $_POST['sep_exclude']
+            ? filter_var($_POST['sep_exclude'], FILTER_VALIDATE_BOOLEAN)
+            : null;
         if (is_array($postIds) && null !== $exclude) {
             $this->savePostIdsToSearchExclude($postIds, $exclude);
         }
+    }
+
+    private function filterPostIds($postIds)
+    {
+        return array_filter(filter_var($postIds, FILTER_VALIDATE_INT, FILTER_FORCE_ARRAY));
     }
 
     public function enqueueEditScripts()
@@ -268,7 +275,7 @@ class SearchExclude
         if (!isset($_POST['sep'])) return $postId;
 
         $sep = $_POST['sep'];
-        $exclude = (isset($sep['exclude'])) ? $sep['exclude'] : 0 ;
+        $exclude = (isset($sep['exclude'])) ? filter_var($sep['exclude'], FILTER_VALIDATE_BOOLEAN) : false;
 
         $this->savePostIdToSearchExclude($postId, $exclude);
 
@@ -296,11 +303,18 @@ class SearchExclude
 
     public function saveOptions()
     {
-        if (isset($_POST['search_exclude_submit'])) {
-
-            $excluded = $_POST['sep_exclude'];
-            $this->saveExcluded($excluded);
+        if (!isset($_POST['search_exclude_submit'])) {
+            return;
         }
+
+        check_admin_referer( 'search_exclude_submit' );
+
+        if ( !current_user_can('edit_others_pages') ) {
+            wp_die( 'Not enough permissions', '', ['response' => 401, 'exit' => true] );
+        }
+
+        $excluded = $this->filterPostIds($_POST['sep_exclude']);
+        $this->saveExcluded($excluded);
     }
 }
 $pluginSearchExclude = new SearchExclude();

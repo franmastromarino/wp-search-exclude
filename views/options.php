@@ -23,6 +23,8 @@
                 </tbody>
             </table>
 
+            <?php wp_nonce_field( 'search_exclude_submit'); ?>
+
             <p class="submit"><input type="submit" name="search_exclude_submit" class="button-primary" value="<?php _e('Save Changes') ?>" /></p>
         </form>
     <?php endif; ?>

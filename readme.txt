@@ -3,7 +3,7 @@ Contributors: pronskiy, williamdodson, stevelock
 Tags: admin, plugin, search
 Requires at least: 3.3
 Tested up to: 5.2
-Stable tag: 1.2.2
+Stable tag: 1.2.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -77,6 +77,9 @@ function filterForProducts($exclude, $query)
 2. screenshot-2.png
 
 == Changelog ==
+
+= 1.2.3 =
+* Security release. All users are encouraged to update.
 
 = 1.2.2 =
 * Added action searchexclude_hide_from_search
