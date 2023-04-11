@@ -1,9 +1,9 @@
 === Search Exclude ===
-Contributors: pronskiy, williamdodson, stevelock
+Contributors: quadlayers, pronskiy, williamdodson, stevelock
 Tags: admin, plugin, search
-Requires at least: 3.3
-Tested up to: 5.3
-Stable tag: 1.2.5
+Requires at least: 4.7
+Tested up to: 6.1
+Stable tag: 1.3.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -27,7 +27,21 @@ On the plugin settings page you can also see the list of all the items that are 
 = Does this plugin affect SEO? =
 
 No, it does not affect crawling and indexing by search engines.
-The only thing it does is hiding selected post/pages from your site search page. Not altering SEO indexing.
+The ONLY thing it does is hiding selected post/pages from your site search page. Not altering SEO indexing.
+
+If you want posts/pages to be hidden from search engines you may add the following snippet to your `functions.php`:
+`
+function add_meta_for_search_excluded()
+{
+    global $post;
+    if (false !== array_search($post->ID, get_option('sep_exclude', array()))) {
+        echo '<meta name="robots" content="noindex,nofollow" />', "\n";
+    }
+}
+add_action('wp_head', 'add_meta_for_search_excluded');
+`
+
+Note: already indexed pages will remain indexed for quite a while. In order to remove them from Google index, you may use Google Search Console (or similar tool for other engines).
 
 = Are there any hooks or actions available to customize plugin behaviour? =
 
@@ -77,6 +91,19 @@ function filterForProducts($exclude, $query)
 2. screenshot-2.png
 
 == Changelog ==
+
+= 1.3.1 =
+* Author update.
+
+= 1.3.0 =
+* Fix and rework bulk edit: The `Bulk actions` dropdown now offers hide/show actions.
+
+= 1.2.7 =
+* This is a security release. All users are encouraged to upgrade.
+* Fix possible XSS vulnerability.
+
+= 1.2.6 =
+* Fix compatibility with WordPress 5.5
 
 = 1.2.5 =
 * Security release. More protection added.
