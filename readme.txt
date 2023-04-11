@@ -1,13 +1,19 @@
 === Search Exclude ===
 Contributors: quadlayers, pronskiy, williamdodson, stevelock
+Donate link: https://quadlayers.com/
 Tags: admin, plugin, search
 Requires at least: 4.7
-Tested up to: 6.1
-Stable tag: 1.3.1
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Requires PHP: 5.6
+Tested up to: 6.2
+Stable tag: 2.0.0
+License: GPLv3
+License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
 Hide any post or page from the search results.
+
+== Presentation ==
+
+[QuadLayers](https://quadlayers.com/) | [Community](https://www.facebook.com/groups/quadlayers/)
 
 == Description ==
 
@@ -57,8 +63,8 @@ for newly created posts, but not pages. In this case you can add following code
 to your theme's function.php:
 
 `
-add_filter('default_content', 'excludeNewPostByDefault', 10, 2);
-function excludeNewPostByDefault($content, $post)
+add_filter('default_content', 'exclude_new_post_by_default', 10, 2);
+function exclude_new_post_by_default($content, $post)
 {
 	if ('post' === $post->post_type) {
         do_action('searchexclude_hide_from_search', array($post->ID), true);

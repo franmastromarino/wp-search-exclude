@@ -1,0 +1,51 @@
+{
+	"name": "quadlayers/search-exclude",
+	"description": "Search Exclude",
+	"type": "project",
+	"authors": [
+		{
+			"name": "QuadLayers",
+			"email": "noreply@quadlayers.com"
+		}
+	],
+	"minimum-stability": "stable",
+	"config": {
+		"platform": {
+			"php": "7.3.0"
+		},
+		"allow-plugins": {
+			"quadlayers/wp-autoload": true,
+			"automattic/jetpack-composer-plugin": true
+		}
+	},
+	"require": {
+		"php": ">=7.1.0",
+		"automattic/jetpack-composer-plugin": "*",
+		"automattic/jetpack-assets": "*",
+		"quadlayers/wp-dashboard-widget-news": "*",
+		"quadlayers/wp-notice-plugin-required": "*",
+		"quadlayers/wp-notice-plugin-promote": "*",
+		"quadlayers/wp-plugin-table-links": "*",
+		"quadlayers/wp-plugin-suggestions": "*"
+	},
+	"autoload": {
+		"classmap": [
+			"lib/"
+		]
+	},
+	"autoload-dev": {
+		"exclude-from-classmap": [
+			"lib/"
+		]
+	},
+	"require-dev": {
+		"quadlayers/wp-autoload": "*"
+	},
+	"extra": {
+		"quadlayers/wp-autoload": {
+			"QuadLayers\\SearchExclude": "lib/"
+		},
+		"wp-plugin-slug": "search-exclude"
+	},
+	"scripts": {}
+}
