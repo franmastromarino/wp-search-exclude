@@ -98,6 +98,14 @@ function filterForProducts($exclude, $query)
 
 == Changelog ==
 
+= 2.0.0 =
+* i18n implemented
+* Composer implemented
+* Autoload implemented
+* Rename files to fit WordPress Development rules
+* Rename classes to fit WordPress Development rules
+* Rename variables to fit WordPress Development rules
+
 = 1.3.1 =
 * Author update.
 
