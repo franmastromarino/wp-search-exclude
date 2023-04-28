@@ -11,7 +11,7 @@ final class Plugin {
 		/**
 		* Load plugin textdomain.
 		*/
-		load_plugin_textdomain( 'plugin-init', false, QLSE_PLUGIN_DIR . '/languages/' );
+		load_plugin_textdomain( 'search-exclude', false, QLSE_PLUGIN_DIR . '/languages/' );
 		/**
 		 * On activation
 		 */
