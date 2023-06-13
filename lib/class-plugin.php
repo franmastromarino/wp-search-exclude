@@ -244,7 +244,7 @@ final class Plugin {
 	}
 
 	public function add_column( $columns ) {
-		$columns['search_exclude'] = 'Search Exclude';
+		$columns['search_exclude'] = esc_html__( 'Search Excluded', 'search-exclude' );
 		return $columns;
 	}
 
