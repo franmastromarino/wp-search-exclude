@@ -13,10 +13,8 @@
 .design                 export-ignore
 .ideas                  export-ignore
 .vscode                 export-ignore
-bin                     export-ignore
 node_modules            export-ignore
 packages                export-ignore
-phpunit                 export-ignore
 tests                   export-ignore
 .editorconfig           export-ignore
 .eslintignore           export-ignore
