@@ -4,8 +4,8 @@ Donate link: https://quadlayers.com/
 Tags: admin, plugin, search, search exclude
 Requires at least: 4.7
 Requires PHP: 5.6
-Tested up to: 6.3
-Stable tag: 2.0.5
+Tested up to: 6.4
+Stable tag: 2.0.6
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -97,6 +97,9 @@ function filterForProducts($exclude, $query)
 2. screenshot-2.png
 
 == Changelog ==
+
+= 2.0.6 =
+* WordPress compatibility
 
 = 2.0.5 =
 * Update portfolio link
