@@ -89,7 +89,7 @@ msgid "This plugin allows you to add custom fields to the checkout page, related
 msgstr ""
 
 #: vendor_packages/wp-notice-plugin-promote.php:31
-msgid "It allows you to reduce the steps in the checkout process by skipping the shopping cart page. This can encourage buyers to shop more and quickly. You will increase your sales reducing cart abandonment."
+msgid "It allows you to reduce the steps in the checkout process by skipping the shopping cart page. This can encourage buyers to shop more quickly and potentially increase your sales by reducing cart abandonment."
 msgstr ""
 
 #: vendor_packages/wp-notice-plugin-promote.php:42
@@ -117,7 +117,7 @@ msgid "Hello! We have a special gift!"
 msgstr ""
 
 #: vendor_packages/wp-notice-plugin-promote.php:74
-msgid "Today we want to make you a special gift. Using the coupon code %1$s before the next 48 hours you can get a 20 percent discount on the premium version of the %2$s plugin."
+msgid "Today we have a special gift for you. Use the coupon code %1$s within the next 48 hours to receive a 20% discount on the premium version of the %2$s plugin."
 msgstr ""
 
 #: vendor_packages/wp-notice-plugin-promote.php:82

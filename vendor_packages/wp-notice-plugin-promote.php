@@ -28,7 +28,7 @@ if ( class_exists( 'QuadLayers\\WP_Notice_Plugin_Promote\\Load' ) ) {
 	 */
 	define( 'QLSE_PROMOTE_CROSS_INSTALL_2_SLUG', 'woocommerce-direct-checkout' );
 	define( 'QLSE_PROMOTE_CROSS_INSTALL_2_NAME', 'WooCommerce Direct Checkout' );
-	define( 'QLSE_PROMOTE_CROSS_INSTALL_2_DESCRIPTION', esc_html__( 'It allows you to reduce the steps in the checkout process by skipping the shopping cart page. This can encourage buyers to shop more and quickly. You will increase your sales reducing cart abandonment.', 'search-exclude' ) );
+	define( 'QLSE_PROMOTE_CROSS_INSTALL_2_DESCRIPTION', esc_html__( 'It allows you to reduce the steps in the checkout process by skipping the shopping cart page. This can encourage buyers to shop more quickly and potentially increase your sales by reducing cart abandonment.', 'search-exclude' ) );
 	define( 'QLSE_PROMOTE_CROSS_INSTALL_2_URL', 'https://quadlayers.com/products/woocommerce-direct-checkout/?utm_source=qlse_admin' );
 
 	new \QuadLayers\WP_Notice_Plugin_Promote\Load(
@@ -72,7 +72,7 @@ if ( class_exists( 'QuadLayers\\WP_Notice_Plugin_Promote\\Load' ) ) {
 				),
 				'notice_description' => sprintf(
 					esc_html__(
-						'Today we want to make you a special gift. Using the coupon code %1$s before the next 48 hours you can get a 20 percent discount on the premium version of the %2$s plugin.',
+						'Today we have a special gift for you. Use the coupon code %1$s within the next 48 hours to receive a 20% discount on the premium version of the %2$s plugin.',
 						'search-exclude'
 					),
 					'ADMINPANEL20%',
