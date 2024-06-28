@@ -4,13 +4,13 @@
  * Plugin Name:             Search Exclude
  * Plugin URI:              https://wordpress.org/plugins/search-exclude
  * Description:             Hide any page or post from the WordPress search results by checking off the checkbox.
- * Version:                 2.1.0
+ * Version:                 2.1.2
  * Text Domain:             search-exclude
  * Author:                  QuadLayers
  * Author URI:              https://quadlayers.com
  * License:                 GPLv3
  * Domain Path:             /languages
- * Request at least:        4.7.0
+ * Request at least:        4.7
  * Tested up to:            6.5
  * Requires PHP:            5.6
  */
@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 */
 
 define( 'QLSE_PLUGIN_NAME', 'Search Exclude' );
-define( 'QLSE_PLUGIN_VERSION', '2.1.0' );
+define( 'QLSE_PLUGIN_VERSION', '2.1.2' );
 define( 'QLSE_PLUGIN_FILE', __FILE__ );
 define( 'QLSE_PLUGIN_DIR', __DIR__ . DIRECTORY_SEPARATOR );
 define( 'QLSE_DOMAIN', 'qlse' );
@@ -39,8 +39,6 @@ define( 'QLSE_DOCUMENTATION_API_URL', 'https://quadlayers.com/documentation/sear
 define( 'QLSE_DOCUMENTATION_ACCOUNT_URL', 'https://quadlayers.com/documentation/search-exclude/account/?utm_source=qlse_admin' );
 define( 'QLSE_GROUP_URL', 'https://www.facebook.com/groups/quadlayers' );
 define( 'QLSE_DEVELOPER', false );
-define( 'QLSE_PREMIUM_SELL_URL', 'https://quadlayers.com/search-exclude-pro' );
-
 /**
  * Load composer autoload
  */
@@ -52,6 +50,7 @@ require_once __DIR__ . '/vendor_packages/wp-i18n-map.php';
 require_once __DIR__ . '/vendor_packages/wp-dashboard-widget-news.php';
 require_once __DIR__ . '/vendor_packages/wp-plugin-table-links.php';
 require_once __DIR__ . '/vendor_packages/wp-plugin-install-tab.php';
+require_once __DIR__ . '/vendor_packages/wp-notice-plugin-promote.php';
 /**
  * Load plugin classes
  */
