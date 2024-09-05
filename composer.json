@@ -44,7 +44,7 @@
 	},
 	"extra": {
 		"quadlayers/wp-autoload": {
-			"QuadLayers\\SearchExclude": "lib/"
+			"QuadLayers\\QLSE": "lib/"
 		},
 		"wp-plugin-slug": "search-exclude"
 	},
