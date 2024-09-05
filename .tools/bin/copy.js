@@ -13,5 +13,5 @@ try {
 	copyFileFromTo(myArgs[0], myArgs[1]);
 	consoleSuccess('File copied successfully');
 } catch (e) {
-	consoleError('cannot copy the file, internationalization not found.');
+	consoleError('Can not copy the file, internationalization not found.');
 }

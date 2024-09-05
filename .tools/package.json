@@ -3,9 +3,14 @@
 	"description": "Tools",
 	"main": "index.js",
 	"scripts": {
-		"setup": "pnpm install --force && composer install"
+		"setup": "pnpm run setup:js && pnpm run setup:php",
+		"setup:js": "pnpm install --force",
+		"setup:php": "composer install",
+		"clean": "pnpm run clean:js && pnpm run clean:php",
+		"clean:js": "node bin/delete.js ./package-lock.json ./pnpm-lock.yaml ./node_modules",
+		"clean:php": "composer clean"
 	},
 	"dependencies": {
-		"archiver": "^5.3.1"
+		"archiver": "*"
 	}
 }
