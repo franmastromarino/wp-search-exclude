@@ -2,13 +2,14 @@
 
 namespace QuadLayers\QLSE\Controllers;
 
+use QuadLayers\QLSE\Models\Excluded as Models_Excluded;
+
 /**
  * Frontend Class
  */
 class Frontend {
 
 	protected static $instance;
-	protected $excluded;
 
 	private function __construct() {
 	/**
@@ -27,7 +28,7 @@ class Frontend {
 		$exclude = apply_filters( 'searchexclude_filter_search', $exclude, $query );
 
 		if ( $exclude ) {
-			$query->set( 'post__not_in', array_merge( array(), Backend::instance()->get_excluded() ) );
+			$query->set( 'post__not_in', array_merge( array(), Models_Excluded::instance()->get() ) );
 		}
 
 		return $query;

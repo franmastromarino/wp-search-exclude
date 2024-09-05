@@ -2,6 +2,7 @@
 
 namespace QuadLayers\QLSE\Controllers;
 
+use QuadLayers\QLSE\Models\Excluded as Models_Excluded;
 use QuadLayers\QLSE\Helpers;
 
 /**
@@ -162,39 +163,18 @@ class Backend {
 
 	public function save_post_ids_to_search_exclude( $post_ids, $exclude ) {
 		$exclude  = (bool) $exclude;
-		$excluded = $this->get_excluded();
+		$excluded = Models_Excluded::instance()->get();
 
 		if ( $exclude ) {
 			$excluded = array_unique( array_merge( $excluded, $post_ids ) );
 		} else {
 			$excluded = array_diff( $excluded, $post_ids );
 		}
-		$this->save_excluded( $excluded );
-	}
-
-	/**
-	 * Save excluded posts
-	 *
-	 * @param $excluded array IDs of posts to be saved for excluding from the search results
-	 */
-	public function save_excluded( $excluded ) {
-		update_option( 'sep_exclude', $excluded );
-		$this->excluded = $excluded;
-	}
-
-	public function get_excluded() {
-		if ( null === $this->excluded ) {
-			$this->excluded = get_option( 'sep_exclude' );
-			if ( ! is_array( $this->excluded ) ) {
-				$this->excluded = array();
-			}
-		}
-
-		return $this->excluded;
+		Models_Excluded::instance()->save( $excluded );
 	}
 
 	protected function is_excluded( $post_id ) {
-		return false !== array_search( $post_id, $this->get_excluded() );
+		return false !== array_search( $post_id, Models_Excluded::instance()->get() );
 	}
 
 	protected function view( $view, $params = array() ) {
@@ -289,7 +269,7 @@ class Backend {
 	}
 
 	public function options() {
-		$excluded = $this->get_excluded();
+		$excluded = Models_Excluded::instance()->get();
 		$query    = new \WP_Query(
 			array(
 				'post_type'   => 'any',
@@ -321,7 +301,7 @@ class Backend {
 		$this->check_permissions();
 
 		$excluded = Helpers::filter_posts_ids( $sep_exclude );
-		$this->save_excluded( $excluded );
+		Models_Excluded::instance()->save( $excluded );
 	}
 
 	private function check_permissions() {
