@@ -19,9 +19,8 @@ final class Plugin {
 
 		Controllers\Backend::instance();
 		Controllers\Frontend::instance();
-
 	}
-	
+
 	public function activate() {
 		$excluded = Controllers\Backend::instance()->get_excluded();
 		if ( empty( $excluded ) ) {

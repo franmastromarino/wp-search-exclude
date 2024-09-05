@@ -53,7 +53,7 @@ class Backend {
 		add_action( 'admin_notices', array( $this, 'bulk_action_notices' ) );
 		add_filter(
 			'removable_query_args',
-			function( $args ) {
+			function ( $args ) {
 				$args[] = 'se_saved';
 				return $args;
 			}

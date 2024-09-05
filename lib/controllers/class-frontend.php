@@ -16,7 +16,6 @@ class Frontend {
 	 */
 	add_filter( 'pre_get_posts', array( $this, 'search_filter' ) );
 	add_filter( 'bbp_has_replies_query', array( $this, 'bbpress_flag_replies' ) );
-
 	}
 
 	public function search_filter( $query ) {

@@ -60,7 +60,7 @@ require_once __DIR__ . '/lib/class-plugin.php';
  */
 register_activation_hook(
 	__FILE__,
-	function() {
+	function () {
 		do_action( 'qlse_activation' );
 	}
 );
@@ -69,7 +69,7 @@ register_activation_hook(
  */
 register_deactivation_hook(
 	__FILE__,
-	function() {
+	function () {
 		do_action( 'qlse_deactivation' );
 	}
 );
