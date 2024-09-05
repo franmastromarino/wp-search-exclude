@@ -21,28 +21,11 @@ final class Plugin {
 		Controllers\Frontend::instance();
 
 	}
-
-	protected function get_excluded() {
-		if ( null === $this->excluded ) {
-			$this->excluded = get_option( 'sep_exclude' );
-			if ( ! is_array( $this->excluded ) ) {
-				$this->excluded = array();
-			}
-		}
-
-		return $this->excluded;
-	}
-
-	protected function save_excluded( $excluded ) {
-		update_option( 'sep_exclude', $excluded );
-		$this->excluded = $excluded;
-	}
-
+	
 	public function activate() {
-		$excluded = $this->get_excluded();
-
+		$excluded = Controllers\Backend::instance()->get_excluded();
 		if ( empty( $excluded ) ) {
-			$this->save_excluded( array() );
+			Controllers\Backend::instance()->save_excluded( array() );
 		}
 	}
 

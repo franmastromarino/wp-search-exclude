@@ -19,17 +19,6 @@ class Frontend {
 
 	}
 
-	protected function get_excluded() {
-		if ( null === $this->excluded ) {
-			$this->excluded = get_option( 'sep_exclude' );
-			if ( ! is_array( $this->excluded ) ) {
-				$this->excluded = array();
-			}
-		}
-
-		return $this->excluded;
-	}
-
 	public function search_filter( $query ) {
 		$exclude =
 			( ! is_admin() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) )
@@ -39,7 +28,7 @@ class Frontend {
 		$exclude = apply_filters( 'searchexclude_filter_search', $exclude, $query );
 
 		if ( $exclude ) {
-			$query->set( 'post__not_in', array_merge( array(), $this->get_excluded() ) );
+			$query->set( 'post__not_in', array_merge( array(), Backend::instance()->get_excluded() ) );
 		}
 
 		return $query;

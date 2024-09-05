@@ -177,12 +177,12 @@ class Backend {
 	 *
 	 * @param $excluded array IDs of posts to be saved for excluding from the search results
 	 */
-	protected function save_excluded( $excluded ) {
+	public function save_excluded( $excluded ) {
 		update_option( 'sep_exclude', $excluded );
 		$this->excluded = $excluded;
 	}
 
-	protected function get_excluded() {
+	public function get_excluded() {
 		if ( null === $this->excluded ) {
 			$this->excluded = get_option( 'sep_exclude' );
 			if ( ! is_array( $this->excluded ) ) {
