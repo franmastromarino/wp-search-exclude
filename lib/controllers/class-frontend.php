@@ -2,7 +2,8 @@
 
 namespace QuadLayers\QLSE\Controllers;
 
-use QuadLayers\QLSE\Models\Excluded as Models_Excluded;
+use QuadLayers\QLSE\Models\Settings as Models_Settings;
+
 
 /**
  * Frontend Class
@@ -20,6 +21,9 @@ class Frontend {
 	}
 
 	public function search_filter( $query ) {
+		$settings_entity = Models_Settings::instance()->get();
+		$excluded        = $settings_entity->get( 'excluded' );
+
 		$exclude =
 			( ! is_admin() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) )
 			&& $query->is_search
@@ -28,7 +32,7 @@ class Frontend {
 		$exclude = apply_filters( 'searchexclude_filter_search', $exclude, $query );
 
 		if ( $exclude ) {
-			$query->set( 'post__not_in', array_merge( array(), Models_Excluded::instance()->get() ) );
+			$query->set( 'post__not_in', array_merge( array(), $excluded ) );
 		}
 
 		return $query;

@@ -27,7 +27,8 @@
 		"quadlayers/wp-notice-plugin-promote": "*",
 		"quadlayers/wp-plugin-table-links": "*",
 		"quadlayers/wp-plugin-suggestions": "*",
-		"quadlayers/wp-plugin-install-tab": "*"
+		"quadlayers/wp-plugin-install-tab": "*",
+		"franmastromarino/wp-orm": "dev-dev-refactor"
 	},
 	"autoload": {
 		"classmap": [
