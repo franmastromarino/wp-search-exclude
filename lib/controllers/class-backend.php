@@ -11,7 +11,6 @@ use QuadLayers\QLSE\Helpers;
 class Backend {
 
 	protected static $instance;
-	protected $excluded;
 
 	private function __construct() {
 		/**

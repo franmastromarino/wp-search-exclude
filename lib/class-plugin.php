@@ -2,10 +2,11 @@
 
 namespace QuadLayers\QLSE;
 
+use QuadLayers\QLSE\Models\Settings as Models_Settings;
+
 final class Plugin {
 
 	private static $instance;
-	protected $excluded;
 
 	private function __construct() {
 		/**
@@ -22,9 +23,11 @@ final class Plugin {
 	}
 
 	public function activate() {
-		$excluded = Controllers\Backend::instance()->get_excluded();
+		$settings_entity = Models_Settings::instance()->get();
+		$excluded        = $settings_entity->get( 'excluded' );
+
 		if ( empty( $excluded ) ) {
-			Controllers\Backend::instance()->save_excluded( array() );
+			Models_Settings::instance()->save( array() );
 		}
 	}
 
