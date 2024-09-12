@@ -273,8 +273,7 @@ class Backend {
 	}
 
 	public function options() {
-		$settings_entity = Models_Settings::instance()->get();
-		$excluded        = $settings_entity->get( 'excluded' );
+		$excluded = Models_Settings::instance()->get()->get( 'excluded' );
 
 		$query = new \WP_Query(
 			array(
@@ -307,7 +306,8 @@ class Backend {
 		$this->check_permissions();
 
 		$excluded = Helpers::filter_posts_ids( $sep_exclude );
-		Models_Settings::instance()->save( $excluded );
+
+		Models_Settings::instance()->save( array( 'excluded' => $excluded ) );
 	}
 
 	private function check_permissions() {

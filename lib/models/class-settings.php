@@ -16,7 +16,7 @@ class Settings {
 
 	public function __construct() {
 		$builder = ( new SingleRepositoryBuilder() )
-		->setTable( 'search_exclude_settings' )
+		->setTable( 'qlse_settings' )
 		->setEntity( Settings_Entity::class );
 
 		$this->repository = $builder->getRepository();
