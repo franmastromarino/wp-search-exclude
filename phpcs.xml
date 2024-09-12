@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
-<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Example Project" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/squizlabs/PHP_CodeSniffer/master/phpcs.xsd">
+<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Example Project"
+	xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/squizlabs/PHP_CodeSniffer/master/phpcs.xsd">
 	<description>QuadLayers PHPCS rules</description>
 	<!-- Configs -->
 	<config name="minimum_supported_wp_version" value="4.7" />
@@ -19,7 +20,7 @@
 	<!-- Include the WordPress-Extra standard. -->
 	<rule ref="WordPress-Extra">
 		<!-- <exclude name="WordPress.WP.GlobalVariablesOverride" /> -->
-		<exclude name="WordPress.WP.I18n.MissingTranslatorsComment"/>
+		<exclude name="WordPress.WP.I18n.MissingTranslatorsComment" />
 		<!-- <exclude name="WordPress.PHP.YodaConditions.NotYoda" /> -->
 		<exclude name="Squiz.Commenting.FileComment.Missing" />
 		<exclude name="Squiz.Commenting.ClassComment.Missing" />
@@ -31,14 +32,29 @@
 		<exclude name="WooCommerce.Commenting.CommentHooks.MissingHookComment" />
 	</rule>
 	<!-- Add in some extra rules from other standards. -->
-	<rule ref="Generic.CodeAnalysis.UnusedFunctionParameter"/>
-	<rule ref="Generic.Commenting.Todo"/>
+	<rule ref="Generic.CodeAnalysis.UnusedFunctionParameter" />
+	<rule ref="Generic.Commenting.Todo" />
 	<!-- Exclude WooCommerce-Core rules. -->
 	<rule ref="WooCommerce-Core">
 		<exclude name="Core.Commenting.CommentTags.AuthorTag" />
 		<exclude name="WordPress.PHP.DontExtract" />
 		<exclude name="Generic.Arrays.DisallowShortArraySyntax" />
 		<exclude name="Generic.WhiteSpace.ScopeIndent.Incorrect" />
+	</rule>
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array">
+				<element value="search-exclude" />
+			</property>
+		</properties>
+	</rule>
+
+	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+		<properties>
+			<property name="prefixes" type="array">
+				<element value="search-exclude" />
+			</property>
+		</properties>
 	</rule>
 	<!-- Exclude tests folder. -->
 	<rule ref="PHPCompatibility">
