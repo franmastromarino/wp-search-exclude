@@ -27,7 +27,7 @@ class Settings {
 	 *
 	 * @return string
 	 */
-	public function get_table():string {
+	public function get_table(): string {
 		return $this->repository->getTable();
 	}
 

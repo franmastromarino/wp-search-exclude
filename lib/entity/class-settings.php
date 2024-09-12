@@ -8,5 +8,4 @@ class Settings extends SingleEntity {
 	public $excluded                  = array();
 	public static $sanitizeProperties = array();
 	public static $validateProperties = array();
-
 }
