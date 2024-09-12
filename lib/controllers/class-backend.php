@@ -273,8 +273,10 @@ class Backend {
 	}
 
 	public function options() {
-		$excluded = Models_Settings::instance()->get();
-		$query    = new \WP_Query(
+		$settings_entity = Models_Settings::instance()->get();
+		$excluded        = $settings_entity->get( 'excluded' );
+
+		$query = new \WP_Query(
 			array(
 				'post_type'   => 'any',
 				'post_status' => 'any',
