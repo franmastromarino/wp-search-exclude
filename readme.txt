@@ -1,11 +1,11 @@
 === Search Exclude ===
 Contributors: quadlayers, pronskiy, williamdodson, stevelock
 Donate link: https://quadlayers.com/
-Tags: admin, plugin, search, search exclude
+Tags: search exclude, search, wordpress search, exclude post, exclude page
 Requires at least: 4.7
 Requires PHP: 5.6
 Tested up to: 6.6
-Stable tag: 2.1.4
+Stable tag: 2.1.5
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -98,8 +98,11 @@ function filterForProducts($exclude, $query)
 
 == Changelog ==
 
-= 2.1.4 =
+= 2.1.5 =
 * Refactor
+
+= 2.1.4 =
+* WordPress compatibility
 
 = 2.1.3 =
 * WordPress compatibility
