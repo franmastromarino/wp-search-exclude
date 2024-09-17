@@ -21,6 +21,7 @@ class Backend {
 		/**
 		* Admin menu
 		*/
+		add_action( 'admin_notices', array( $this, 'bulk_action_notices' ) );
 		add_action( 'admin_init', array( $this, 'save_options' ) );
 		// add_action( 'admin_menu', array( $this, 'admin_menu' ) );
 		/**
@@ -50,7 +51,6 @@ class Backend {
 		/**
 		 * Display messages
 		 */
-		add_action( 'admin_notices', array( $this, 'bulk_action_notices' ) );
 		add_filter(
 			'removable_query_args',
 			function ( $args ) {
@@ -100,7 +100,8 @@ class Backend {
 			_n(
 				'%d item updated.',
 				'%d items updated.',
-				$count
+				$count,
+				'search-exclude'
 			),
 			$count
 		);
@@ -305,7 +306,8 @@ class Backend {
 		$this->check_permissions();
 
 		$excluded = Helpers::filter_posts_ids( $sep_exclude );
-		Models_Settings::instance()->save( $excluded );
+
+		Models_Settings::instance()->save( array( 'excluded' => $excluded ) );
 	}
 
 	private function check_permissions() {
@@ -313,7 +315,7 @@ class Backend {
 
 		if ( ! current_user_can( $capability ) ) {
 			wp_die(
-				'Not enough permissions',
+				esc_html__( 'Not enough permissions', 'search-exclude' ),
 				'',
 				array(
 					'response' => 401,

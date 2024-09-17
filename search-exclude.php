@@ -4,7 +4,7 @@
  * Plugin Name:             Search Exclude
  * Plugin URI:              https://wordpress.org/plugins/search-exclude
  * Description:             Hide any page or post from the WordPress search results by checking off the checkbox.
- * Version:                 2.1.3
+ * Version:                 2.1.5
  * Text Domain:             search-exclude
  * Author:                  QuadLayers
  * Author URI:              https://quadlayers.com
@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 */
 
 define( 'QLSE_PLUGIN_NAME', 'Search Exclude' );
-define( 'QLSE_PLUGIN_VERSION', '2.1.3' );
+define( 'QLSE_PLUGIN_VERSION', '2.1.5' );
 define( 'QLSE_PLUGIN_FILE', __FILE__ );
 define( 'QLSE_PLUGIN_DIR', __DIR__ . DIRECTORY_SEPARATOR );
 define( 'QLSE_DOMAIN', 'qlse' );
@@ -43,6 +43,10 @@ define( 'QLSE_DEVELOPER', false );
  * Load composer autoload
  */
 require_once __DIR__ . '/vendor/autoload.php';
+/**
+ * Load compatibility
+ */
+require_once __DIR__ . '/compatibility/old.php';
 /**
  * Load vendor_packages packages
  */
