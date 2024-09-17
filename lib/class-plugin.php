@@ -20,6 +20,8 @@ final class Plugin {
 
 		Controllers\Backend::instance();
 		Controllers\Frontend::instance();
+		Controllers\Metabox::instance();
+		Controllers\Settings::instance();
 	}
 
 	public function activate() {

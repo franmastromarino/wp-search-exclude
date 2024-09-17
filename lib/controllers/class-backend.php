@@ -22,7 +22,7 @@ class Backend {
 		* Admin menu
 		*/
 		add_action( 'admin_init', array( $this, 'save_options' ) );
-		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
+		// add_action( 'admin_menu', array( $this, 'admin_menu' ) );
 		/**
 		 * Edit post metabox
 		 */
@@ -248,16 +248,15 @@ class Backend {
 		$this->view( 'metabox', array( 'exclude' => $this->is_excluded( $post->ID ) ) );
 	}
 
-	public function admin_menu() {
-		add_options_page(
-			'Search Exclude',
-			'Search Exclude',
-			'manage_options',
-			'search_exclude',
-			array( $this, 'options' )
-		);
-	}
-
+	// public function admin_menu() {
+	// add_options_page(
+	// 'Search Exclude',
+	// 'Search Exclude',
+	// 'manage_options',
+	// 'search_exclude',
+	// array( $this, 'options' )
+	// );
+	// }
 
 	public function post_save( $post_id ) {
 		if ( ! isset( $_POST['sep'] ) ) {
@@ -275,8 +274,7 @@ class Backend {
 	public function options() {
 		$settings_entity = Models_Settings::instance()->get();
 		$excluded        = $settings_entity->get( 'excluded' );
-
-		$query = new \WP_Query(
+		$query           = new \WP_Query(
 			array(
 				'post_type'   => 'any',
 				'post_status' => 'any',
