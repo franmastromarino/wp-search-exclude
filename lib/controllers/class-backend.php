@@ -234,7 +234,6 @@ class Backend {
 				),
 			)
 		);
-
 	}
 
 	public function enqueue_scripts() {
@@ -252,7 +251,6 @@ class Backend {
 		wp_enqueue_media();
 		wp_enqueue_style( 'qlse-backend' );
 		wp_enqueue_script( 'qlse-backend' );
-
 	}
 
 	// public function enqueue_style() {
@@ -289,8 +287,13 @@ class Backend {
 
 	public function add_meta_box() {
 		$current_screen = get_current_screen();
-		/* Do not show meta box on service pages */
+		// Do not show meta box on service pages.
 		if ( empty( $current_screen->post_type ) ) {
+			return;
+		}
+		// Check if this is the Gutenberg editor.
+		if ( function_exists( 'use_block_editor_for_post_type' ) && use_block_editor_for_post_type( $current_screen->post_type ) ) {
+			// This is the Gutenberg editor, don't add the meta box.
 			return;
 		}
 		add_meta_box( 'sep_metabox_id', 'Search Exclude', array( $this, 'metabox' ), null, 'side' );
