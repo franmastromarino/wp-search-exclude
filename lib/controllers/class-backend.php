@@ -4,6 +4,8 @@ namespace QuadLayers\QLSE\Controllers;
 
 use QuadLayers\QLSE\Models\Settings as Models_Settings;
 use QuadLayers\QLSE\Helpers;
+use QuadLayers\QLSE\Api\Entities\Settings\Get as API_Settings_Get;
+
 
 /**
  * Backend Class
@@ -16,8 +18,10 @@ class Backend {
 		/**
 		 * Admin scripts
 		 */
-		add_action( 'admin_print_scripts-edit.php', array( $this, 'enqueue_scripts' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_style' ) );
+
+		add_action( 'admin_enqueue_scripts', array( $this, 'register_scripts' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+		// add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_style' ) );
 		/**
 		* Admin menu
 		*/
@@ -187,30 +191,78 @@ class Backend {
 		include QLSE_PLUGIN_DIR . '/lib/views/' . $view . '.php';
 	}
 
-	public function enqueue_scripts() {
+	public function register_scripts() {
+		global $wp_version;
 
 		$backend = include QLSE_PLUGIN_DIR . 'build/backend/js/index.asset.php';
+		$store   = include QLSE_PLUGIN_DIR . 'build/store/js/index.asset.php';
 
-		wp_enqueue_script(
-			'search-exclude-backend',
+		wp_register_script(
+			'qlse-backend',
 			plugins_url( '/build/backend/js/index.js', QLSE_PLUGIN_FILE ),
-			array_merge(
-				$backend['dependencies'],
-				array( 'inline-edit-post' )
-			),
+			// array_merge(
+			// $backend['dependencies'],
+			// array( 'inline-edit-post' )
+			// ),
+			$backend['dependencies'],
 			$backend['version'],
 			true
 		);
-	}
 
-	public function enqueue_style() {
-		wp_enqueue_style(
-			'search-exclude-backend',
+		wp_register_style(
+			'qlse-backend',
 			plugins_url( '/build/backend/css/style.css', QLSE_PLUGIN_FILE ),
 			array(),
 			QLSE_PLUGIN_VERSION
 		);
+
+		wp_register_script(
+			'qlse-store',
+			plugins_url( '/build/store/js/index.js', QLSE_PLUGIN_FILE ),
+			$store['dependencies'],
+			$store['version'],
+			true
+		);
+
+		wp_localize_script(
+			'qlse-store',
+			'qlseStore',
+			array(
+				'WP_VERSION'       => $wp_version,
+				'QLSE_REST_ROUTES' => array(
+					'excluded' => API_Settings_Get::get_rest_path(),
+				),
+			)
+		);
+
 	}
+
+	public function enqueue_scripts() {
+		$current_screen  = get_current_screen()->id;
+		$allowed_screens = array( 'edit-page', 'edit-post', 'settings_page_search_exclude' );
+
+		if (
+			! in_array( $current_screen, $allowed_screens ) ) {
+		return;
+		}
+
+		/**
+		 * Load admin scripts
+		 */
+		wp_enqueue_media();
+		wp_enqueue_style( 'qlse-backend' );
+		wp_enqueue_script( 'qlse-backend' );
+
+	}
+
+	// public function enqueue_style() {
+	// wp_enqueue_style(
+	// 'qlse-backend',
+	// plugins_url( '/build/backend/css/style.css', QLSE_PLUGIN_FILE ),
+	// array(),
+	// QLSE_PLUGIN_VERSION
+	// );
+	// }
 
 	public function add_quick_edit_custom_box( $column_name ) {
 		if ( 'search_exclude' == $column_name ) {

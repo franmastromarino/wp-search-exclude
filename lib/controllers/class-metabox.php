@@ -17,7 +17,7 @@ class Metabox {
 		 * Register metabox assets
 		 */
 		wp_register_script(
-			'search-exclude-metabox',
+			'qlse-metabox',
 			plugins_url( '/build/metabox/js/index.js', QLSE_PLUGIN_FILE ),
 			$content['dependencies'],
 			$content['version'],
@@ -25,7 +25,7 @@ class Metabox {
 		);
 
 		wp_register_style(
-			'search-exclude-metabox',
+			'qlse-metabox',
 			plugins_url( '/build/metabox/css/style.css', QLSE_PLUGIN_FILE ),
 			array(
 				'search-exclude-components',
@@ -37,8 +37,8 @@ class Metabox {
 
 	public function enqueue_scripts() {
 
-		wp_enqueue_script( 'search-exclude-metabox' );
-		wp_enqueue_style( 'search-exclude-metabox' );
+		wp_enqueue_script( 'qlse-metabox' );
+		wp_enqueue_style( 'qlse-metabox' );
 	}
 
 

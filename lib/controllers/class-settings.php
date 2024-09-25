@@ -19,7 +19,7 @@ class Settings {
 		 * Register settings assets
 		 */
 		wp_register_script(
-			'search-exclude-settings',
+			'qlse-settings',
 			plugins_url( '/build/settings/js/index.js', QLSE_PLUGIN_FILE ),
 			$content['dependencies'],
 			$content['version'],
@@ -27,10 +27,10 @@ class Settings {
 		);
 
 		wp_register_style(
-			'search-exclude-settings',
+			'qlse-settings',
 			plugins_url( '/build/settings/css/style.css', QLSE_PLUGIN_FILE ),
 			array(
-				'search-exclude-components',
+				'qlse-components',
 				'wp-components',
 			),
 			QLSE_PLUGIN_VERSION
@@ -56,9 +56,15 @@ class Settings {
 
 
 	public function enqueue_scripts() {
+		$current_screen  = get_current_screen()->id;
+		$allowed_screens = 'settings_page_search_exclude';
 
-		wp_enqueue_script( 'search-exclude-settings' );
-		wp_enqueue_style( 'search-exclude-settings' );
+		if ( $current_screen !== $allowed_screens ) {
+			return;
+		}
+
+		wp_enqueue_script( 'qlse-settings' );
+		wp_enqueue_style( 'qlse-settings' );
 	}
 
 
