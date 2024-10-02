@@ -21,8 +21,8 @@ const config = {
 				if ('@qlse/backend' === request) {
 					return ['qlse', 'backend'];
 				}
-				if ('@qlse/metabox' === request) {
-					return ['qlse', 'metabox'];
+				if ('@qlse/gutenberg' === request) {
+					return ['qlse', 'gutenberg'];
 				}
 				if ('@qlse/store' === request) {
 					return ['qlse', 'store'];
@@ -34,8 +34,8 @@ const config = {
 				if ('@qlse/backend' === request) {
 					return 'qlse-backend';
 				}
-				if ('@qlse/metabox' === request) {
-					return 'qlse-metabox';
+				if ('@qlse/gutenberg' === request) {
+					return 'qlse-gutenberg';
 				}
 				if ('@qlse/store' === request) {
 					return 'qlse-store';
@@ -48,22 +48,22 @@ const config = {
 };
 
 module.exports = [
-	//Backend
-	// {
-	// 	...config,
-	// 	entry: {
-	// 		index: path.resolve(__dirname, 'packages', './backend/index.js'),
-	// 	},
-	// 	output: {
-	// 		filename: '[name].js',
-	// 		path: path.resolve(__dirname, 'build/backend/js/'),
-	// 		library: ['qlse', 'backend'],
-	// 		libraryTarget: 'window',
-	// 	},
-	// 	optimization: {
-	// 		minimize: isProduction,
-	// 	},
-	// },
+	// Backend
+	{
+		...config,
+		entry: {
+			index: path.resolve(__dirname, 'packages', './backend/index.js'),
+		},
+		output: {
+			filename: '[name].js',
+			path: path.resolve(__dirname, 'build/backend/js/'),
+			library: ['qlse', 'backend'],
+			libraryTarget: 'window',
+		},
+		optimization: {
+			minimize: isProduction,
+		},
+	},
 	// {
 	// 	...config,
 	// 	entry: {
@@ -102,16 +102,16 @@ module.exports = [
 	// 		}),
 	// 	],
 	// },
-	//Metabox
+	//Gutenberg
 	{
 		...config,
 		entry: {
-			index: path.resolve(__dirname, 'packages', './metabox/index.js'),
+			index: path.resolve(__dirname, 'packages', './gutenberg/index.js'),
 		},
 		output: {
 			filename: '[name].js',
-			path: path.resolve(__dirname, 'build/metabox/js/'),
-			library: ['qlse', 'metabox'],
+			path: path.resolve(__dirname, 'build/gutenberg/js/'),
+			library: ['qlse', 'gutenberg'],
 			libraryTarget: 'window',
 		},
 		optimization: {
@@ -121,11 +121,11 @@ module.exports = [
 	// {
 	// 	...config,
 	// 	entry: {
-	// 		index: path.resolve(__dirname, 'packages', './metabox/style.scss'),
+	// 		index: path.resolve(__dirname, 'packages', './gutenberg/style.scss'),
 	// 	},
 	// 	output: {
 	// 		filename: '[name].js',
-	// 		path: path.resolve(__dirname, 'build/metabox/css/'),
+	// 		path: path.resolve(__dirname, 'build/gutenbergrg/css/'),
 	// 	},
 	// 	module: {
 	// 		...config.module,

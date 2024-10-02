@@ -16,7 +16,7 @@ class Post extends Base {
 		try {
 			// throw new \Exception( esc_html__( 'Unknown error.', 'ai-copilot' ), 500 );
 			$body = json_decode( $request->get_body(), true );
-			error_log( 'body: ' . json_encode( $body, JSON_PRETTY_PRINT ) );
+
 			$status = Models_Settings::instance()->save( $body );
 			return $this->handle_response( $status );
 

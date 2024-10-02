@@ -19,9 +19,7 @@ export const getSettingsDisplay = async () => {
 export const getSettingsExcluded = async () => {
 	try {
 		const response = await fetchRestApiSettings({ route: 'excluded' });
-		console.log('response: ', response);
-
-		return actions.setSettingsExcluded(response);
+		return actions.setSettingsExcluded(response?.excluded);
 	} catch (error) {
 		console.error(error);
 	}

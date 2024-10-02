@@ -2,7 +2,7 @@
 
 namespace QuadLayers\QLSE\Controllers;
 
-class Metabox {
+class Gutenberg {
 
 	protected static $instance;
 
@@ -12,21 +12,21 @@ class Metabox {
 	}
 
 	public function register_scripts() {
-		$content = include QLSE_PLUGIN_DIR . 'build/metabox/js/index.asset.php';
+		$content = include QLSE_PLUGIN_DIR . 'build/gutenberg/js/index.asset.php';
 		/**
-		 * Register metabox assets
+		 * Register gutenberg assets
 		 */
 		wp_register_script(
-			'qlse-metabox',
-			plugins_url( '/build/metabox/js/index.js', QLSE_PLUGIN_FILE ),
+			'qlse-gutenberg',
+			plugins_url( '/build/gutenberg/js/index.js', QLSE_PLUGIN_FILE ),
 			$content['dependencies'],
 			$content['version'],
 			true
 		);
 
 		wp_register_style(
-			'qlse-metabox',
-			plugins_url( '/build/metabox/css/style.css', QLSE_PLUGIN_FILE ),
+			'qlse-gutenberg',
+			plugins_url( '/build/gutenberg/css/style.css', QLSE_PLUGIN_FILE ),
 			array(
 				'search-exclude-components',
 				'wp-components',
@@ -37,8 +37,8 @@ class Metabox {
 
 	public function enqueue_scripts() {
 
-		wp_enqueue_script( 'qlse-metabox' );
-		wp_enqueue_style( 'qlse-metabox' );
+		wp_enqueue_script( 'qlse-gutenberg' );
+		wp_enqueue_style( 'qlse-gutenberg' );
 	}
 
 

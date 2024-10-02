@@ -194,20 +194,20 @@ class Backend {
 	public function register_scripts() {
 		global $wp_version;
 
-		// $backend = include QLSE_PLUGIN_DIR . 'build/backend/js/index.asset.php';
-		$store = include QLSE_PLUGIN_DIR . 'build/store/js/index.asset.php';
+		$backend = include QLSE_PLUGIN_DIR . 'build/backend/js/index.asset.php';
+		$store   = include QLSE_PLUGIN_DIR . 'build/store/js/index.asset.php';
 
-		// wp_register_script(
-		// 'qlse-backend',
-		// plugins_url( '/build/backend/js/index.js', QLSE_PLUGIN_FILE ),
-		// array_merge(
-		// $backend['dependencies'],
-		// array( 'inline-edit-post' )
-		// ),
-		// $backend['dependencies'],
-		// $backend['version'],
-		// true
-		// );
+		wp_register_script(
+			'qlse-backend',
+			plugins_url( '/build/backend/js/index.js', QLSE_PLUGIN_FILE ),
+			array_merge(
+				$backend['dependencies'],
+				array( 'inline-edit-post' )
+			),
+			$backend['dependencies'],
+			$backend['version'],
+			true
+		);
 
 		// wp_register_style(
 		// 'qlse-backend',

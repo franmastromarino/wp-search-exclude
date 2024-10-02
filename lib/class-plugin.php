@@ -22,7 +22,7 @@ final class Plugin {
 		Routes_Library::instance();
 		Controllers\Backend::instance();
 		Controllers\Frontend::instance();
-		Controllers\Metabox::instance();
+		Controllers\Gutenberg::instance();
 		Controllers\Settings::instance();
 	}
 
