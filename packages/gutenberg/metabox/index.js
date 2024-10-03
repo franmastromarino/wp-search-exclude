@@ -2,8 +2,9 @@ import { __ } from '@wordpress/i18n';
 import { PluginDocumentSettingPanel } from '@wordpress/editor';
 import { CheckboxControl } from '@wordpress/components';
 import { useState, useEffect, useRef } from '@wordpress/element';
-import { useExcludedSettings, useCurrentPostMeta } from '@qlse/store';
+import { useExcludedSettings } from '@qlse/store';
 import { select, subscribe } from '@wordpress/data';
+import { useExcludeMeta } from '../../helpers/hooks';
 
 export const Metabox = () => {
 	const {
@@ -11,7 +12,8 @@ export const Metabox = () => {
 		hasResolvedSettingsExcluded,
 		saveExcludedSettings,
 	} = useExcludedSettings();
-	const { meta, setMeta } = useCurrentPostMeta();
+
+	const { exclude, setExclude } = useExcludeMeta();
 
 	const [postExcluded, setPostExcluded] = useState([]);
 	const postId = select('core/editor').getCurrentPostId();
@@ -49,9 +51,7 @@ export const Metabox = () => {
 				  )
 				: [...prevExcluded, postId];
 
-			setMeta({
-				_exclude_from_search: updatedExcluded ? updatedExcluded : false,
-			});
+			setExclude(exclude ? undefined : true);
 
 			return updatedExcluded;
 		});

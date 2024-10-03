@@ -1,6 +1,12 @@
 import { __ } from '@wordpress/i18n';
 import { useState, useEffect } from '@wordpress/element';
-import { useExcludedSettings, usePostTypes } from '@qlse/store';
+import { useExcludedSettings } from '@qlse/store';
+import {
+	usePostsByIds,
+	usePostsByIdsAnyPostType,
+	usePostTypes,
+	useValidPostTypes,
+} from '../../helpers/hooks';
 
 export const SearchExclude = () => {
 	const {
@@ -10,36 +16,29 @@ export const SearchExclude = () => {
 		isResolvingSettingsExcluded,
 	} = useExcludedSettings();
 
-	const {
-		postTypes: pages,
-		isResolvingPostTypes: isResolvingPages,
-		hasResolvedPostTypes: hasResolvedPages,
-	} = usePostTypes();
+	const { posts, isResolvingPosts, hasPosts, hasResolvedPosts } =
+		usePostsByIdsAnyPostType(excluded);
 
-	const {
-		postTypes: posts,
-		isResolvingPostTypes: isResolvingPosts,
-		hasResolvedPostTypes: hasResolvedPost,
-	} = usePostTypes({ postType: 'post' });
+	console.log('test: ', posts);
 
 	const [postExcluded, setPostExcluded] = useState([]);
 	const [excludedPreview, setExcludedPreview] = useState([]);
 	const isExcludedChanged =
 		excluded.sort().join(' ') !== excludedPreview.sort().join(' ');
 
-	const isLoadingPostTypes =
-		isResolvingPages || isResolvingPosts || isResolvingSettingsExcluded;
+	const test2 = useValidPostTypes();
 
-	const hasLoadedPostTypes =
-		hasResolvedPost && hasResolvedPages && hasResolvedSettingsExcluded;
+	console.log('test2: ', test2);
+
+	const isLoadingPostTypes = isResolvingPosts || isResolvingSettingsExcluded;
+
+	const hasLoadedPostTypes = hasResolvedPosts && hasResolvedSettingsExcluded;
 
 	useEffect(() => {
 		if (hasLoadedPostTypes) {
 			const excludedSet = new Set(excluded);
 
-			setPostExcluded(
-				[...posts, ...pages].filter(({ id }) => excludedSet.has(id))
-			);
+			setPostExcluded([...posts].filter(({ id }) => excludedSet.has(id)));
 
 			setExcludedPreview(excluded);
 		}
