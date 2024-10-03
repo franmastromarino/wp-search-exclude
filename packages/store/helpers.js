@@ -7,6 +7,8 @@ import { apiFetch } from '../helpers/apiFetch.js';
  */
 import { useSelect, useDispatch } from '@wordpress/data';
 import { addQueryArgs } from '@wordpress/url';
+import { store as editorStore } from '@wordpress/editor';
+import { store as coreStore } from '@wordpress/core-data';
 /**
  * Internal dependencies
  */
@@ -93,6 +95,76 @@ export function useExcludedSettings() {
 		setSettingsExcluded,
 	};
 }
+
+export const useCurrentPostMeta = (props = {}) => {
+	const { context = {} } = props;
+
+	const { meta, postType, postId } = useSelect(
+		(select) => {
+			const { getEditedEntityRecord } = select(coreStore);
+			const { getCurrentPostId, getCurrentPostType } =
+				select(editorStore);
+			const {
+				postType = getCurrentPostType(),
+				postId = getCurrentPostId(),
+			} = context;
+			const post = getEditedEntityRecord('postType', postType, postId);
+			return {
+				meta: post?.meta,
+				postType,
+				postId,
+			};
+		},
+		[context]
+	);
+	const { editEntityRecord } = useDispatch(coreStore);
+	const setMeta = (newValue) => {
+		editEntityRecord('postType', postType, postId, {
+			meta: {
+				...meta,
+				...newValue,
+			},
+		});
+	};
+	return {
+		meta,
+		setMeta,
+	};
+};
+
+export const usePostTypes = ({ postType = 'page', limit = -1 } = {}) => {
+	return useSelect(
+		(select) => {
+			const { getEntityRecords, isResolving, hasFinishedResolution } =
+				select(coreStore);
+			// Build the query parameters
+			const query = {
+				per_page: limit,
+			};
+
+			const params = ['postType', postType, query];
+			const postTypes = getEntityRecords(...params);
+			const isResolvingPostTypes = isResolving(
+				'getEntityRecords',
+				params
+			);
+
+			const hasResolvedPostTypes = hasFinishedResolution(
+				'getEntityRecords',
+				params
+			);
+			const hasPostTypes = !isResolvingPostTypes && !!postTypes?.length;
+
+			return {
+				postTypes,
+				isResolvingPostTypes,
+				hasPostTypes,
+				hasResolvedPostTypes,
+			};
+		},
+		[postType, limit]
+	);
+};
 
 export const isVersionLessThan = (currentVersion, targetVersion) => {
 	const currentParts = currentVersion.split('.').map(Number);

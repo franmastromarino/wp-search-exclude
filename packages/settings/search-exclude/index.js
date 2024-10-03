@@ -1,50 +1,49 @@
 import { __ } from '@wordpress/i18n';
 import { useState, useEffect } from '@wordpress/element';
-import { useExcludedSettings } from '@qlse/store';
-import { select, subscribe } from '@wordpress/data';
+import { useExcludedSettings, usePostTypes } from '@qlse/store';
 
 export const SearchExclude = () => {
 	const {
 		settingsExcluded: excluded,
 		saveExcludedSettings,
 		hasResolvedSettingsExcluded,
+		isResolvingSettingsExcluded,
 	} = useExcludedSettings();
 
-	const [postsAndPages, setPostAndPages] = useState([]);
+	const {
+		postTypes: pages,
+		isResolvingPostTypes: isResolvingPages,
+		hasResolvedPostTypes: hasResolvedPages,
+	} = usePostTypes();
+
+	const {
+		postTypes: posts,
+		isResolvingPostTypes: isResolvingPosts,
+		hasResolvedPostTypes: hasResolvedPost,
+	} = usePostTypes({ postType: 'post' });
+
 	const [postExcluded, setPostExcluded] = useState([]);
 	const [excludedPreview, setExcludedPreview] = useState([]);
 	const isExcludedChanged =
 		excluded.sort().join(' ') !== excludedPreview.sort().join(' ');
 
-	//TODO: add a loading true until both posts and pages finished loading
-	useEffect(() => {
-		const unsubscribe = subscribe(() => {
-			const pages =
-				select('core').getEntityRecords('postType', 'page', {
-					per_page: -1,
-				}) || [];
-			const posts =
-				select('core').getEntityRecords('postType', 'post', {
-					per_page: -1,
-				}) || [];
+	const isLoadingPostTypes =
+		isResolvingPages || isResolvingPosts || isResolvingSettingsExcluded;
 
-			setPostAndPages([...posts, ...pages]);
-		});
-
-		return () => unsubscribe();
-	}, []);
+	const hasLoadedPostTypes =
+		hasResolvedPost && hasResolvedPages && hasResolvedSettingsExcluded;
 
 	useEffect(() => {
-		if (hasResolvedSettingsExcluded && postsAndPages?.length > 0) {
+		if (hasLoadedPostTypes) {
 			const excludedSet = new Set(excluded);
 
 			setPostExcluded(
-				postsAndPages.filter(({ id }) => excludedSet.has(id))
+				[...posts, ...pages].filter(({ id }) => excludedSet.has(id))
 			);
 
 			setExcludedPreview(excluded);
 		}
-	}, [hasResolvedSettingsExcluded, excluded, postsAndPages]);
+	}, [hasLoadedPostTypes, excluded]);
 
 	const handleChange = (postId) => {
 		setExcludedPreview((prevExcluded) => {
@@ -65,7 +64,7 @@ export const SearchExclude = () => {
 	return (
 		<div className="wrap">
 			<h2>{__('Search Exclude', 'search-excluded')}</h2>
-			{!hasResolvedSettingsExcluded ? (
+			{isLoadingPostTypes ? (
 				<div>{__('Loading…', 'search-excluded')}</div>
 			) : postExcluded?.length === 0 ? (
 				<p>
