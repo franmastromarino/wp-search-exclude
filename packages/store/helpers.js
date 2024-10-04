@@ -154,7 +154,7 @@ export const applyThunkMiddleware = (store) => {
 			throw new Error(
 				__(
 					'The created instance does not contain a valid store.',
-					'insta-gallery'
+					'search-exclude'
 				)
 			);
 		}

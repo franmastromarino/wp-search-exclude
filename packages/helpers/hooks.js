@@ -1,3 +1,6 @@
+/**
+ * WordPress dependencies
+ */
 import { useSelect, useDispatch } from '@wordpress/data';
 import { store as editorStore } from '@wordpress/editor';
 import { store as coreStore } from '@wordpress/core-data';
@@ -14,6 +17,7 @@ export const useExcludeMeta = (props = {}) => {
 		setExclude,
 	};
 };
+
 export const useCurrentPostMeta = (props = {}) => {
 	const { context = {} } = props;
 	const { meta, postType, postId } = useSelect(
@@ -47,87 +51,6 @@ export const useCurrentPostMeta = (props = {}) => {
 		meta,
 		setMeta,
 	};
-};
-
-export const usePostTypes = ({ postType = 'page', limit = -1 } = {}) => {
-	return useSelect(
-		(select) => {
-			const { getEntityRecords, isResolving, hasFinishedResolution } =
-				select(coreStore);
-			// Build the query parameters
-			const query = {
-				per_page: limit,
-			};
-
-			const params = ['postType', postType, query];
-			const postTypes = getEntityRecords(...params);
-			const isResolvingPostTypes = isResolving(
-				'getEntityRecords',
-				params
-			);
-
-			const hasResolvedPostTypes = hasFinishedResolution(
-				'getEntityRecords',
-				params
-			);
-			const hasPostTypes = !isResolvingPostTypes && !!postTypes?.length;
-
-			return {
-				postTypes,
-				isResolvingPostTypes,
-				hasPostTypes,
-				hasResolvedPostTypes,
-			};
-		},
-		[postType, limit]
-	);
-};
-export const usePostsByIds = (ids = [], postType = 'post') => {
-	return useSelect(
-		(select) => {
-			const { getEntityRecords, isResolving, hasFinishedResolution } =
-				select(coreStore);
-
-			const query = {
-				include: ids,
-				per_page: ids.length,
-				_fields: ['id', 'title', 'date', 'link'],
-			};
-
-			const posts = getEntityRecords('postType', postType, query);
-
-			const isResolvingPosts = isResolving('getEntityRecords', [
-				'postType',
-				postType,
-				query,
-			]);
-
-			const hasResolvedPosts = hasFinishedResolution('getEntityRecords', [
-				'postType',
-				postType,
-				query,
-			]);
-
-			const hasPosts = !isResolvingPosts && !!posts?.length;
-
-			const postsData = hasPosts
-				? posts.map(({ id, title, date, link }) => ({
-						id,
-						title: title.rendered,
-						date,
-						link,
-				  }))
-				: [];
-
-			return {
-				posts: postsData,
-				isResolvingPosts,
-				hasPosts,
-				hasResolvedPosts,
-			};
-		},
-		[ids.join(','), postType]
-	);
 };
 
 export const useValidPostTypes = () => {
@@ -265,99 +188,3 @@ export const usePostsByIdsAnyPostType = (ids = [], validPostTypes = []) => {
 		hasResolvedPosts,
 	};
 };
-
-// export const usePostsByIdsAnyPostType = (ids = []) => {
-// 	return useSelect(
-// 		(select) => {
-// 			const {
-// 				getEntityRecords,
-// 				isResolving,
-// 				hasFinishedResolution,
-// 				getPostTypes,
-// 			} = select(coreStore);
-
-// 			// Fetch all post types
-// 			const postTypes = getPostTypes({ per_page: -1 });
-
-// 			// Check if post types are resolving
-// 			const isResolvingPostTypes = isResolving('getPostTypes', [
-// 				{ per_page: -1 },
-// 			]);
-// 			const hasResolvedPostTypes = hasFinishedResolution('getPostTypes', [
-// 				{ per_page: -1 },
-// 			]);
-
-// 			if (isResolvingPostTypes || !hasResolvedPostTypes || !postTypes) {
-// 				return {
-// 					posts: [],
-// 					isResolvingPosts: true,
-// 					hasPosts: false,
-// 					hasResolvedPosts: false,
-// 				};
-// 			}
-
-// 			// Filter out post types that are not public or not hierarchical
-// 			const validPostTypes = postTypes.filter(
-// 				(postType) =>
-// 					postType.viewable && !postType.slug.startsWith('wp_')
-// 			);
-
-// 			// Initialize variables to collect posts and resolution states
-// 			let allPosts = [];
-// 			let isResolvingPosts = false;
-// 			let hasResolvedPosts = true;
-
-// 			// Loop through each post type and fetch posts with the given IDs
-// 			validPostTypes.forEach((postType) => {
-// 				const query = {
-// 					include: ids,
-// 					per_page: ids.length,
-// 					_fields: ['id', 'title', 'date', 'link', 'type'],
-// 				};
-
-// 				const posts = getEntityRecords(
-// 					'postType',
-// 					postType.slug,
-// 					query
-// 				);
-
-// 				const isResolvingCurrent = isResolving('getEntityRecords', [
-// 					'postType',
-// 					postType.slug,
-// 					query,
-// 				]);
-
-// 				const hasResolvedCurrent = hasFinishedResolution(
-// 					'getEntityRecords',
-// 					['postType', postType.slug, query]
-// 				);
-
-// 				// Update resolving states
-// 				isResolvingPosts = isResolvingPosts || isResolvingCurrent;
-// 				hasResolvedPosts = hasResolvedPosts && hasResolvedCurrent;
-
-// 				if (posts && posts.length) {
-// 					allPosts = allPosts.concat(
-// 						posts.map(({ id, title, date, link, type }) => ({
-// 							id,
-// 							title: title.rendered,
-// 							date,
-// 							link,
-// 							postType: type,
-// 						}))
-// 					);
-// 				}
-// 			});
-
-// 			const hasPosts = !isResolvingPosts && allPosts.length > 0;
-
-// 			return {
-// 				posts: allPosts,
-// 				isResolvingPosts,
-// 				hasPosts,
-// 				hasResolvedPosts,
-// 			};
-// 		},
-// 		[ids.join(',')] // Dependency array to re-run the hook when IDs change
-// 	);
-// };

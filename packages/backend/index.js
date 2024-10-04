@@ -1,5 +1,5 @@
 /**
- * External dependencies
+ * Internal dependencies
  */
 import { onDocumentLoaded } from '../helpers/onDocumentLoaded';
 

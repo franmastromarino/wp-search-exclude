@@ -1,12 +1,17 @@
+/**
+ * External dependencies
+ */
+import { useExcludedSettings } from '@qlse/store';
+/**
+ * WordPress dependencies
+ */
 import { __ } from '@wordpress/i18n';
 import { useState, useEffect } from '@wordpress/element';
-import { useExcludedSettings } from '@qlse/store';
-import {
-	usePostsByIds,
-	usePostsByIdsAnyPostType,
-	usePostTypes,
-	useValidPostTypes,
-} from '../../helpers/hooks';
+/**
+ * Internal dependencies
+ */
+import { usePostsByIdsAnyPostType } from '../../helpers/hooks';
+import { formatDate } from '../../helpers/formatDate';
 
 export const SearchExclude = () => {
 	const {
@@ -16,19 +21,12 @@ export const SearchExclude = () => {
 		isResolvingSettingsExcluded,
 	} = useExcludedSettings();
 
-	const { posts, isResolvingPosts, hasPosts, hasResolvedPosts } =
+	const { posts, isResolvingPosts, hasResolvedPosts } =
 		usePostsByIdsAnyPostType(excluded);
 
-	console.log('test: ', posts);
-
-	const [postExcluded, setPostExcluded] = useState([]);
 	const [excludedPreview, setExcludedPreview] = useState([]);
 	const isExcludedChanged =
 		excluded.sort().join(' ') !== excludedPreview.sort().join(' ');
-
-	const test2 = useValidPostTypes();
-
-	console.log('test2: ', test2);
 
 	const isLoadingPostTypes = isResolvingPosts || isResolvingSettingsExcluded;
 
@@ -36,10 +34,6 @@ export const SearchExclude = () => {
 
 	useEffect(() => {
 		if (hasLoadedPostTypes) {
-			const excludedSet = new Set(excluded);
-
-			setPostExcluded([...posts].filter(({ id }) => excludedSet.has(id)));
-
 			setExcludedPreview(excluded);
 		}
 	}, [hasLoadedPostTypes, excluded]);
@@ -59,98 +53,121 @@ export const SearchExclude = () => {
 		e.preventDefault();
 		await saveExcludedSettings(excludedPreview);
 	};
+	const postTypes = [...new Set(posts.map((post) => post.postType))];
 
 	return (
 		<div className="wrap">
-			<h2>{__('Search Exclude', 'search-excluded')}</h2>
+			<h2>{__('Search Exclude', 'search-exclude')}</h2>
 			{isLoadingPostTypes ? (
-				<div>{__('Loading…', 'search-excluded')}</div>
-			) : postExcluded?.length === 0 ? (
+				<span>{__('Loading…', 'search-exclude')}</span>
+			) : posts?.length === 0 ? (
 				<p>
 					{__(
 						'No items excluded from the search results yet.',
-						'search-excluded'
+						'search-exclude'
 					)}
 				</p>
 			) : (
 				<>
-					<h3>
+					<span>
 						{__(
 							'The following items are excluded from the search results',
-							'search-excluded'
+							'search-exclude'
 						)}
-					</h3>
+					</span>
 					<form
 						method="post"
 						action="options-general.php?page=search_exclude"
 						encType="multipart/form-data"
 						onSubmit={(e) => handleSubmit(e)}
 					>
-						<table
-							className="wp-list-table widefat fixed pages"
-							cellSpacing="0"
-						>
-							<thead>
-								<tr>
-									<th
-										className="check-column"
-										scope="col"
-									></th>
-									<th
-										className="column-title manage-column"
-										scope="col"
-									>
-										<span>
-											{__('Title', 'search-excluded')}
-										</span>
-									</th>
-									<th
-										className="manage-column column-type"
-										scope="col"
-									>
-										<span>
-											{__('Type', 'search-excluded')}
-										</span>
-									</th>
-								</tr>
-							</thead>
-							<tbody>
-								{postExcluded.map((item) => (
-									<tr
-										key={item.id}
-										className={`post-${item.id} page type-${item.type}`}
-									>
-										<th
-											className="check-column"
-											scope="row"
-										>
-											<input
-												type="checkbox"
-												onChange={() =>
-													handleChange(item.id)
-												}
-												value={item.id}
-												defaultChecked={true}
-											/>
-										</th>
-										<td className="post-title page-title column-title">
-											<strong>
-												<a
-													title={`Edit “${item.title?.raw}”`}
-													href={`/wp-admin/post.php?post=${item.id}&action=edit`}
-													className="row-title"
+						{postTypes.map((type, index) => (
+							<div key={index}>
+								<h3>
+									{type[0].toUpperCase() + type.substring(1)}
+								</h3>
+								<table
+									className="wp-list-table widefat fixed pages"
+									cellSpacing="0"
+								>
+									<thead>
+										<tr>
+											<th
+												className="check-column"
+												scope="col"
+											></th>
+											<th
+												className="column-title manage-column"
+												scope="col"
+											>
+												<span>
+													{__(
+														'Title',
+														'search-exclude'
+													)}
+												</span>
+											</th>
+											<th
+												className="manage-column column-type"
+												scope="col"
+											>
+												<span>
+													{__(
+														'Date',
+														'search-exclude'
+													)}
+												</span>
+											</th>
+										</tr>
+									</thead>
+									<tbody>
+										{posts
+											.filter(
+												(post) => post.postType === type
+											)
+											.map((post) => (
+												<tr
+													key={post.id}
+													className={`post-${post.id} page type-${post.type}`}
 												>
-													{item.title?.raw}
-												</a>
-											</strong>
-										</td>
-										<td className="author column-author">
-											{item.type}
-										</td>
-									</tr>
-								))}
-							</tbody>
-						</table>
+													<th
+														className="check-column"
+														scope="row"
+													>
+														<input
+															type="checkbox"
+															onChange={() =>
+																handleChange(
+																	post.id
+																)
+															}
+															value={post.id}
+															defaultChecked={
+																true
+															}
+														/>
+													</th>
+													<td className="post-title page-title column-title">
+														<strong>
+															<a
+																title={`Edit “${post.title}”`}
+																href={`/wp-admin/post.php?post=${post.id}&action=edit`}
+																className="row-title"
+															>
+																{post.title}
+															</a>
+														</strong>
+													</td>
+													<td className="author column-date">
+														{formatDate(post.date)}
+													</td>
+												</tr>
+											))}
+									</tbody>
+								</table>
+							</div>
+						))}
+
 						<p className="submit">
 							<input
 								type="submit"

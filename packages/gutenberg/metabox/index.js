@@ -1,9 +1,18 @@
+/**
+ * External dependencies
+ */
+import { useExcludedSettings } from '@qlse/store';
+/**
+ * WordPress dependencies
+ */
 import { __ } from '@wordpress/i18n';
 import { PluginDocumentSettingPanel } from '@wordpress/editor';
 import { CheckboxControl } from '@wordpress/components';
 import { useState, useEffect, useRef } from '@wordpress/element';
-import { useExcludedSettings } from '@qlse/store';
 import { select, subscribe } from '@wordpress/data';
+/**
+ * Internal dependencies
+ */
 import { useExcludeMeta } from '../../helpers/hooks';
 
 export const Metabox = () => {

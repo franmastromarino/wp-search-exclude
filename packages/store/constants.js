@@ -1,4 +1,4 @@
-export const STORE_NAME = 'qlwapp/menu/store';
+export const STORE_NAME = 'qlse/settings';
 
 export const INITIAL_STATE = {
 	display: {

@@ -1,8 +1,11 @@
 /**
+ * WordPress dependencies
+ */
+import { combineReducers } from '@wordpress/data';
+/**
  * Internal dependencies
  */
 import { INITIAL_STATE } from './constants';
-import { combineReducers } from '@wordpress/data';
 
 export function display(state = INITIAL_STATE.display, action) {
 	switch (action.type) {

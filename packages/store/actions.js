@@ -3,6 +3,9 @@
  */
 import { __, sprintf } from '@wordpress/i18n';
 import { store as noticesStore } from '@wordpress/notices';
+/**
+ * Internal dependencies
+ */
 import { fetchRestApiSettings } from './helpers';
 import { deepMerge } from '../helpers/deepMerge';
 

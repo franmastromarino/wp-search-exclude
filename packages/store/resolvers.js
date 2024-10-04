@@ -3,7 +3,6 @@
 /**
  * Internal dependencies
  */
-
 import { fetchRestApiSettings } from './helpers';
 import * as actions from './actions';
 
