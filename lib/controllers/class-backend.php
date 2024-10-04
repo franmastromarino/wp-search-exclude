@@ -21,7 +21,7 @@ class Backend {
 
 		add_action( 'admin_enqueue_scripts', array( $this, 'register_scripts' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
-		// add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_style' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_style' ) );
 		/**
 		* Admin menu
 		*/
@@ -253,14 +253,14 @@ class Backend {
 		wp_enqueue_script( 'qlse-backend' );
 	}
 
-	// public function enqueue_style() {
-	// wp_enqueue_style(
-	// 'qlse-backend',
-	// plugins_url( '/build/backend/css/style.css', QLSE_PLUGIN_FILE ),
-	// array(),
-	// QLSE_PLUGIN_VERSION
-	// );
-	// }
+	public function enqueue_style() {
+	wp_enqueue_style(
+		'qlse-backend',
+		plugins_url( '/build/backend/css/style.css', QLSE_PLUGIN_FILE ),
+		array(),
+		QLSE_PLUGIN_VERSION
+	);
+	}
 
 	public function add_quick_edit_custom_box( $column_name ) {
 		if ( 'search_exclude' == $column_name ) {
