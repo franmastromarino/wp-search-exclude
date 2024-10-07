@@ -71,7 +71,7 @@ export const SearchExclude = () => {
 				<>
 					<span>
 						{__(
-							'The following items are excluded from the search results',
+							'The following items are excluded from the search results.',
 							'search-exclude'
 						)}
 					</span>

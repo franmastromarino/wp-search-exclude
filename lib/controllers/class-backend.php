@@ -27,7 +27,6 @@ class Backend {
 		*/
 		add_action( 'admin_notices', array( $this, 'bulk_action_notices' ) );
 		add_action( 'admin_init', array( $this, 'save_options' ) );
-		// add_action( 'admin_menu', array( $this, 'admin_menu' ) );
 		/**
 		 * Edit post metabox
 		 */
@@ -303,16 +302,6 @@ class Backend {
 		wp_nonce_field( 'sep_metabox_nonce', 'metabox_nonce' );
 		$this->view( 'metabox', array( 'exclude' => $this->is_excluded( $post->ID ) ) );
 	}
-
-	// public function admin_menu() {
-	// add_options_page(
-	// 'Search Exclude',
-	// 'Search Exclude',
-	// 'manage_options',
-	// 'search_exclude',
-	// array( $this, 'options' )
-	// );
-	// }
 
 	public function post_save( $post_id ) {
 		if ( ! isset( $_POST['sep'] ) ) {

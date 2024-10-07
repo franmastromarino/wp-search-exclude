@@ -10,7 +10,6 @@ class Settings {
 		add_action( 'admin_enqueue_scripts', array( $this, 'register_scripts' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
-
 	}
 
 	public function register_scripts() {
