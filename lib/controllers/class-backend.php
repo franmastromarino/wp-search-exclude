@@ -238,10 +238,10 @@ class Backend {
 
 	public function enqueue_scripts() {
 		$current_screen  = get_current_screen()->id;
-		$allowed_screens = array( 'edit-page', 'edit-post', 'settings_page_search_exclude' );
+		$allowed_screens = array( 'edit-page', 'edit-post' );
 
 		if (
-			! in_array( $current_screen, $allowed_screens ) ) {
+			! in_array( $current_screen, $allowed_screens, true ) ) {
 		return;
 		}
 

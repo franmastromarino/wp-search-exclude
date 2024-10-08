@@ -1,0 +1,20 @@
+.qlse__multiple-selector {
+	// display: flex;
+	label {
+		display: none !important;
+	}
+
+	.components-form-token-field {
+		width: 267px !important;
+	}
+
+	.components-flex {
+		padding: calc(2px) !important;
+		gap: calc(2px) !important;
+		background-color: white !important;
+	}
+
+	.components-spacer {
+		display: none !important;
+	}
+}

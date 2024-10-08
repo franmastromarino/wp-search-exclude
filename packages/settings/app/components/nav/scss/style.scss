@@ -1,0 +1,10 @@
+.qlse__nav-tab-li {
+	margin: 0;
+	a {
+		&:active,
+		&:focus {
+			outline: none;
+			box-shadow: none;
+		}
+	}
+}
