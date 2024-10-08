@@ -2,6 +2,7 @@
 
 namespace QuadLayers\QLSE;
 
+use QuadLayers\QLSE\Api\Entities\Settings\Routes_Library;
 use QuadLayers\QLSE\Models\Settings as Models_Settings;
 
 final class Plugin {
@@ -18,8 +19,11 @@ final class Plugin {
 		 */
 		add_action( 'qlse_activation', array( $this, 'activate' ) );
 
+		Routes_Library::instance();
 		Controllers\Backend::instance();
 		Controllers\Frontend::instance();
+		Controllers\Gutenberg::instance();
+		Controllers\Settings::instance();
 	}
 
 	public function activate() {

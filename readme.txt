@@ -98,6 +98,9 @@ function filterForProducts($exclude, $query)
 
 == Changelog ==
 
+= 2.1.6 =
+* Refactor update 
+
 = 2.1.5 =
 * Refactor
 
