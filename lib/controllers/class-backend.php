@@ -209,12 +209,12 @@ class Backend {
 			true
 		);
 
-		// wp_register_style(
-		// 'qlse-backend',
-		// plugins_url( '/build/backend/css/style.css', QLSE_PLUGIN_FILE ),
-		// array(),
-		// QLSE_PLUGIN_VERSION
-		// );
+		wp_register_style(
+			'qlse-backend',
+			plugins_url( '/build/backend/css/style.css', QLSE_PLUGIN_FILE ),
+			array(),
+			QLSE_PLUGIN_VERSION
+		);
 
 		wp_register_script(
 			'qlse-store',
@@ -238,10 +238,10 @@ class Backend {
 
 	public function enqueue_scripts() {
 		$current_screen  = get_current_screen()->id;
-		$allowed_screens = array( 'edit-page', 'edit-post' );
+		$allowed_screens = array( 'edit-page', 'edit-post', 'settings_page_search_exclude' );
 
 		if (
-			! in_array( $current_screen, $allowed_screens, true ) ) {
+			! in_array( $current_screen, $allowed_screens ) ) {
 		return;
 		}
 
@@ -249,17 +249,20 @@ class Backend {
 		 * Load admin scripts
 		 */
 		wp_enqueue_media();
-		wp_enqueue_style( 'qlse-backend' );
 		wp_enqueue_script( 'qlse-backend' );
 	}
 
 	public function enqueue_style() {
-	wp_enqueue_style(
-		'qlse-backend',
-		plugins_url( '/build/backend/css/style.css', QLSE_PLUGIN_FILE ),
-		array(),
-		QLSE_PLUGIN_VERSION
-	);
+		$current_screen  = get_current_screen()->id;
+		$allowed_screens = array( 'edit-page', 'edit-post', 'edit-product' );
+
+		if (
+			! in_array( $current_screen, $allowed_screens ) ) {
+		return;
+		}
+
+		wp_enqueue_style( 'qlse-backend' );
+
 	}
 
 	public function add_quick_edit_custom_box( $column_name ) {
