@@ -1,20 +1,20 @@
+import { useSettings } from '@qlse/store';
 import { __ } from '@wordpress/i18n';
-const { QLSE_DISPLAY_POST_TYPES, QLSE_DISPLAY_TAXONOMIES } = qlseSettings;
-
-import { useDisplaySettings } from '@qlse/store';
+import {
+	QLSE_DISPLAY_POST_TYPES,
+	QLSE_DISPLAY_TAXONOMIES,
+} from '../../../../helpers/constants';
 import PostTypesSelector from '../../components/post-types-selector';
 import Tab from '../tab';
 import MultipleSelector from '../../components/multiple-selector';
 import TaxonomyTermsSelector from '../../components/taxonomy-terms-selector';
 
 const Content = () => {
-	const { setSettingsDisplay, settingsDisplay, saveDisplaySettings } =
-		useDisplaySettings();
+	const { setSettings, settings, saveSettings } = useSettings();
 
 	const handleSubmit = async () => {
-		return await saveDisplaySettings(settingsDisplay);
+		return await saveSettings(settings);
 	};
-
 	const targetOptions = [
 		{ label: __('All', 'search-exclude'), value: 'all' },
 		{ label: __('Home', 'search-exclude'), value: 'home' },
@@ -22,25 +22,7 @@ const Content = () => {
 		{ label: __('Search', 'search-exclude'), value: 'search' },
 		{ label: __('404', 'search-exclude'), value: 'error' },
 	];
-
-	const deviceOptions = [
-		{
-			value: 'all',
-			label: __('Show in all devices', 'search-exclude'),
-		},
-		{
-			value: 'mobile',
-			label: __('Show in mobile devices', 'search-exclude'),
-		},
-		{
-			value: 'desktop',
-			label: __('Show in desktop devices', 'search-exclude'),
-		},
-		{
-			value: 'hide',
-			label: __('Hide in all devices', 'search-exclude'),
-		},
-	];
+	console.log('QLSE_DISPLAY_TAXONOMIES: ', QLSE_DISPLAY_TAXONOMIES);
 
 	const includeExcludeOptions = [
 		{
@@ -54,36 +36,10 @@ const Content = () => {
 	];
 
 	return (
-		<Tab settings={settingsDisplay} onSubmit={handleSubmit}>
+		<Tab settings={settings} onSubmit={handleSubmit}>
 			<table className="form-table">
 				<tbody>
-					<tr>
-						<th scope="row">{__('Devices', 'search-exclude')}</th>
-						<td>
-							<select
-								style={{ width: '350px' }}
-								data-placeholder={__(
-									'Choose target&hellip;',
-									'search-exclude'
-								)}
-								value={settingsDisplay.devices}
-								onChange={(e) => {
-									setSettingsDisplay({
-										devices: e.target.value,
-									});
-								}}
-							>
-								{deviceOptions.map((option) => (
-									<option
-										key={option.value}
-										value={option.value}
-									>
-										{option.label}
-									</option>
-								))}
-							</select>
-						</td>
-					</tr>
+					<tr></tr>
 					<tr>
 						<th scope="row">{__('Target', 'search-exclude')}</th>
 						<td>
@@ -95,9 +51,9 @@ const Content = () => {
 							>
 								<select
 									style={{ width: '80px' }}
-									value={settingsDisplay.target.include}
+									value={settings.target.include}
 									onChange={(e) => {
-										setSettingsDisplay({
+										setSettings({
 											target: {
 												include: e.target.value,
 											},
@@ -115,9 +71,9 @@ const Content = () => {
 								</select>
 								<MultipleSelector
 									options={targetOptions}
-									value={settingsDisplay.target.ids}
+									value={settings.target.ids}
 									onChange={(newValues) => {
-										setSettingsDisplay({
+										setSettings({
 											target: {
 												ids: newValues,
 											},
@@ -152,12 +108,12 @@ const Content = () => {
 												style={{ width: '80px' }}
 												name={postType.name?.include}
 												value={
-													settingsDisplay.entries[
+													settings.entries[
 														postType.name
 													]?.include
 												}
 												onChange={(e) => {
-													setSettingsDisplay({
+													setSettings({
 														entries: {
 															[postType.name]: {
 																include:
@@ -183,10 +139,8 @@ const Content = () => {
 												key={postType.name}
 												label={postType.label}
 												postType={postType.name}
-												settings={settingsDisplay}
-												onChangeSettings={
-													setSettingsDisplay
-												}
+												settings={settings}
+												onChangeSettings={setSettings}
 											/>
 										</div>
 									</td>
@@ -213,12 +167,12 @@ const Content = () => {
 												style={{ width: '80px' }}
 												name={taxonomy.name?.include}
 												value={
-													settingsDisplay.taxonomies[
+													settings.taxonomies[
 														taxonomy.name
 													]?.include
 												}
 												onChange={(e) => {
-													setSettingsDisplay({
+													setSettings({
 														taxonomies: {
 															[taxonomy.name]: {
 																include:
@@ -244,10 +198,8 @@ const Content = () => {
 												key={taxonomy.name}
 												label={taxonomy.label}
 												taxonomy={taxonomy.name}
-												settings={settingsDisplay}
-												onChangeSettings={
-													setSettingsDisplay
-												}
+												settings={settings}
+												onChangeSettings={setSettings}
 											/>
 										</div>
 									</td>

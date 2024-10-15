@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-import { useExcludedSettings } from '@qlse/store';
+import { useSettings } from '@qlse/store';
 /**
  * WordPress dependencies
  */
@@ -14,29 +14,25 @@ import { usePostsByIdsAnyPostType } from '../../../../helpers/hooks';
 import { formatDate } from '../../../../helpers/formatDate';
 
 const Content = () => {
-	const {
-		settingsExcluded: excluded,
-		saveExcludedSettings,
-		hasResolvedSettingsExcluded,
-		isResolvingSettingsExcluded,
-	} = useExcludedSettings();
+	const { settings, saveSettings, hasResolvedSettings, isResolvingSettings } =
+		useSettings();
 
 	const { posts, isResolvingPosts, hasResolvedPosts } =
-		usePostsByIdsAnyPostType(excluded);
+		usePostsByIdsAnyPostType(settings.excluded);
 
 	const [excludedPreview, setExcludedPreview] = useState([]);
 	const isExcludedChanged =
-		excluded.sort().join(' ') !== excludedPreview.sort().join(' ');
+		settings.excluded.sort().join(' ') !== excludedPreview.sort().join(' ');
 
-	const isLoadingPostTypes = isResolvingPosts || isResolvingSettingsExcluded;
+	const isLoadingPostTypes = isResolvingPosts || isResolvingSettings;
 
-	const hasLoadedPostTypes = hasResolvedPosts && hasResolvedSettingsExcluded;
+	const hasLoadedPostTypes = hasResolvedPosts && hasResolvedSettings;
 
 	useEffect(() => {
 		if (hasLoadedPostTypes) {
-			setExcludedPreview(excluded);
+			setExcludedPreview(settings.excluded);
 		}
-	}, [hasLoadedPostTypes, excluded]);
+	}, [hasLoadedPostTypes, settings]);
 
 	const handleChange = (postId) => {
 		setExcludedPreview((prevExcluded) => {
@@ -51,13 +47,12 @@ const Content = () => {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		await saveExcludedSettings(excludedPreview);
+		await saveSettings(excludedPreview);
 	};
 	const postTypes = [...new Set(posts.map((post) => post.postType))];
 
 	return (
-		<div className="wrap">
-			<h2>{__('Search Exclude', 'search-exclude')}</h2>
+		<div className="wrap about-wrap full-width-layout qlwrap">
 			{isLoadingPostTypes ? (
 				<span>{__('Loading…', 'search-exclude')}</span>
 			) : posts?.length === 0 ? (
@@ -173,7 +168,7 @@ const Content = () => {
 								type="submit"
 								className="button-primary"
 								disabled={!isExcludedChanged}
-								value="Save Changes"
+								value={__('Save', 'search-exclude')}
 							/>
 						</p>
 					</form>

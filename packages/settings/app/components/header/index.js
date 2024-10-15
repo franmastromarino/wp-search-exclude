@@ -1,13 +1,12 @@
 /**
  * External dependencies
  */
-// import {
-// 	QLSE_PLUGIN_NAME,
-// 	QLSE_PREMIUM_SELL_URL,
-// 	QLSE_DEMO_URL,
-// 	QLSE_DOCUMENTATION_URL,
-// 	getPluginURL,
-// } from '../../../../helpers';
+import {
+	QLSE_PLUGIN_NAME,
+	QLSE_PREMIUM_SELL_URL,
+	QLSE_DEMO_URL,
+	QLSE_DOCUMENTATION_URL,
+} from '../../../../helpers/constants';
 /**
  * WordPress dependencies
  */
@@ -17,8 +16,7 @@ import { getPluginURL } from '../../../../helpers/getPluginUrl';
 const Header = () => {
 	return (
 		<div className="wrap about-wrap full-width-layout">
-			<h2>{__('Search Exclude', 'search-exclude')}</h2>
-			{/* <h1>{QLSE_PLUGIN_NAME}</h1>
+			<h1>{QLSE_PLUGIN_NAME}</h1>
 			<p className="about-text">
 				{sprintf(
 					__(
@@ -40,7 +38,7 @@ const Header = () => {
 				<a href={QLSE_DOCUMENTATION_URL} target="__blank">
 					{__('Documentation', 'search-exclude')}
 				</a>
-			</p> */}
+			</p>
 			<a
 				href="https://quadlayers.com/?utm_source=qlse_admin"
 				target="_blank"

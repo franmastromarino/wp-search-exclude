@@ -29,12 +29,14 @@ class Settings {
 			$content['version'],
 			true
 		);
+
 		wp_register_style(
 			'qlse-settings',
 			plugins_url( '/build/settings/css/style.css', QLSE_PLUGIN_FILE ),
-			$content['dependencies'],
-			$content['version'],
-			true
+			array(
+				'wp-components',
+			),
+			QLSE_PLUGIN_VERSION
 		);
 
 		wp_localize_script(
@@ -44,7 +46,10 @@ class Settings {
 				'QLSE_DISPLAY_POST_TYPES' => $entity_options->get_entries(),
 				'QLSE_DISPLAY_TAXONOMIES' => $entity_options->get_taxonomies(),
 				'QLSE_PLUGIN_URL'         => plugins_url( '/', QLSE_PLUGIN_FILE ),
-
+				'QLSE_PLUGIN_NAME'        => QLSE_PLUGIN_NAME,
+				'QLSE_PREMIUM_SELL_URL'   => QLSE_PREMIUM_SELL_URL,
+				'QLSE_DEMO_URL'           => QLSE_DEMO_URL,
+				'QLSE_DOCUMENTATION_URL'  => QLSE_DOCUMENTATION_URL,
 			)
 		);
 	}

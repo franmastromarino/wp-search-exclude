@@ -228,10 +228,9 @@ class Backend {
 			'qlse-store',
 			'qlseStore',
 			array(
-				'WP_VERSION'       => $wp_version,
-				'QLSE_REST_ROUTES' => array(
-					'excluded' => API_Settings_Get::get_rest_path(),
-				),
+				'WP_VERSION'      => $wp_version,
+				'QLSE_REST_ROUTE' => API_Settings_Get::get_rest_path(),
+
 			)
 		);
 	}

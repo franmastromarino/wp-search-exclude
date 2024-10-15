@@ -6,19 +6,11 @@
 import { fetchRestApiSettings } from './helpers';
 import * as actions from './actions';
 
-export const getSettingsDisplay = async () => {
+export const getSettings = async () => {
 	try {
-		const response = await fetchRestApiSettings({ route: 'display' });
-		return actions.setSettingsDisplay(response);
-	} catch (error) {
-		console.error(error);
-	}
-};
+		const response = await fetchRestApiSettings();
 
-export const getSettingsExcluded = async () => {
-	try {
-		const response = await fetchRestApiSettings({ route: 'excluded' });
-		return actions.setSettingsExcluded(response?.excluded);
+		return actions.setSettings(response);
 	} catch (error) {
 		console.error(error);
 	}

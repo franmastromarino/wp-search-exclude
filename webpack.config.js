@@ -27,6 +27,9 @@ const config = {
 				if ('@qlse/store' === request) {
 					return ['qlse', 'store'];
 				}
+				if ('@qlse/settings' === request) {
+					return ['qlse', 'settings'];
+				}
 				// Return the default value for other requests
 				return external;
 			},
@@ -39,6 +42,9 @@ const config = {
 				}
 				if ('@qlse/store' === request) {
 					return 'qlse-store';
+				}
+				if ('@qlse/settings' === request) {
+					return 'qlse-settings';
 				}
 				// Return the default value for other requests
 				return external;

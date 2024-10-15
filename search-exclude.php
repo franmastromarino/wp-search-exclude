@@ -38,6 +38,7 @@ define( 'QLSE_DOCUMENTATION_URL', 'https://quadlayers.com/documentation/search-e
 define( 'QLSE_DOCUMENTATION_API_URL', 'https://quadlayers.com/documentation/search-exclude/api/?utm_source=qlse_admin' );
 define( 'QLSE_DOCUMENTATION_ACCOUNT_URL', 'https://quadlayers.com/documentation/search-exclude/account/?utm_source=qlse_admin' );
 define( 'QLSE_GROUP_URL', 'https://www.facebook.com/groups/quadlayers' );
+define( 'QLSE_PREMIUM_SELL_URL', '' );
 define( 'QLSE_DEVELOPER', false );
 /**
  * Load composer autoload

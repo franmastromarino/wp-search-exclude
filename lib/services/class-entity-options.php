@@ -16,7 +16,6 @@ class Entity_Options {
 			'entries'    => $this->get_display_entries(),
 			'taxonomies' => $this->get_display_taxonomies(),
 			'target'     => $this->base,
-			'devices'    => 'all',
 		);
 		return $args;
 	}

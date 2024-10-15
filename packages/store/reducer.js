@@ -1,28 +1,12 @@
 /**
- * WordPress dependencies
- */
-import { combineReducers } from '@wordpress/data';
-/**
  * Internal dependencies
  */
 import { INITIAL_STATE } from './constants';
 
-export function display(state = INITIAL_STATE.display, action) {
+export default function settings(state = INITIAL_STATE, action) {
 	switch (action.type) {
-		case 'SET_DISPLAY':
+		case 'SET_SETTINGS':
 			return action.payload(state);
 	}
 	return state;
 }
-export function excluded(state = INITIAL_STATE.excluded, action) {
-	switch (action.type) {
-		case 'SET_EXCLUDED':
-			return action.payload(state);
-	}
-	return state;
-}
-
-export default combineReducers({
-	display,
-	excluded,
-});

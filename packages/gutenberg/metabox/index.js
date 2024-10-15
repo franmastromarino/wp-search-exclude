@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-import { useExcludedSettings } from '@qlse/store';
+import { useSettings } from '@qlse/store';
 /**
  * WordPress dependencies
  */
@@ -9,30 +9,26 @@ import { __ } from '@wordpress/i18n';
 import { PluginDocumentSettingPanel } from '@wordpress/editor';
 import { CheckboxControl } from '@wordpress/components';
 import { useState, useEffect, useRef } from '@wordpress/element';
-import { select, subscribe } from '@wordpress/data';
+import { select, subscribe, useDispatch } from '@wordpress/data';
 /**
  * Internal dependencies
  */
 import { useExcludeMeta } from '../../helpers/hooks';
 
 export const Metabox = () => {
-	const {
-		settingsExcluded: excluded,
-		hasResolvedSettingsExcluded,
-		saveExcludedSettings,
-	} = useExcludedSettings();
+	const { settings, setSettings, hasResolvedSettings, saveSettings } =
+		useSettings();
 
 	const { exclude, setExclude } = useExcludeMeta();
-
-	const [postExcluded, setPostExcluded] = useState([]);
+	// const [postExcluded, setPostExcluded] = useState([]);
 	const postId = select('core/editor').getCurrentPostId();
 	const isSavingRef = useRef(false);
 
-	useEffect(() => {
-		if (hasResolvedSettingsExcluded) {
-			setPostExcluded(excluded);
-		}
-	}, [hasResolvedSettingsExcluded]);
+	// useEffect(() => {
+	// 	if (hasResolvedSettings) {
+	// 		setPostExcluded(settings.excluded);
+	// 	}
+	// }, [hasResolvedSettings]);
 
 	useEffect(() => {
 		const unsubscribe = subscribe(() => {
@@ -41,7 +37,7 @@ export const Metabox = () => {
 
 			if (isSavingPost && !isAutosavingPost && !isSavingRef.current) {
 				isSavingRef.current = true;
-				saveExcludedSettings(postExcluded);
+				saveSettings(settings);
 			}
 
 			if (!isSavingPost) {
@@ -50,20 +46,18 @@ export const Metabox = () => {
 		});
 
 		return () => unsubscribe();
-	}, [postExcluded]);
+	}, [settings]);
 
 	const handleChange = () => {
-		setPostExcluded((prevExcluded) => {
-			const updatedExcluded = prevExcluded.includes(postId)
-				? prevExcluded.filter(
-						(excludedPostId) => excludedPostId !== postId
-				  )
-				: [...prevExcluded, postId];
+		const excluded = settings.excluded;
 
-			setExclude(exclude ? undefined : true);
+		const updatedExcluded = excluded.includes(postId)
+			? excluded.filter((excludedPostId) => excludedPostId !== postId)
+			: [...excluded, postId];
 
-			return updatedExcluded;
-		});
+		setExclude(exclude ? undefined : true);
+
+		setSettings({ excluded: updatedExcluded });
 	};
 
 	return (
@@ -71,7 +65,7 @@ export const Metabox = () => {
 			<CheckboxControl
 				__nextHasNoMarginBottom
 				label={__('Exclude from Search Results', 'search-exclude')}
-				checked={postExcluded?.includes(postId)}
+				checked={settings.excluded?.includes(postId)}
 				onChange={handleChange}
 			/>
 		</PluginDocumentSettingPanel>

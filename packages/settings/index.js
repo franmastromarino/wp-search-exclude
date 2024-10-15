@@ -1,7 +1,6 @@
 /**
  * External dependencies
  */
-import { SearchExclude } from './search-exclude';
 import { onDocumentLoaded } from '../helpers/onDocumentLoaded';
 /**
  * WordPress dependencies
