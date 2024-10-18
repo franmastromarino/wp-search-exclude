@@ -33,6 +33,8 @@ const PostTypesSelector = ({ postType, settings, onChangeSettings }) => {
 		searchTerm: debouncedSearchTerm,
 	});
 
+	console.log('postTypesSearch: ', postTypesSearch);
+
 	const updateDebouncedSearchTerm = useDebounce((term) => {
 		setDebouncedSearchTerm(term);
 	}, 300);

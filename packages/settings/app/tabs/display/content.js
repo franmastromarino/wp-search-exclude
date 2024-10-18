@@ -22,7 +22,6 @@ const Content = () => {
 		{ label: __('Search', 'search-exclude'), value: 'search' },
 		{ label: __('404', 'search-exclude'), value: 'error' },
 	];
-	console.log('QLSE_DISPLAY_TAXONOMIES: ', QLSE_DISPLAY_TAXONOMIES);
 
 	const includeExcludeOptions = [
 		{
