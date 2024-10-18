@@ -15,9 +15,6 @@ class Frontend {
 		/**
 		 * Search filter
 		 */
-		if ( is_admin() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
-		return;
-		}
 
 		add_filter( 'pre_get_posts', array( $this, 'search_filter' ) );
 		add_filter( 'bbp_has_replies_query', array( $this, 'bbpress_flag_replies' ) );
@@ -26,6 +23,10 @@ class Frontend {
 	public function search_filter( $query ) {
 		$settings_entity = Models_Settings::instance()->get();
 		$settings        = $settings_entity;
+
+		if ( is_admin() || wp_doing_ajax() || defined( 'REST_REQUEST' ) && REST_REQUEST ) {
+			return;
+		}
 
 		$exclude =
 		( ! is_admin() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) )
@@ -51,12 +52,10 @@ class Frontend {
 							$post__not_in = $this->exclude_all_posts_of_type( $post_type );
 							$query->set( 'post__not_in', $post__not_in );
 						}
-					} else {
-						if ( $include ) {
+					} elseif ( $include ) {
 							$post__in = array_merge( $post__in, $ids );
-						} else {
-							$post__not_in = array_merge( $post__not_in, $ids );
-						}
+					} else {
+						$post__not_in = array_merge( $post__not_in, $ids );
 					}
 				}
 			}
