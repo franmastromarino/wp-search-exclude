@@ -117,7 +117,6 @@ class Backend {
 	}
 
 	public function bulk_action_handler( $redirect, $doaction, $object_ids ) {
-
 		/**
 		 * Let's remove query args first
 		 */
@@ -134,6 +133,7 @@ class Backend {
 		 * Do something for "Make Draft" bulk action
 		 */
 		$exclude = ( 'se_hide' === $doaction );
+
 		$this->save_post_ids_to_search_exclude( $object_ids, $exclude );
 
 		$redirect = add_query_arg(
@@ -146,7 +146,6 @@ class Backend {
 	}
 
 	public function bulk_edit( $bulk_array ) {
-
 		$bulk_array['se_hide'] = esc_html__( 'Hide from Search', 'search-exclude' );
 		$bulk_array['se_show'] = esc_html__( 'Show in Search', 'search-exclude' );
 
@@ -170,9 +169,9 @@ class Backend {
 		$excluded        = $settings_entity->get( 'excluded' );
 
 		if ( $exclude ) {
-			$settings_entity->set( 'excluded', array_unique( array_merge( $excluded, $post_ids ) ) );
+			$settings_entity->set( 'excluded', array_values( array_unique( array_merge( $excluded, $post_ids ) ) ) );
 		} else {
-			$settings_entity->set( 'excluded', array_diff( $excluded, $post_ids ) );
+			$settings_entity->set( 'excluded', array_values( array_diff( $excluded, $post_ids ) ) );
 
 		}
 
