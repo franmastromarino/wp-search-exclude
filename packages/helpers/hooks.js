@@ -130,46 +130,57 @@ export const usePostsByIdsAnyPostType = (ids = [], validPostTypes = []) => {
 
 			// Loop through each valid post type and fetch posts with the given IDs
 			resolvedValidPostTypes.forEach((postType) => {
-				const query = {
-					include: ids,
-					per_page: ids.length, // ids.length is at least 1 here
-					_fields: ['id', 'title', 'date', 'link', 'type'],
-				};
+				const batchSize = 50;
+				const postBatches = [];
 
-				const posts = getEntityRecords(
-					'postType',
-					postType.slug,
-					query
-				);
-
-				const isResolvingCurrent = isResolving('getEntityRecords', [
-					'postType',
-					postType.slug,
-					query,
-				]);
-
-				const hasResolvedCurrent = hasFinishedResolution(
-					'getEntityRecords',
-					['postType', postType.slug, query]
-				);
-
-				// Update resolving states
-				isResolvingAllPosts = isResolvingAllPosts || isResolvingCurrent;
-				hasResolvedAllPosts = hasResolvedAllPosts && hasResolvedCurrent;
-
-				if (posts && posts.length) {
-					allPosts = allPosts.concat(
-						posts.map(({ id, title, date, link, type }) => ({
-							id,
-							title: title.rendered,
-							date,
-							link,
-							postType: type,
-						}))
-					);
+				//split ids quantity into smaller batch, to prevent overloading the url (400 Bad Request)
+				for (let i = 0; i < ids.length; i += batchSize) {
+					postBatches.push(ids.slice(i, i + batchSize));
 				}
-			});
 
+				postBatches.forEach((idsBatch) => {
+					const query = {
+						include: idsBatch,
+						per_page: idsBatch.length, // ids.length is at least 1 here
+						_fields: ['id', 'title', 'date', 'link', 'type'],
+					};
+
+					const posts = getEntityRecords(
+						'postType',
+						postType.slug,
+						query
+					);
+
+					const isResolvingCurrent = isResolving('getEntityRecords', [
+						'postType',
+						postType.slug,
+						query,
+					]);
+
+					const hasResolvedCurrent = hasFinishedResolution(
+						'getEntityRecords',
+						['postType', postType.slug, query]
+					);
+
+					// Update resolving states
+					isResolvingAllPosts =
+						isResolvingAllPosts || isResolvingCurrent;
+					hasResolvedAllPosts =
+						hasResolvedAllPosts && hasResolvedCurrent;
+
+					if (posts && posts.length) {
+						allPosts = allPosts.concat(
+							posts.map(({ id, title, date, link, type }) => ({
+								id,
+								title: title.rendered,
+								date,
+								link,
+								postType: type,
+							}))
+						);
+					}
+				});
+			});
 			return {
 				postsData: allPosts,
 				isResolvingPosts: isResolvingAllPosts,
