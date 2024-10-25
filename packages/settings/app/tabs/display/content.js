@@ -10,27 +10,27 @@ import MultipleSelector from '../../components/multiple-selector';
 import TaxonomyTermsSelector from '../../components/taxonomy-terms-selector';
 
 const Content = () => {
-	const { setSettings, settings, saveSettings } = useSettings();
+	const { setSettings, settings, saveSettings, isResolvingSettings } =
+		useSettings();
 
 	const handleSubmit = async () => {
 		return await saveSettings(settings);
 	};
 	const targetOptions = [
-		{ label: __('All', 'search-exclude'), value: 'all' },
 		{ label: __('Home', 'search-exclude'), value: 'home' },
 		{ label: __('Blog', 'search-exclude'), value: 'blog' },
 		{ label: __('Search', 'search-exclude'), value: 'search' },
 		{ label: __('404', 'search-exclude'), value: 'error' },
 	];
 
-	const includeExcludeOptions = [
+	const excludeOptions = [
 		{
-			value: 1,
-			label: __('Include', 'search-exclude'),
+			value: false,
+			label: __('Ids', 'search-exclude'),
 		},
 		{
-			value: 0,
-			label: __('Exclude', 'search-exclude'),
+			value: true,
+			label: __('All', 'search-exclude'),
 		},
 	];
 
@@ -50,16 +50,16 @@ const Content = () => {
 							>
 								<select
 									style={{ width: '80px' }}
-									value={settings.target.include}
+									value={settings.target.all}
 									onChange={(e) => {
 										setSettings({
 											target: {
-												include: e.target.value,
+												all: e.target.value,
 											},
 										});
 									}}
 								>
-									{includeExcludeOptions.map((option) => (
+									{excludeOptions.map((option) => (
 										<option
 											key={option.value}
 											value={option.value}
@@ -105,25 +105,26 @@ const Content = () => {
 										>
 											<select
 												style={{ width: '80px' }}
-												name={postType.name?.include}
+												name={postType.name?.all}
 												value={
 													settings.entries[
 														postType.name
-													]?.include
+													]?.all
 												}
 												onChange={(e) => {
 													setSettings({
 														entries: {
 															[postType.name]: {
-																include:
+																all:
 																	e.target
-																		.value,
+																		.value ===
+																	'true',
 															},
 														},
 													});
 												}}
 											>
-												{includeExcludeOptions.map(
+												{excludeOptions.map(
 													(option) => (
 														<option
 															key={option.value}
@@ -140,6 +141,11 @@ const Content = () => {
 												postType={postType.name}
 												settings={settings}
 												onChangeSettings={setSettings}
+												disabled={
+													settings.entries[
+														postType.name
+													]?.all
+												}
 											/>
 										</div>
 									</td>
@@ -164,25 +170,26 @@ const Content = () => {
 										>
 											<select
 												style={{ width: '80px' }}
-												name={taxonomy.name?.include}
+												name={taxonomy.name?.all}
 												value={
 													settings.taxonomies[
 														taxonomy.name
-													]?.include
+													]?.all
 												}
 												onChange={(e) => {
 													setSettings({
 														taxonomies: {
 															[taxonomy.name]: {
-																include:
+																all:
 																	e.target
-																		.value,
+																		.value ===
+																	'true',
 															},
 														},
 													});
 												}}
 											>
-												{includeExcludeOptions.map(
+												{excludeOptions.map(
 													(option) => (
 														<option
 															key={option.value}
@@ -199,6 +206,11 @@ const Content = () => {
 												taxonomy={taxonomy.name}
 												settings={settings}
 												onChangeSettings={setSettings}
+												disabled={
+													settings.taxonomies[
+														taxonomy.name
+													]?.all
+												}
 											/>
 										</div>
 									</td>
