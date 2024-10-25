@@ -4,14 +4,16 @@ import { useDebounce } from '@wordpress/compose';
 import { useTaxonomyTerms } from './helpers';
 import MultipleSelector from '../../components/multiple-selector';
 
-const TaxonomyTermsSelector = ({ taxonomy, settings, onChangeSettings }) => {
+const TaxonomyTermsSelector = ({
+	taxonomy,
+	settings,
+	onChangeSettings,
+	disabled,
+}) => {
 	const value = settings.taxonomies[taxonomy]?.ids;
 
 	const ids = useMemo(
-		() =>
-			value
-				?.filter((item) => item !== 'all')
-				?.map((item) => parseInt(item)),
+		() => value?.map((item) => parseInt(item)),
 		[taxonomy, settings.taxonomies]
 	);
 
@@ -53,7 +55,7 @@ const TaxonomyTermsSelector = ({ taxonomy, settings, onChangeSettings }) => {
 			};
 		});
 
-		return [{ label: 'All', value: 'all' }, ...taxonomiesOptions];
+		return taxonomiesOptions;
 	}, [taxonomyTerms, taxonomyTermsSearch]);
 
 	return (
@@ -70,6 +72,7 @@ const TaxonomyTermsSelector = ({ taxonomy, settings, onChangeSettings }) => {
 				});
 			}}
 			onInputChange={setSearchTerm}
+			disabled={disabled}
 		/>
 	);
 };

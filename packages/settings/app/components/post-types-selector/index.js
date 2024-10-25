@@ -4,14 +4,16 @@ import { useDebounce } from '@wordpress/compose';
 import { usePostTypes } from './helpers';
 import MultipleSelector from '../../components/multiple-selector';
 
-const PostTypesSelector = ({ postType, settings, onChangeSettings }) => {
+const PostTypesSelector = ({
+	postType,
+	settings,
+	onChangeSettings,
+	disabled,
+}) => {
 	const value = settings.entries[postType]?.ids;
 
 	const ids = useMemo(
-		() =>
-			value
-				?.filter((item) => item !== 'all')
-				?.map((item) => parseInt(item)),
+		() => value?.map((item) => parseInt(item)),
 		[postType, settings.entries]
 	);
 
@@ -33,8 +35,6 @@ const PostTypesSelector = ({ postType, settings, onChangeSettings }) => {
 		searchTerm: debouncedSearchTerm,
 	});
 
-	console.log('postTypesSearch: ', postTypesSearch);
-
 	const updateDebouncedSearchTerm = useDebounce((term) => {
 		setDebouncedSearchTerm(term);
 	}, 300);
@@ -53,7 +53,7 @@ const PostTypesSelector = ({ postType, settings, onChangeSettings }) => {
 				value: parseInt(item.id),
 			};
 		});
-		return [{ label: 'All', value: 'all' }, ...postTypesOptions];
+		return postTypesOptions;
 	}, [postTypes, postTypesSearch]);
 
 	return (
@@ -70,6 +70,7 @@ const PostTypesSelector = ({ postType, settings, onChangeSettings }) => {
 				});
 			}}
 			onInputChange={setSearchTerm}
+			disabled={disabled}
 		/>
 	);
 };
