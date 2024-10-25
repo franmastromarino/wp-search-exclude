@@ -35,33 +35,73 @@ class Frontend {
 
 		$exclude = apply_filters( 'searchexclude_filter_search', $exclude, $query );
 
+		// exclude posts by post type
 		if ( $exclude && isset( $settings ) ) {
-			$post__in     = $query->get( 'post__in', array() );
 			$post__not_in = $query->get( 'post__not_in', array() );
 
 			if ( isset( $settings->entries ) ) {
 				foreach ( $settings->entries as $post_type => $setting ) {
-					$include = isset( $setting['include'] ) ? (int) $setting['include'] : 0;
-					$ids     = isset( $setting['ids'] ) ? $setting['ids'] : array();
+					$ids = isset( $setting['ids'] ) ? $setting['ids'] : array();
+					// Exclude all posts of this post type
+					if ( $setting['all'] ) {
+						$post__not_in = $this->exclude_all_posts_of_type( $post_type );
+						$query->set( 'post__not_in', $post__not_in );
 
-					if ( in_array( 'all', $ids, true ) ) {
-						if ( $include ) {
-							$query->set( 'post_type', $post_type );
-						} else {
-							// Exclude all posts of this post type
-							$post__not_in = $this->exclude_all_posts_of_type( $post_type );
-							$query->set( 'post__not_in', $post__not_in );
-						}
-					} elseif ( $include ) {
-							$post__in = array_merge( $post__in, $ids );
+					// Exclude by ids
 					} else {
 						$post__not_in = array_merge( $post__not_in, $ids );
 					}
 				}
 			}
 
-			$query->set( 'post__in', $post__in );
 			$query->set( 'post__not_in', $post__not_in );
+		}
+
+		// exclude posts by taxonomies
+		if ( isset( $settings->taxonomies ) ) {
+			$tax_query = $query->get( 'tax_query', array() );
+
+			foreach ( $settings->taxonomies as $taxonomy => $setting ) {
+				$ids = isset( $setting['ids'] ) ? $setting['ids'] : array();
+
+				// Exclude all taxonomies
+				if ( $setting['all'] ) {
+					$terms = get_terms(
+						array(
+							'taxonomy'   => $taxonomy,
+							'fields'     => 'ids',
+							'hide_empty' => false,
+						)
+					);
+
+					if ( ! is_wp_error( $terms ) && ! empty( $terms ) ) {
+						$tax_query[] = array(
+							'taxonomy' => $taxonomy,
+							'field'    => 'term_id',
+							'terms'    => $terms,
+							'operator' => 'NOT IN',
+						);
+					}
+				// Exclude by ids
+				} elseif ( ! empty( $ids ) ) {
+					$tax_query[] = array(
+						'taxonomy' => $taxonomy,
+						'field'    => 'term_id',
+						'terms'    => $ids,
+						'operator' => 'NOT IN',
+					);
+				}
+			}
+
+			if ( ! empty( $tax_query ) ) {
+				$existing_tax_query = $query->get( 'tax_query' );
+				if ( ! empty( $existing_tax_query ) ) {
+					$tax_query = array_merge( array( $existing_tax_query ), $tax_query );
+				}
+
+				$tax_query['relation'] = 'AND';
+				$query->set( 'tax_query', $tax_query );
+			}
 		}
 
 		return $query;
