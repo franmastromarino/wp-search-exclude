@@ -7,8 +7,8 @@ class Entity_Options {
 	protected static $instance;
 
 	public $base = array(
-		'include' => 1,
-		'ids'     => array(),
+		'all' => false,
+		'ids' => array(),
 	);
 
 	public function get_args() {
