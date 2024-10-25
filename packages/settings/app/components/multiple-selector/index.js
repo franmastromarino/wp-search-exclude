@@ -1,5 +1,6 @@
 import { FormTokenField } from '@wordpress/components';
 import { memo } from '@wordpress/element';
+import classNames from 'classnames';
 
 export const MultipleSelector = ({
 	options = [],
@@ -9,6 +10,7 @@ export const MultipleSelector = ({
 	multiple = true,
 	onInputChange,
 	placeholder,
+	disabled,
 }) => {
 	// Convert values ids to int if is numeric
 	const value = _value?.map((v) => {
@@ -45,7 +47,12 @@ export const MultipleSelector = ({
 		.filter((s) => !!s);
 
 	return (
-		<div className="qlse__multiple-selector">
+		<div
+			className={classNames(
+				'qlse__multiple-selector',
+				disabled && 'qlse__multiple-selector--input-disabled'
+			)}
+		>
 			<FormTokenField
 				value={labels}
 				onChange={handleChange}
