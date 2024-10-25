@@ -2,30 +2,30 @@ export const STORE_NAME = 'qlse/settings';
 
 export const INITIAL_STATE = {
 	target: {
-		include: 1,
+		all: false,
 		ids: [],
 	},
 	entries: {
 		post: {
-			include: 1,
+			all: false,
 			ids: [],
 		},
 		page: {
-			include: 1,
+			all: false,
 			ids: [],
 		},
 	},
 	taxonomies: {
 		category: {
-			include: 1,
+			all: false,
 			ids: [],
 		},
 		tags: {
-			include: 1,
+			all: false,
 			ids: [],
 		},
 		product_cat: {
-			include: 1,
+			all: false,
 			ids: [],
 		},
 	},
