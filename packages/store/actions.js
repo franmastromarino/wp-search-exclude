@@ -40,11 +40,5 @@ export const saveSettings =
 
 		dispatch.setSettings(data);
 
-		registry
-			.dispatch(noticesStore)
-			.createSuccessNotice(__('Settings saved.', 'search-exclude'), {
-				type: 'snackbar',
-			});
-
 		return true;
 	};

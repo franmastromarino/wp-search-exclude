@@ -27,7 +27,6 @@ class Backend {
 		*/
 		add_action( 'admin_notices', array( $this, 'bulk_action_notices' ) );
 		add_action( 'admin_init', array( $this, 'save_options' ) );
-		// add_action( 'admin_menu', array( $this, 'admin_menu' ) );
 		/**
 		 * Edit post metabox
 		 */
@@ -118,7 +117,6 @@ class Backend {
 	}
 
 	public function bulk_action_handler( $redirect, $doaction, $object_ids ) {
-
 		/**
 		 * Let's remove query args first
 		 */
@@ -135,6 +133,7 @@ class Backend {
 		 * Do something for "Make Draft" bulk action
 		 */
 		$exclude = ( 'se_hide' === $doaction );
+
 		$this->save_post_ids_to_search_exclude( $object_ids, $exclude );
 
 		$redirect = add_query_arg(
@@ -147,7 +146,6 @@ class Backend {
 	}
 
 	public function bulk_edit( $bulk_array ) {
-
 		$bulk_array['se_hide'] = esc_html__( 'Hide from Search', 'search-exclude' );
 		$bulk_array['se_show'] = esc_html__( 'Show in Search', 'search-exclude' );
 
@@ -171,9 +169,9 @@ class Backend {
 		$excluded        = $settings_entity->get( 'excluded' );
 
 		if ( $exclude ) {
-			$settings_entity->set( 'excluded', array_unique( array_merge( $excluded, $post_ids ) ) );
+			$settings_entity->set( 'excluded', array_values( array_unique( array_merge( $excluded, $post_ids ) ) ) );
 		} else {
-			$settings_entity->set( 'excluded', array_diff( $excluded, $post_ids ) );
+			$settings_entity->set( 'excluded', array_values( array_diff( $excluded, $post_ids ) ) );
 
 		}
 
@@ -305,16 +303,6 @@ class Backend {
 		wp_nonce_field( 'sep_metabox_nonce', 'metabox_nonce' );
 		$this->view( 'metabox', array( 'exclude' => $this->is_excluded( $post->ID ) ) );
 	}
-
-	// public function admin_menu() {
-	// add_options_page(
-	// 'Search Exclude',
-	// 'Search Exclude',
-	// 'manage_options',
-	// 'search_exclude',
-	// array( $this, 'options' )
-	// );
-	// }
 
 	public function post_save( $post_id ) {
 		if ( ! isset( $_POST['sep'] ) ) {
