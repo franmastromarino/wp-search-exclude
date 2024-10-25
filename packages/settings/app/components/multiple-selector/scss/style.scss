@@ -1,4 +1,8 @@
 .qlse__multiple-selector {
+	&--input-disabled {
+		opacity: 0.3;
+		pointer-events: none !important;
+	}
 	// display: flex;
 	label {
 		display: none !important;
