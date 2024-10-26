@@ -21,6 +21,8 @@ export const setSettingsDisplay = (newSettings) => {
 };
 
 export const setSettingsExcluded = (newSettings) => {
+	console.log('newSettings: ', newSettings);
+
 	return {
 		type: 'SET_EXCLUDED',
 		payload: () => {
@@ -69,16 +71,8 @@ export const saveSettings =
 			return false;
 		}
 
-		dispatch[`setSettings${setter}`](data);
 
-		registry
-			.dispatch(noticesStore)
-			.createSuccessNotice(
-				sprintf(__('%s settings saved.', 'search-exclude'), setter),
-				{
-					type: 'snackbar',
-				}
-			);
+		dispatch[`setSettings${setter}`](data);
 
 		return true;
 	};
