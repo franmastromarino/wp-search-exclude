@@ -3,16 +3,7 @@
 add_filter(
 	'default_option_qlse_settings',
 	function ( $value ) {
-		static $running = false;
-
-		if ( $running ) {
-			return $value;
-		}
-
-		$running = true;
-
 		if ( $value ) {
-			$running = false;
 			return $value;
 		}
 
