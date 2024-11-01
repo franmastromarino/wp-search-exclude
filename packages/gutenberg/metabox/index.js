@@ -38,15 +38,10 @@ export const Metabox = () => {
 		wp.editSite?.PluginDocumentSettingPanel;
 
 	const { exclude, setExclude } = useExcludeMeta();
-	// const [postExcluded, setPostExcluded] = useState([]);
 	const postId = select('core/editor').getCurrentPostId();
+	const postType = select('core/editor').getCurrentPostType();
 	const isSavingRef = useRef(false);
-
-	// useEffect(() => {
-	// 	if (hasResolvedSettings) {
-	// 		setPostExcluded(settings.excluded);
-	// 	}
-	// }, [hasResolvedSettings]);
+	const excluded = settings?.entries[postType]?.ids;
 
 	useEffect(() => {
 		const unsubscribe = subscribe(() => {
@@ -67,15 +62,13 @@ export const Metabox = () => {
 	}, [settings]);
 
 	const handleChange = () => {
-		const excluded = settings.excluded;
-
 		const updatedExcluded = excluded.includes(postId)
 			? excluded.filter((excludedPostId) => excludedPostId !== postId)
 			: [...excluded, postId];
 
 		setExclude(exclude ? undefined : true);
 
-		setSettings({ excluded: updatedExcluded });
+		setSettings({ entries: { [postType]: { ids: updatedExcluded } } });
 	};
 
 	return (
@@ -86,7 +79,7 @@ export const Metabox = () => {
 			<CheckboxControl
 				__nextHasNoMarginBottom
 				label={__('Exclude from Search Results', 'search-exclude')}
-				checked={settings.excluded?.includes(postId)}
+				checked={excluded?.includes(postId)}
 				onChange={handleChange}
 			/>
 		</PluginDocumentSettingPanel>
