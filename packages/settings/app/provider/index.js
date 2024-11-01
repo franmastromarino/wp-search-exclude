@@ -18,7 +18,6 @@ import { handleBrowserParams } from '../../../helpers/handleBrowserParams';
  */
 
 import Display from '../tabs/display';
-import Settings from '../tabs/settings';
 
 const { tabParam, setBrowserTabParam } = handleBrowserParams();
 
@@ -57,11 +56,6 @@ const AppProvider = ({ children }) => {
 			label: __('Visibility', 'search-exclude'),
 			name: 'display',
 			content: Display,
-		},
-		{
-			label: __('Settings', 'search-exclude'),
-			name: 'settings',
-			content: Settings,
 		},
 	]);
 
