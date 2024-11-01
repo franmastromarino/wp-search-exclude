@@ -32,7 +32,6 @@ class Backend {
 		 */
 		add_action( 'post_updated', array( $this, 'post_save' ) );
 		add_action( 'edit_attachment', array( $this, 'post_save' ) );
-		add_action( 'add_meta_boxes', array( $this, 'add_meta_box' ) );
 		/**
 		 * Add column to posts/pages list
 		 */
@@ -164,14 +163,18 @@ class Backend {
 	}
 
 	public function save_post_ids_to_search_exclude( $post_ids, $exclude ) {
+		$post_type = $_REQUEST['post_type'];
+
 		$exclude         = (bool) $exclude;
 		$settings_entity = Models_Settings::instance()->get();
-		$excluded        = $settings_entity->get( 'excluded' );
+		$entries         = $settings_entity->get( 'entries' );
 
 		if ( $exclude ) {
-			$settings_entity->set( 'excluded', array_values( array_unique( array_merge( $excluded, $post_ids ) ) ) );
+			$entries[ $post_type ]['ids'] = array_values( array_unique( array_merge( $entries[ $post_type ]['ids'], $post_ids ) ) );
+			$settings_entity->set( 'entries', $entries );
 		} else {
-			$settings_entity->set( 'excluded', array_values( array_diff( $excluded, $post_ids ) ) );
+			$entries[ $post_type ]['ids'] = array_values( array_diff( $entries[ $post_type ]['ids'], $post_ids ) );
+			$settings_entity->set( 'entries', $entries );
 
 		}
 
@@ -179,7 +182,8 @@ class Backend {
 	}
 
 	protected function is_excluded( $post_id ) {
-		$excluded = Models_Settings::instance()->get()->get( 'excluded' );
+		$post_type = get_post_type( $post_id );
+		$excluded  = Models_Settings::instance()->get()->get( 'entries' )[ $post_type ]['ids'];
 
 		return false !== array_search( $post_id, $excluded );
 	}
@@ -285,25 +289,6 @@ class Backend {
 		}
 	}
 
-	public function add_meta_box() {
-		$current_screen = get_current_screen();
-		// Do not show meta box on service pages.
-		if ( empty( $current_screen->post_type ) ) {
-			return;
-		}
-		// Check if this is the Gutenberg editor.
-		if ( function_exists( 'use_block_editor_for_post_type' ) && use_block_editor_for_post_type( $current_screen->post_type ) ) {
-			// This is the Gutenberg editor, don't add the meta box.
-			return;
-		}
-		add_meta_box( 'sep_metabox_id', 'Search Exclude', array( $this, 'metabox' ), null, 'side' );
-	}
-
-	public function metabox( $post ) {
-		wp_nonce_field( 'sep_metabox_nonce', 'metabox_nonce' );
-		$this->view( 'metabox', array( 'exclude' => $this->is_excluded( $post->ID ) ) );
-	}
-
 	public function post_save( $post_id ) {
 		if ( ! isset( $_POST['sep'] ) ) {
 			return $post_id;
@@ -339,7 +324,6 @@ class Backend {
 	}
 
 	public function save_options() {
-
 		if ( ! isset( $_POST['search_exclude_submit'] ) ) {
 			return;
 		}
