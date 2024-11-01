@@ -47,20 +47,20 @@ final class Plugin {
 			'taxonomies' => array(
 				'category'    => array(
 					'all' => false,
-					'ids' => [],
+					'ids' => array(),
 				),
 				'tags'        => array(
 					'all' => false,
-					'ids' => [],
+					'ids' => array(),
 				),
 				'product_cat' => array(
 					'all' => false,
-					'ids' => [],
+					'ids' => array(),
 				),
 			),
 			'author'     => array(
 				'all' => false,
-				'ids' => [],
+				'ids' => array(),
 			),
 		);
 

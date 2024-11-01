@@ -3,27 +3,42 @@
 add_filter(
 	'default_option_qlse_settings',
 	function ( $value ) {
+
 		if ( $value ) {
 			return $value;
 		}
 
-		$old_value_excluded = get_option( 'sep_exclude' );
-		$excluded           = isset( get_option( 'qlse_settings' )['excluded'] ) ? get_option( 'qlse_settings' )['excluded'] : array();
+		$old_value_ids = get_option( 'sep_exclude' );
 
-		$ids = [ $old_value_excluded, $excluded ];
+		$new_value = array(
+			'excluded' => $old_value_ids,
+		);
 
-		// Initialize the new entries array.
+		return $new_value;
+	}
+);
+
+add_filter(
+	'option_qlse_settings',
+	function ( $value ) {
+
+		if ( isset( $value['entries'] ) ) {
+			return $value;
+		}
+
+		$old_value_ids = isset( $value['excluded'] ) ? $value['excluded'] : get_option( 'sep_exclude' );
+
+		if ( empty( $old_value_ids ) ) {
+			return $value;
+		}
+
 		$new_value = array(
 			'entries' => array(
-				'post'    => array(
+				'post' => array(
 					'all' => false,
 					'ids' => array(),
 				),
-				'page'    => array(
-					'all' => false,
-					'ids' => array(),
-				),
-				'product' => array(
+				'page' => array(
 					'all' => false,
 					'ids' => array(),
 				),
@@ -31,9 +46,9 @@ add_filter(
 		);
 
 		// Iterate over the old exclude IDs and categorize them by post type.
-		foreach ( $ids as $id ) {
+		foreach ( $old_value_ids as $id ) {
 			$post_type = get_post_type( $id );
-			if ( $post_type && isset( $new_value['entries'][ $post_type ] ) ) {
+			if ( $post_type ) {
 				$new_value['entries'][ $post_type ]['ids'][] = $id;
 			}
 		}

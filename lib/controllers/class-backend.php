@@ -263,7 +263,6 @@ class Backend {
 		}
 
 		wp_enqueue_style( 'qlse-backend' );
-
 	}
 
 	public function add_quick_edit_custom_box( $column_name ) {
