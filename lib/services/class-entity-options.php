@@ -15,7 +15,7 @@ class Entity_Options {
 		$args = array(
 			'entries'    => $this->get_display_entries(),
 			'taxonomies' => $this->get_display_taxonomies(),
-			'target'     => $this->base,
+			'author'     => $this->base,
 		);
 		return $args;
 	}

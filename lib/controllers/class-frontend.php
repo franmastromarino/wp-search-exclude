@@ -47,7 +47,7 @@ class Frontend {
 						$post__not_in = $this->exclude_all_posts_of_type( $post_type );
 						$query->set( 'post__not_in', $post__not_in );
 
-					// Exclude by ids
+						// Exclude by ids
 					} else {
 						$post__not_in = array_merge( $post__not_in, $ids );
 					}
@@ -82,7 +82,7 @@ class Frontend {
 							'operator' => 'NOT IN',
 						);
 					}
-				// Exclude by ids
+					// Exclude by ids
 				} elseif ( ! empty( $ids ) ) {
 					$tax_query[] = array(
 						'taxonomy' => $taxonomy,
@@ -104,7 +104,20 @@ class Frontend {
 			}
 		}
 
-		return $query;
+		// exclude posts by author
+		if ( isset( $settings->author ) ) {
+			$ids = isset( $settings->author['ids'] ) ? $settings->author['ids'] : array();
+			// exclude all posts by author
+			if ( $settings->author['all'] ) {
+				$query->set( 'post__in', array( 0 ) ); // This returns no posts
+
+				// Exclude by ids
+			} else {
+					$query->set( 'author__not_in', $ids );
+			}
+
+			return $query;
+		}
 	}
 
 /**

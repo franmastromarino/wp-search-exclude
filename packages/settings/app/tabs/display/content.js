@@ -6,8 +6,8 @@ import {
 } from '../../../../helpers/constants';
 import PostTypesSelector from '../../components/post-types-selector';
 import Tab from '../tab';
-import MultipleSelector from '../../components/multiple-selector';
 import TaxonomyTermsSelector from '../../components/taxonomy-terms-selector';
+import AuthorSelector from '../../components/author-selector';
 
 const Content = () => {
 	const { setSettings, settings, saveSettings, isResolvingSettings } =
@@ -16,12 +16,6 @@ const Content = () => {
 	const handleSubmit = async () => {
 		return await saveSettings(settings);
 	};
-	const targetOptions = [
-		{ label: __('Home', 'search-exclude'), value: 'home' },
-		{ label: __('Blog', 'search-exclude'), value: 'blog' },
-		{ label: __('Search', 'search-exclude'), value: 'search' },
-		{ label: __('404', 'search-exclude'), value: 'error' },
-	];
 
 	const excludeOptions = [
 		{
@@ -38,56 +32,6 @@ const Content = () => {
 		<Tab settings={settings} onSubmit={handleSubmit}>
 			<table className="form-table">
 				<tbody>
-					<tr></tr>
-					<tr>
-						<th scope="row">{__('Target', 'search-exclude')}</th>
-						<td>
-							<div
-								style={{
-									display: 'flex',
-									alignItems: 'flex-start',
-								}}
-							>
-								<select
-									style={{ width: '80px' }}
-									value={settings.target.all}
-									onChange={(e) => {
-										setSettings({
-											target: {
-												all: e.target.value,
-											},
-										});
-									}}
-								>
-									{excludeOptions.map((option) => (
-										<option
-											key={option.value}
-											value={option.value}
-										>
-											{option.label}
-										</option>
-									))}
-								</select>
-								<MultipleSelector
-									options={targetOptions}
-									value={settings.target.ids}
-									onChange={(newValues) => {
-										setSettings({
-											target: {
-												ids: newValues,
-											},
-										});
-									}}
-								/>
-							</div>
-							<p className="description hidden">
-								{__(
-									'If you select an option all the other will be excluded',
-									'search-exclude'
-								)}
-							</p>
-						</td>
-					</tr>
 					{Object.values(QLSE_DISPLAY_POST_TYPES).map(
 						(postType, index) => {
 							return (
@@ -218,6 +162,44 @@ const Content = () => {
 							);
 						}
 					)}
+					<tr className="qlse-premium-field">
+						<th scope="row">{__('Authors', 'search-exclude')}</th>
+						<td>
+							<div
+								style={{
+									display: 'flex',
+									alignItems: 'flex-start',
+								}}
+							>
+								<select
+									style={{ width: '80px' }}
+									name={settings.author?.all}
+									value={settings.author?.all}
+									onChange={(e) => {
+										setSettings({
+											author: {
+												all: e.target.value === 'true',
+											},
+										});
+									}}
+								>
+									{excludeOptions.map((option) => (
+										<option
+											key={option.value}
+											value={option.value}
+										>
+											{option.label}
+										</option>
+									))}
+								</select>
+								<AuthorSelector
+									settings={settings}
+									onChangeSettings={setSettings}
+									disabled={settings.author?.all}
+								/>
+							</div>
+						</td>
+					</tr>
 				</tbody>
 			</table>
 		</Tab>
