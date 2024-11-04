@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, memo } from '@wordpress/element';
+import { useState, useEffect, useMemo, memo, useRef } from '@wordpress/element';
 import { useDebounce } from '@wordpress/compose';
 
 import { useTaxonomyTerms } from './helpers';
@@ -23,6 +23,8 @@ const TaxonomyTermsSelector = ({
 			include: ids,
 		});
 
+	const prevTaxonomyTerms = useRef(null);
+
 	const [searchTerm, setSearchTerm] = useState('');
 	const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(searchTerm);
 
@@ -41,12 +43,20 @@ const TaxonomyTermsSelector = ({
 	}, 300);
 
 	useEffect(() => {
+		if (taxonomyTerms) {
+			prevTaxonomyTerms.current = taxonomyTerms;
+		}
+	}, [taxonomyTerms]);
+
+	useEffect(() => {
 		updateDebouncedSearchTerm(searchTerm);
 	}, [searchTerm, updateDebouncedSearchTerm]);
 
 	const options = useMemo(() => {
+		const currentTaxonomyTerms =
+			taxonomyTerms || prevTaxonomyTerms.current || [];
 		const taxonomiesOptions = [
-			...(taxonomyTerms || []),
+			...(currentTaxonomyTerms || []),
 			...(taxonomyTermsSearch || []),
 		].map((item) => {
 			return {

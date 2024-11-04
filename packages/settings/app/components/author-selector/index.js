@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, memo } from '@wordpress/element';
+import { useState, useEffect, useMemo, memo, useRef } from '@wordpress/element';
 import { useDebounce } from '@wordpress/compose';
 
 import { useAuthor } from './helpers';
@@ -15,6 +15,8 @@ const AuthorSelector = ({ settings, onChangeSettings, disabled }) => {
 	const { authors, isResolvingAuthors, hasAuthors } = useAuthor({
 		include: ids,
 	});
+
+	const prevAuthors = useRef(null);
 
 	const [searchTerm, setSearchTerm] = useState('');
 	const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(searchTerm);
@@ -33,12 +35,19 @@ const AuthorSelector = ({ settings, onChangeSettings, disabled }) => {
 	}, 300);
 
 	useEffect(() => {
+		if (authors) {
+			prevAuthors.current = authors;
+		}
+	}, [authors]);
+
+	useEffect(() => {
 		updateDebouncedSearchTerm(searchTerm);
 	}, [searchTerm, updateDebouncedSearchTerm]);
 
 	const options = useMemo(() => {
-		const taxonomiesOptions = [
-			...(authors || []),
+		const currentAuthors = authors || prevAuthors.current || [];
+		const authorsOptions = [
+			...(currentAuthors || []),
 			...(authorsSearch || []),
 		].map((item) => {
 			return {
@@ -47,7 +56,7 @@ const AuthorSelector = ({ settings, onChangeSettings, disabled }) => {
 			};
 		});
 
-		return taxonomiesOptions;
+		return authorsOptions;
 	}, [authors, authorsSearch]);
 
 	return (
