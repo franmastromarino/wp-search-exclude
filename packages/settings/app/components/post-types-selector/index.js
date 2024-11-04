@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, memo } from '@wordpress/element';
+import { useState, useEffect, useMemo, memo, useRef } from '@wordpress/element';
 import { useDebounce } from '@wordpress/compose';
 
 import { usePostTypes } from './helpers';
@@ -22,6 +22,8 @@ const PostTypesSelector = ({
 		include: ids,
 	});
 
+	const prevPostTypes = useRef(null);
+
 	const [searchTerm, setSearchTerm] = useState('');
 	const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(searchTerm);
 
@@ -40,12 +42,19 @@ const PostTypesSelector = ({
 	}, 300);
 
 	useEffect(() => {
+		if (postTypes) {
+			prevPostTypes.current = postTypes;
+		}
+	}, [postTypes]);
+
+	useEffect(() => {
 		updateDebouncedSearchTerm(searchTerm);
 	}, [searchTerm, updateDebouncedSearchTerm]);
 
 	const options = useMemo(() => {
+		const currentPostTypes = postTypes || prevPostTypes.current || [];
 		const postTypesOptions = [
-			...(postTypes || []),
+			...(currentPostTypes || []),
 			...(postTypesSearch || []),
 		].map((item) => {
 			return {

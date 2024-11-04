@@ -58,7 +58,6 @@ export const MultipleSelector = ({
 				onChange={handleChange}
 				suggestions={suggestions}
 				label={label}
-				__experimentalExpandOnFocus
 				__experimentalShowHowTo={false}
 				multiple={multiple}
 				placeholder={placeholder}
