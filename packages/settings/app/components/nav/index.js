@@ -6,10 +6,14 @@ import classnames from 'classnames';
  * WordPress dependencies
  */
 // import { useEffect } from '@wordpress/element';
+import { __ } from '@wordpress/i18n';
+
 /**
  * Internal dependencies
  */
 import { useAppContext } from '../../provider';
+import ItemTooltip from '../item-tooltip';
+
 // import { activeSubmenuItems, hideSubmenus } from './helpers';
 // import { useButtonSettings } from '../../../store/settings';
 // import { activeSubmenuItems, hideSubmenus } from './helpers';
@@ -62,6 +66,29 @@ function Nav() {
 									}}
 								>
 									{label}
+									<ItemTooltip>
+										<>
+											<h4>
+												{__(
+													'Exclude options:',
+													'search-exclude'
+												)}
+											</h4>
+											<p>
+												{__(
+													'Customize the exclusion settings by post type, taxonomy, or author. Use the selector to search and choose specific IDs to exclude, or opt for the "All" option to exclude every item.',
+													'search-exclude'
+												)}
+											</p>
+											<hr />
+											<p>
+												{__(
+													'Note: Enabling the "All" option will not update the status in the "Search Excluded" column. While the post may appear as not excluded, it is indeed excluded.',
+													'search-exclude'
+												)}
+											</p>
+										</>
+									</ItemTooltip>
 								</a>
 							</li>
 						);
