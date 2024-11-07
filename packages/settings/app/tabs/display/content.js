@@ -1,5 +1,5 @@
 import { useSettings } from '@qlse/store';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import {
 	QLSE_DISPLAY_POST_TYPES,
 	QLSE_DISPLAY_TAXONOMIES,
@@ -79,18 +79,34 @@ const Content = () => {
 													)
 												)}
 											</select>
-											<PostTypesSelector
-												key={postType.name}
-												label={postType.label}
-												postType={postType.name}
-												settings={settings}
-												onChangeSettings={setSettings}
-												disabled={
-													settings.entries[
-														postType.name
-													]?.all
-												}
-											/>
+											<div>
+												<PostTypesSelector
+													key={postType.name}
+													label={postType.label}
+													postType={postType.name}
+													settings={settings}
+													onChangeSettings={
+														setSettings
+													}
+													disabled={
+														settings.entries[
+															postType.name
+														]?.all
+													}
+												/>
+												{settings.entries[postType.name]
+													?.all && (
+													<p className="description">
+														{sprintf(
+															__(
+																'All %s are excluded.',
+																'ai-copilot'
+															),
+															postType.label.toLowerCase()
+														)}
+													</p>
+												)}
+											</div>
 										</div>
 									</td>
 								</tr>
@@ -144,18 +160,35 @@ const Content = () => {
 													)
 												)}
 											</select>
-											<TaxonomyTermsSelector
-												key={taxonomy.name}
-												label={taxonomy.label}
-												taxonomy={taxonomy.name}
-												settings={settings}
-												onChangeSettings={setSettings}
-												disabled={
-													settings.taxonomies[
-														taxonomy.name
-													]?.all
-												}
-											/>
+											<div>
+												<TaxonomyTermsSelector
+													key={taxonomy.name}
+													label={taxonomy.label}
+													taxonomy={taxonomy.name}
+													settings={settings}
+													onChangeSettings={
+														setSettings
+													}
+													disabled={
+														settings.taxonomies[
+															taxonomy.name
+														]?.all
+													}
+												/>
+												{settings.taxonomies[
+													taxonomy.name
+												]?.all && (
+													<p className="description">
+														{sprintf(
+															__(
+																'All %s are excluded.',
+																'ai-copilot'
+															),
+															taxonomy.label.toLowerCase()
+														)}
+													</p>
+												)}
+											</div>
 										</div>
 									</td>
 								</tr>
@@ -192,11 +225,21 @@ const Content = () => {
 										</option>
 									))}
 								</select>
-								<AuthorSelector
-									settings={settings}
-									onChangeSettings={setSettings}
-									disabled={settings.author?.all}
-								/>
+								<div>
+									<AuthorSelector
+										settings={settings}
+										onChangeSettings={setSettings}
+										disabled={settings.author?.all}
+									/>
+									{settings.author?.all && (
+										<p className="description">
+											{__(
+												'All authors are excluded.',
+												'ai-copilot'
+											)}
+										</p>
+									)}
+								</div>
 							</div>
 						</td>
 					</tr>
