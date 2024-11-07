@@ -2,6 +2,6 @@ import { registerPlugin } from '@wordpress/plugins';
 import { Metabox } from './metabox';
 
 // Register the plugin
-registerPlugin('custom-sidebar-metabox', {
+registerPlugin('search-exclude-sidebar-metabox', {
 	render: Metabox,
 });
