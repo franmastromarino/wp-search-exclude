@@ -28,10 +28,44 @@ final class Plugin {
 
 	public function activate() {
 		$settings_entity = Models_Settings::instance()->get();
-		$excluded        = $settings_entity->get( 'excluded' );
 
-		if ( empty( $excluded ) ) {
-			Models_Settings::instance()->save( array() );
+		$new_value = array(
+			'entries'    => array(
+				'post'    => array(
+					'all' => false,
+					'ids' => array(),
+				),
+				'page'    => array(
+					'all' => false,
+					'ids' => array(),
+				),
+				'product' => array(
+					'all' => false,
+					'ids' => array(),
+				),
+			),
+			'taxonomies' => array(
+				'category'    => array(
+					'all' => false,
+					'ids' => array(),
+				),
+				'tags'        => array(
+					'all' => false,
+					'ids' => array(),
+				),
+				'product_cat' => array(
+					'all' => false,
+					'ids' => array(),
+				),
+			),
+			'author'     => array(
+				'all' => false,
+				'ids' => array(),
+			),
+		);
+
+		if ( empty( $settings_entity ) ) {
+			Models_Settings::instance()->save( $new_value );
 		}
 	}
 

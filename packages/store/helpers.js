@@ -14,15 +14,15 @@ import { addQueryArgs } from '@wordpress/url';
 import { STORE_NAME } from './constants';
 
 // eslint-disable-next-line no-undef
-export const { QLSE_REST_ROUTES, WP_VERSION } = qlseStore;
+export const { QLSE_REST_ROUTE, WP_VERSION } = qlseStore;
 
 export const FIRST_WP_VERSION_WITH_THUNK_SUPPORT = '6.0';
 
-export const fetchRestApiSettings = ({ method, data, route } = {}) => {
+export const fetchRestApiSettings = ({ method, data } = {}) => {
 	const path =
 		method === 'GET'
-			? addQueryArgs(QLSE_REST_ROUTES[route], data)
-			: QLSE_REST_ROUTES[route];
+			? addQueryArgs(QLSE_REST_ROUTE, data)
+			: QLSE_REST_ROUTE;
 
 	return apiFetch({
 		path,
@@ -31,67 +31,30 @@ export const fetchRestApiSettings = ({ method, data, route } = {}) => {
 	});
 };
 
-export function useDisplaySettings() {
-	const { setSettingsDisplay, saveDisplaySettings } = useDispatch(STORE_NAME);
+export function useSettings() {
+	const { setSettings, saveSettings } = useDispatch(STORE_NAME);
 
-	const {
-		settingsDisplay,
-		isResolvingSettingsDisplay,
-		hasResolvedSettingsDisplay,
-	} = useSelect((select) => {
-		const { getSettingsDisplay, isResolving, hasFinishedResolution } =
-			select(STORE_NAME);
+	const { settings, isResolvingSettings, hasResolvedSettings } = useSelect(
+		(select) => {
+			const { getSettings, isResolving, hasFinishedResolution } =
+				select(STORE_NAME);
 
-		return {
-			settingsDisplay: getSettingsDisplay(),
-			isResolvingSettingsDisplay: isResolving('getSettingsDisplay'),
-			hasResolvedSettingsDisplay:
-				hasFinishedResolution('getSettingsDisplay'),
-		};
-	}, []);
+			return {
+				settings: getSettings(),
+				isResolvingSettings: isResolving('getSettings'),
+				hasResolvedSettings: hasFinishedResolution('getSettings'),
+			};
+		},
+		[]
+	);
 
 	return {
-		settingsDisplay,
-		isResolvingSettingsDisplay,
-		hasResolvedSettingsDisplay,
-		hasSettingsDisplay: !!(
-			hasResolvedSettingsDisplay && Object.keys(settingsDisplay)?.length
-		),
-		saveDisplaySettings,
-		setSettingsDisplay,
-	};
-}
-
-export function useExcludedSettings() {
-	const { setSettingsExcluded, saveExcludedSettings } =
-		useDispatch(STORE_NAME);
-
-	const {
-		settingsExcluded,
-		isResolvingSettingsExcluded,
-		hasResolvedSettingsExcluded,
-	} = useSelect((select) => {
-		const { getSettingsExcluded, isResolving, hasFinishedResolution } =
-			select(STORE_NAME);
-
-		return {
-			settingsExcluded: getSettingsExcluded(),
-			isResolvingSettingsExcluded: isResolving('getSettingsExcluded'),
-			hasResolvedSettingsExcluded: hasFinishedResolution(
-				'getSettingsExcluded'
-			),
-		};
-	}, []);
-
-	return {
-		settingsExcluded,
-		isResolvingSettingsExcluded,
-		hasResolvedSettingsExcluded,
-		hasSettingsExcluded: !!(
-			hasResolvedSettingsExcluded && Object.keys(settingsExcluded)?.length
-		),
-		saveExcludedSettings,
-		setSettingsExcluded,
+		settings,
+		isResolvingSettings,
+		hasResolvedSettings,
+		hasSettings: !!(hasResolvedSettings && Object.keys(settings)?.length),
+		saveSettings,
+		setSettings,
 	};
 }
 

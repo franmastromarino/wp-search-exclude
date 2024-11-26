@@ -32,7 +32,6 @@ class Backend {
 		 */
 		add_action( 'post_updated', array( $this, 'post_save' ) );
 		add_action( 'edit_attachment', array( $this, 'post_save' ) );
-		add_action( 'add_meta_boxes', array( $this, 'add_meta_box' ) );
 		/**
 		 * Add column to posts/pages list
 		 */
@@ -164,14 +163,18 @@ class Backend {
 	}
 
 	public function save_post_ids_to_search_exclude( $post_ids, $exclude ) {
+		$post_type = $_REQUEST['post_type'];
+
 		$exclude         = (bool) $exclude;
 		$settings_entity = Models_Settings::instance()->get();
-		$excluded        = $settings_entity->get( 'excluded' );
+		$entries         = $settings_entity->get( 'entries' );
 
 		if ( $exclude ) {
-			$settings_entity->set( 'excluded', array_values( array_unique( array_merge( $excluded, $post_ids ) ) ) );
+			$entries[ $post_type ]['ids'] = array_values( array_unique( array_merge( $entries[ $post_type ]['ids'], $post_ids ) ) );
+			$settings_entity->set( 'entries', $entries );
 		} else {
-			$settings_entity->set( 'excluded', array_values( array_diff( $excluded, $post_ids ) ) );
+			$entries[ $post_type ]['ids'] = array_values( array_diff( $entries[ $post_type ]['ids'], $post_ids ) );
+			$settings_entity->set( 'entries', $entries );
 
 		}
 
@@ -179,7 +182,8 @@ class Backend {
 	}
 
 	protected function is_excluded( $post_id ) {
-		$excluded = Models_Settings::instance()->get()->get( 'excluded' );
+		$post_type = get_post_type( $post_id );
+		$excluded  = Models_Settings::instance()->get()->get( 'entries' )[ $post_type ]['ids'];
 
 		return false !== array_search( $post_id, $excluded );
 	}
@@ -207,12 +211,12 @@ class Backend {
 			true
 		);
 
-		// wp_register_style(
-		// 'qlse-backend',
-		// plugins_url( '/build/backend/css/style.css', QLSE_PLUGIN_FILE ),
-		// array(),
-		// QLSE_PLUGIN_VERSION
-		// );
+		wp_register_style(
+			'qlse-backend',
+			plugins_url( '/build/backend/css/style.css', QLSE_PLUGIN_FILE ),
+			array(),
+			QLSE_PLUGIN_VERSION
+		);
 
 		wp_register_script(
 			'qlse-store',
@@ -226,10 +230,9 @@ class Backend {
 			'qlse-store',
 			'qlseStore',
 			array(
-				'WP_VERSION'       => $wp_version,
-				'QLSE_REST_ROUTES' => array(
-					'excluded' => API_Settings_Get::get_rest_path(),
-				),
+				'WP_VERSION'      => $wp_version,
+				'QLSE_REST_ROUTE' => API_Settings_Get::get_rest_path(),
+
 			)
 		);
 	}
@@ -247,17 +250,19 @@ class Backend {
 		 * Load admin scripts
 		 */
 		wp_enqueue_media();
-		wp_enqueue_style( 'qlse-backend' );
 		wp_enqueue_script( 'qlse-backend' );
 	}
 
 	public function enqueue_style() {
-	wp_enqueue_style(
-		'qlse-backend',
-		plugins_url( '/build/backend/css/style.css', QLSE_PLUGIN_FILE ),
-		array(),
-		QLSE_PLUGIN_VERSION
-	);
+		$current_screen  = get_current_screen()->id;
+		$allowed_screens = array( 'edit-page', 'edit-post', 'edit-product' );
+
+		if (
+			! in_array( $current_screen, $allowed_screens ) ) {
+		return;
+		}
+
+		wp_enqueue_style( 'qlse-backend' );
 	}
 
 	public function add_quick_edit_custom_box( $column_name ) {
@@ -281,25 +286,6 @@ class Backend {
 				)
 			);
 		}
-	}
-
-	public function add_meta_box() {
-		$current_screen = get_current_screen();
-		// Do not show meta box on service pages.
-		if ( empty( $current_screen->post_type ) ) {
-			return;
-		}
-		// Check if this is the Gutenberg editor.
-		if ( function_exists( 'use_block_editor_for_post_type' ) && use_block_editor_for_post_type( $current_screen->post_type ) ) {
-			// This is the Gutenberg editor, don't add the meta box.
-			return;
-		}
-		add_meta_box( 'sep_metabox_id', 'Search Exclude', array( $this, 'metabox' ), null, 'side' );
-	}
-
-	public function metabox( $post ) {
-		wp_nonce_field( 'sep_metabox_nonce', 'metabox_nonce' );
-		$this->view( 'metabox', array( 'exclude' => $this->is_excluded( $post->ID ) ) );
 	}
 
 	public function post_save( $post_id ) {
@@ -337,7 +323,6 @@ class Backend {
 	}
 
 	public function save_options() {
-
 		if ( ! isset( $_POST['search_exclude_submit'] ) ) {
 			return;
 		}

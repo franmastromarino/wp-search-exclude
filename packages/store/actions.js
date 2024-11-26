@@ -9,9 +9,9 @@ import { store as noticesStore } from '@wordpress/notices';
 import { fetchRestApiSettings } from './helpers';
 import { deepMerge } from '../helpers/deepMerge';
 
-export const setSettingsDisplay = (newSettings) => {
+export const setSettings = (newSettings) => {
 	return {
-		type: 'SET_DISPLAY',
+		type: 'SET_SETTINGS',
 		payload: (prevSettings) => {
 			const settings = deepMerge(prevSettings, newSettings);
 
@@ -20,45 +20,12 @@ export const setSettingsDisplay = (newSettings) => {
 	};
 };
 
-export const setSettingsExcluded = (newSettings) => {
-	console.log('newSettings: ', newSettings);
-
-	return {
-		type: 'SET_EXCLUDED',
-		payload: () => {
-			return newSettings;
-		},
-	};
-};
-
 export const saveSettings =
-	(data, route) =>
+	(data) =>
 	async ({ registry, dispatch, select }) => {
-		let settings;
-
-		if (!route) {
-			throw new Error('Route is required.');
-		}
-
-		switch (route) {
-			case 'excluded':
-				settings = {
-					...select.getSettingsDisplay(),
-					excluded: data,
-				};
-				break;
-			case 'display':
-				settings = {
-					...select.getSettingsExcluded(),
-					display: data,
-				};
-		}
-
-		const setter = route.charAt(0).toUpperCase() + route.slice(1);
 		const response = await fetchRestApiSettings({
 			method: 'POST',
-			data: settings,
-			route,
+			data,
 		});
 
 		if (response?.code) {
@@ -71,12 +38,7 @@ export const saveSettings =
 			return false;
 		}
 
-
-		dispatch[`setSettings${setter}`](data);
+		dispatch.setSettings(data);
 
 		return true;
 	};
-
-export const saveDisplaySettings = (data) => saveSettings(data, 'display');
-
-export const saveExcludedSettings = (data) => saveSettings(data, 'excluded');

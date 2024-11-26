@@ -28,7 +28,6 @@ class Gutenberg {
 			'qlse-gutenberg',
 			plugins_url( '/build/gutenberg/css/style.css', QLSE_PLUGIN_FILE ),
 			array(
-				'search-exclude-components',
 				'wp-components',
 			),
 			QLSE_PLUGIN_VERSION

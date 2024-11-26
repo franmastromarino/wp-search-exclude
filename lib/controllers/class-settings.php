@@ -2,6 +2,8 @@
 
 namespace QuadLayers\QLSE\Controllers;
 
+use QuadLayers\QLSE\Services\Entity_Options;
+
 class Settings {
 
 	protected static $instance;
@@ -13,7 +15,9 @@ class Settings {
 	}
 
 	public function register_scripts() {
-		$content = include QLSE_PLUGIN_DIR . 'build/settings/js/index.asset.php';
+		$content        = include QLSE_PLUGIN_DIR . 'build/settings/js/index.asset.php';
+		$entity_options = Entity_Options::instance();
+
 		/**
 		 * Register settings assets
 		 */
@@ -29,10 +33,23 @@ class Settings {
 			'qlse-settings',
 			plugins_url( '/build/settings/css/style.css', QLSE_PLUGIN_FILE ),
 			array(
-				'qlse-components',
 				'wp-components',
 			),
 			QLSE_PLUGIN_VERSION
+		);
+
+		wp_localize_script(
+			'qlse-settings',
+			'qlseSettings',
+			array(
+				'QLSE_DISPLAY_POST_TYPES' => $entity_options->get_entries(),
+				'QLSE_DISPLAY_TAXONOMIES' => $entity_options->get_taxonomies(),
+				'QLSE_PLUGIN_URL'         => plugins_url( '/', QLSE_PLUGIN_FILE ),
+				'QLSE_PLUGIN_NAME'        => QLSE_PLUGIN_NAME,
+				'QLSE_PREMIUM_SELL_URL'   => QLSE_PREMIUM_SELL_URL,
+				'QLSE_DEMO_URL'           => QLSE_DEMO_URL,
+				'QLSE_DOCUMENTATION_URL'  => QLSE_DOCUMENTATION_URL,
+			)
 		);
 	}
 
