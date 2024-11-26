@@ -11,7 +11,7 @@
  * License:                 GPLv3
  * Domain Path:             /languages
  * Request at least:        4.7
- * Tested up to:            6.6
+ * Tested up to:            6.7
  * Requires PHP:            5.6
  */
 
