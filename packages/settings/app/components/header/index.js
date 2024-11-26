@@ -11,7 +11,7 @@ import {
  * WordPress dependencies
  */
 import { __, sprintf } from '@wordpress/i18n';
-import { getPluginURL } from '../../../../helpers/getPluginUrl';
+import { getPluginURL } from '../../../../helpers/getPluginURL';
 
 const Header = () => {
 	return (
