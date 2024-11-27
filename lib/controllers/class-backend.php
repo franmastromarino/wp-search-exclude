@@ -41,6 +41,10 @@ class Backend {
 		add_action( 'manage_pages_custom_column', array( $this, 'add_column_value' ), 10, 2 );
 		add_action( 'quick_edit_custom_box', array( $this, 'add_quick_edit_custom_box' ) );
 		/**
+		 * Add classic editor metabox
+		 */
+		add_action( 'add_meta_boxes', array( $this, 'add_meta_box' ) );
+		/**
 		 * Add bulk edit actions
 		 */
 		foreach ( get_post_types() as $post_type ) {
@@ -356,6 +360,29 @@ class Backend {
 				)
 			);
 		}
+	}
+
+	public function add_meta_box() {
+		$current_screen = get_current_screen();
+		// Do not show meta box on service pages.
+		if ( empty( $current_screen->post_type ) ) {
+			return;
+		}
+		// Check if this is the Gutenberg editor.
+		if ( function_exists( 'use_block_editor_for_post_type' ) && use_block_editor_for_post_type( $current_screen->post_type ) ) {
+			// This is the Gutenberg editor, don't add the meta box.
+			return;
+		}
+		add_meta_box(
+			'sep_metabox_id',
+			'Search Exclude',
+			function ( $post ) {
+				wp_nonce_field( 'sep_metabox_nonce', 'metabox_nonce' );
+				$this->view( 'metabox', array( 'exclude' => $this->is_excluded( $post->ID ) ) );
+			},
+			null,
+			'side'
+		);
 	}
 
 	public static function instance() {
