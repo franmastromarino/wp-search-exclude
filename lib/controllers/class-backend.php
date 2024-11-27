@@ -183,7 +183,12 @@ class Backend {
 
 	protected function is_excluded( $post_id ) {
 		$post_type = get_post_type( $post_id );
-		$excluded  = Models_Settings::instance()->get()->get( 'entries' )[ $post_type ]['ids'];
+
+		$entries = Models_Settings::instance()->get()->get( 'entries' );
+
+		$excluded = isset( $entries[ $post_type ]['ids'] ) && is_array( $entries[ $post_type ]['ids'] )
+			? $entries[ $post_type ]['ids']
+			: array();
 
 		return false !== array_search( $post_id, $excluded );
 	}
