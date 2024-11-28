@@ -169,20 +169,20 @@ class Backend {
 	public function save_post_ids_to_search_exclude( $post_ids, $exclude ) {
 		$post_type = $_REQUEST['post_type'];
 
-		$exclude         = (bool) $exclude;
-		$settings_entity = Models_Settings::instance()->get();
-		$entries         = $settings_entity->get( 'entries' );
+		$exclude = (bool) $exclude;
+		$entries = Models_Settings::instance()->get()->get( 'entries' );
+
+		$excluded = isset( $entries[ $post_type ]['ids'] ) && is_array( $entries[ $post_type ]['ids'] )
+		? $entries[ $post_type ]['ids']
+		: array();
 
 		if ( $exclude ) {
-			$entries[ $post_type ]['ids'] = array_values( array_unique( array_merge( $entries[ $post_type ]['ids'], $post_ids ) ) );
-			$settings_entity->set( 'entries', $entries );
+			$entries[ $post_type ]['ids'] = array_values( array_unique( array_merge( $excluded, $post_ids ) ) );
 		} else {
-			$entries[ $post_type ]['ids'] = array_values( array_diff( $entries[ $post_type ]['ids'], $post_ids ) );
-			$settings_entity->set( 'entries', $entries );
-
+			$entries[ $post_type ]['ids'] = array_values( array_diff( $excluded, $post_ids ) );
 		}
 
-		Models_Settings::instance()->save( $settings_entity->getProperties() );
+		Models_Settings::instance()->save( array( 'entries' => $entries ) );
 	}
 
 	protected function is_excluded( $post_id ) {
@@ -311,9 +311,8 @@ class Backend {
 	}
 
 	public function options() {
-		$settings_entity = Models_Settings::instance()->get();
-		$excluded        = $settings_entity->get( 'excluded' );
-		$query           = new \WP_Query(
+		$excluded = Models_Settings::instance()->get()->get( 'excluded' );
+		$query    = new \WP_Query(
 			array(
 				'post_type'   => 'any',
 				'post_status' => 'any',

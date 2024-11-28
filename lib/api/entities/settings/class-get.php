@@ -14,11 +14,8 @@ class Get extends Base {
 	public function callback( \WP_REST_Request $request ) {
 
 		try {
-			// throw new \Exception( esc_html__( 'Unknown error.', 'search-exclude' ), 500 );
 			$settings = Models_Settings::instance()->get()->getProperties();
 			return $this->handle_response( $settings );
-			$test = $this->handle_response( $settings );
-			error_log( 'test: ' . json_encode( $test, JSON_PRETTY_PRINT ) );
 		} catch ( \Throwable  $error ) {
 			return $this->handle_response(
 				array(

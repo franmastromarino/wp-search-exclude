@@ -21,6 +21,6 @@ class Settings extends SingleEntity {
 		$this->taxonomies = $args['taxonomies'];
 		$this->author     = $args['author'];
 	}
-	public static $sanitizeProperties = array();
-	public static $validateProperties = array();
+	public static $sanitizeProperties = array(); //phpcs:ignore
+	public static $validateProperties = array(); //phpcs:ignore
 }

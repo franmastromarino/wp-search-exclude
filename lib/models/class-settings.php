@@ -39,7 +39,6 @@ class Settings {
 	 */
 	public function get() {
 		$entity = $this->repository->find();
-
 		if ( $entity ) {
 			return $entity;
 		} else {
