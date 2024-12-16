@@ -22,6 +22,8 @@ const PostTypesSelector = ({
 		include: ids,
 	});
 
+	console.log({ postTypes });
+
 	const prevPostTypes = useRef(null);
 
 	const [searchTerm, setSearchTerm] = useState('');
