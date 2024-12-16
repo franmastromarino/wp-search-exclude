@@ -1,4 +1,10 @@
 .qlse__multiple-selector {
+	display: flex;
+	align-items: center;
+	align-content: center;
+	&--loading {
+		margin-left: 5px;
+	}
 	&--input-disabled {
 		opacity: 0.3;
 		pointer-events: none !important;
@@ -16,6 +22,8 @@
 		padding: calc(2px) !important;
 		gap: calc(2px) !important;
 		background-color: white !important;
+		overflow: auto;
+		max-height: 300px;
 	}
 
 	.components-spacer {

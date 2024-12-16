@@ -1,16 +1,16 @@
-import { FormTokenField } from '@wordpress/components';
+import { FormTokenField, Spinner } from '@wordpress/components';
 import { memo } from '@wordpress/element';
-import classNames from 'classnames';
+import { __, sprintf } from '@wordpress/i18n';
 
 export const MultipleSelector = ({
 	options = [],
 	value: _value,
+	isLoading,
 	onChange,
 	label = '',
 	multiple = true,
 	onInputChange,
 	placeholder,
-	disabled,
 }) => {
 	// Convert values ids to int if is numeric
 	const value = _value?.map((v) => {
@@ -47,12 +47,7 @@ export const MultipleSelector = ({
 		.filter((s) => !!s);
 
 	return (
-		<div
-			className={classNames(
-				'qlse__multiple-selector',
-				disabled && 'qlse__multiple-selector--input-disabled'
-			)}
-		>
+		<div className="qlse__multiple-selector">
 			<FormTokenField
 				value={labels}
 				onChange={handleChange}
@@ -63,6 +58,11 @@ export const MultipleSelector = ({
 				placeholder={placeholder}
 				onInputChange={onInputChange}
 			/>
+			{isLoading && (
+				<div className="qlse__multiple-selector--loading">
+					<Spinner />
+				</div>
+			)}
 		</div>
 	);
 };
