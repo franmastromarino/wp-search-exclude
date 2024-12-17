@@ -78,6 +78,7 @@ const PostTypesSelector = ({
 				});
 			}}
 			onInputChange={setSearchTerm}
+			disabled={disabled}
 			isLoading={isResolvingPostTypes}
 		/>
 	);
