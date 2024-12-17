@@ -3,7 +3,7 @@ import { store as coreStore } from '@wordpress/core-data';
 
 export const usePostTypes = ({
 	postType = 'page',
-	limit = 50,
+	limit = 100,
 	page = 1,
 	searchTerm = undefined,
 	include = undefined,
