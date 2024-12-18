@@ -80,13 +80,6 @@ function Nav() {
 													'search-exclude'
 												)}
 											</p>
-											<hr />
-											<p>
-												{__(
-													'Note: Enabling the "All" option will not update the status in the "Search Excluded" column. While the post may appear as not excluded, it is indeed excluded.',
-													'search-exclude'
-												)}
-											</p>
 										</>
 									</ItemTooltip>
 								</a>
