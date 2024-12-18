@@ -1,10 +1,11 @@
-import { FormTokenField } from '@wordpress/components';
+import { FormTokenField, Spinner } from '@wordpress/components';
 import { memo } from '@wordpress/element';
 import classNames from 'classnames';
 
 export const MultipleSelector = ({
 	options = [],
 	value: _value,
+	isLoading,
 	onChange,
 	label = '',
 	multiple = true,
@@ -63,6 +64,11 @@ export const MultipleSelector = ({
 				placeholder={placeholder}
 				onInputChange={onInputChange}
 			/>
+			{isLoading && (
+				<div className="qlse__multiple-selector--loading">
+					<Spinner />
+				</div>
+			)}
 		</div>
 	);
 };
