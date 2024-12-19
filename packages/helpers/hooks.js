@@ -53,149 +53,149 @@ export const useCurrentPostMeta = (props = {}) => {
 	};
 };
 
-export const useValidPostTypes = () => {
-	return useSelect(
-		(select) => {
-			const { getPostTypes, isResolving, hasFinishedResolution } =
-				select(coreStore);
+// export const useValidPostTypes = () => {
+// 	return useSelect(
+// 		(select) => {
+// 			const { getPostTypes, isResolving, hasFinishedResolution } =
+// 				select(coreStore);
 
-			const query = { per_page: -1 };
-			const postTypes = getPostTypes(query);
+// 			const query = { per_page: -1 };
+// 			const postTypes = getPostTypes(query);
 
-			const isResolvingPostTypes = isResolving('getPostTypes', [query]);
-			const hasResolvedPostTypes = hasFinishedResolution('getPostTypes', [
-				query,
-			]);
+// 			const isResolvingPostTypes = isResolving('getPostTypes', [query]);
+// 			const hasResolvedPostTypes = hasFinishedResolution('getPostTypes', [
+// 				query,
+// 			]);
 
-			if (isResolvingPostTypes || !hasResolvedPostTypes || !postTypes) {
-				return {
-					validPostTypes: [],
-					isResolvingPostTypes: true,
-					hasResolvedPostTypes: false,
-				};
-			}
+// 			if (isResolvingPostTypes || !hasResolvedPostTypes || !postTypes) {
+// 				return {
+// 					validPostTypes: [],
+// 					isResolvingPostTypes: true,
+// 					hasResolvedPostTypes: false,
+// 				};
+// 			}
 
-			// Filter out post types that are not public or are internal
-			const validPostTypes = postTypes.filter(
-				(postType) =>
-					postType.viewable && !postType.slug.startsWith('wp_')
-			);
+// 			// Filter out post types that are not public or are internal
+// 			const validPostTypes = postTypes.filter(
+// 				(postType) =>
+// 					postType.viewable && !postType.slug.startsWith('wp_')
+// 			);
 
-			return {
-				validPostTypes,
-				isResolvingPostTypes: false,
-				hasResolvedPostTypes: true,
-			};
-		},
-		[] // No dependencies; runs once unless select dependencies change
-	);
-};
+// 			return {
+// 				validPostTypes,
+// 				isResolvingPostTypes: false,
+// 				hasResolvedPostTypes: true,
+// 			};
+// 		},
+// 		[] // No dependencies; runs once unless select dependencies change
+// 	);
+// };
 
-export const usePostsByIdsAnyPostType = (ids = [], validPostTypes = []) => {
-	// Call useValidPostTypes unconditionally
-	const {
-		validPostTypes: fetchedPostTypes,
-		isResolvingPostTypes,
-		hasResolvedPostTypes,
-	} = useValidPostTypes();
+// export const usePostsByIdsAnyPostType = (ids = [], validPostTypes = []) => {
+// 	// Call useValidPostTypes unconditionally
+// 	const {
+// 		validPostTypes: fetchedPostTypes,
+// 		isResolvingPostTypes,
+// 		hasResolvedPostTypes,
+// 	} = useValidPostTypes();
 
-	// Decide which validPostTypes to use
-	const resolvedValidPostTypes = validPostTypes.length
-		? validPostTypes
-		: fetchedPostTypes;
+// 	// Decide which validPostTypes to use
+// 	const resolvedValidPostTypes = validPostTypes.length
+// 		? validPostTypes
+// 		: fetchedPostTypes;
 
-	// Now use useSelect to fetch the posts
-	const { postsData, isResolvingPosts, hasResolvedPosts } = useSelect(
-		(select) => {
-			const { getEntityRecords, isResolving, hasFinishedResolution } =
-				select(coreStore);
+// 	// Now use useSelect to fetch the posts
+// 	const { postsData, isResolvingPosts, hasResolvedPosts } = useSelect(
+// 		(select) => {
+// 			const { getEntityRecords, isResolving, hasFinishedResolution } =
+// 				select(coreStore);
 
-			// Check if post types are resolving
-			if (
-				isResolvingPostTypes ||
-				!hasResolvedPostTypes ||
-				!resolvedValidPostTypes.length
-			) {
-				return {
-					postsData: [],
-					isResolvingPosts: true,
-					hasResolvedPosts: false,
-				};
-			}
+// 			// Check if post types are resolving
+// 			if (
+// 				isResolvingPostTypes ||
+// 				!hasResolvedPostTypes ||
+// 				!resolvedValidPostTypes.length
+// 			) {
+// 				return {
+// 					postsData: [],
+// 					isResolvingPosts: true,
+// 					hasResolvedPosts: false,
+// 				};
+// 			}
 
-			// Initialize variables to collect posts and resolution states
-			let allPosts = [];
-			let isResolvingAllPosts = false;
-			let hasResolvedAllPosts = true;
+// 			// Initialize variables to collect posts and resolution states
+// 			let allPosts = [];
+// 			let isResolvingAllPosts = false;
+// 			let hasResolvedAllPosts = true;
 
-			// Loop through each valid post type and fetch posts with the given IDs
-			resolvedValidPostTypes.forEach((postType) => {
-				const batchSize = 50;
-				const postBatches = [];
+// 			// Loop through each valid post type and fetch posts with the given IDs
+// 			resolvedValidPostTypes.forEach((postType) => {
+// 				const batchSize = 50;
+// 				const postBatches = [];
 
-				//split ids quantity into smaller batch, to prevent overloading the url (400 Bad Request)
-				for (let i = 0; i < ids.length; i += batchSize) {
-					postBatches.push(ids.slice(i, i + batchSize));
-				}
+// 				//split ids quantity into smaller batch, to prevent overloading the url (400 Bad Request)
+// 				for (let i = 0; i < ids.length; i += batchSize) {
+// 					postBatches.push(ids.slice(i, i + batchSize));
+// 				}
 
-				postBatches.forEach((idsBatch) => {
-					const query = {
-						include: idsBatch,
-						per_page: idsBatch.length, // ids.length is at least 1 here
-						_fields: ['id', 'title', 'date', 'link', 'type'],
-					};
+// 				postBatches.forEach((idsBatch) => {
+// 					const query = {
+// 						include: idsBatch,
+// 						per_page: idsBatch.length, // ids.length is at least 1 here
+// 						_fields: ['id', 'title', 'date', 'link', 'type'],
+// 					};
 
-					const posts = getEntityRecords(
-						'postType',
-						postType.slug,
-						query
-					);
+// 					const posts = getEntityRecords(
+// 						'postType',
+// 						postType.slug,
+// 						query
+// 					);
 
-					const isResolvingCurrent = isResolving('getEntityRecords', [
-						'postType',
-						postType.slug,
-						query,
-					]);
+// 					const isResolvingCurrent = isResolving('getEntityRecords', [
+// 						'postType',
+// 						postType.slug,
+// 						query,
+// 					]);
 
-					const hasResolvedCurrent = hasFinishedResolution(
-						'getEntityRecords',
-						['postType', postType.slug, query]
-					);
+// 					const hasResolvedCurrent = hasFinishedResolution(
+// 						'getEntityRecords',
+// 						['postType', postType.slug, query]
+// 					);
 
-					// Update resolving states
-					isResolvingAllPosts =
-						isResolvingAllPosts || isResolvingCurrent;
-					hasResolvedAllPosts =
-						hasResolvedAllPosts && hasResolvedCurrent;
+// 					// Update resolving states
+// 					isResolvingAllPosts =
+// 						isResolvingAllPosts || isResolvingCurrent;
+// 					hasResolvedAllPosts =
+// 						hasResolvedAllPosts && hasResolvedCurrent;
 
-					if (posts && posts.length) {
-						allPosts = allPosts.concat(
-							posts.map(({ id, title, date, link, type }) => ({
-								id,
-								title: title.rendered,
-								date,
-								link,
-								postType: type,
-							}))
-						);
-					}
-				});
-			});
-			return {
-				postsData: allPosts,
-				isResolvingPosts: isResolvingAllPosts,
-				hasResolvedPosts: hasResolvedAllPosts,
-			};
-		},
-		[ids.join(','), resolvedValidPostTypes.map((pt) => pt.slug).join(',')] // Dependencies
-	);
+// 					if (posts && posts.length) {
+// 						allPosts = allPosts.concat(
+// 							posts.map(({ id, title, date, link, type }) => ({
+// 								id,
+// 								title: title.rendered,
+// 								date,
+// 								link,
+// 								postType: type,
+// 							}))
+// 						);
+// 					}
+// 				});
+// 			});
+// 			return {
+// 				postsData: allPosts,
+// 				isResolvingPosts: isResolvingAllPosts,
+// 				hasResolvedPosts: hasResolvedAllPosts,
+// 			};
+// 		},
+// 		[ids.join(','), resolvedValidPostTypes.map((pt) => pt.slug).join(',')] // Dependencies
+// 	);
 
-	const hasPosts = !isResolvingPosts && postsData.length > 0;
+// 	const hasPosts = !isResolvingPosts && postsData.length > 0;
 
-	return {
-		posts: postsData,
-		isResolvingPosts,
-		hasPosts,
-		hasResolvedPosts,
-	};
-};
+// 	return {
+// 		posts: postsData,
+// 		isResolvingPosts,
+// 		hasPosts,
+// 		hasResolvedPosts,
+// 	};
+// };
