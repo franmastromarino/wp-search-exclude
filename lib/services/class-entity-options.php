@@ -46,13 +46,26 @@ class Entity_Options {
 			),
 			'objects'
 		);
-		$array      = array();
-		foreach ( $post_types as $type ) {
-			if ( $count = wp_count_posts( $type->name ) ) {
-				$array[ $type->name ] = $type;
+
+		if ( ! isset( $post_types['attachment'] ) ) {
+			$attachment = get_post_types(
+				array(
+					'name' => 'attachment',
+				),
+				'objects'
+			);
+			if ( ! empty( $attachment ) ) {
+				$post_types['attachment'] = $attachment['attachment'];
 			}
 		}
-		return $array;
+
+		$result = array();
+
+		foreach ( $post_types as $type ) {
+				$result[ $type->name ] = $type;
+		}
+
+		return $result;
 	}
 
 	public function get_taxonomies() {

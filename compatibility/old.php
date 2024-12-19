@@ -16,11 +16,15 @@ add_filter(
 
 		$new_value = array(
 			'entries' => array(
-				'post' => array(
+				'post'       => array(
 					'all' => false,
 					'ids' => array(),
 				),
-				'page' => array(
+				'page'       => array(
+					'all' => false,
+					'ids' => array(),
+				),
+				'attachment' => array(
 					'all' => false,
 					'ids' => array(),
 				),
@@ -55,11 +59,15 @@ add_filter(
 
 		$new_value = array(
 			'entries' => array(
-				'post' => array(
+				'post'       => array(
 					'all' => false,
 					'ids' => array(),
 				),
-				'page' => array(
+				'page'       => array(
+					'all' => false,
+					'ids' => array(),
+				),
+				'attachment' => array(
 					'all' => false,
 					'ids' => array(),
 				),
