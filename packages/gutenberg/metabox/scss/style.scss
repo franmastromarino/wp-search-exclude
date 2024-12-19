@@ -1,7 +1,13 @@
-.qlse__checkbox--loading {
-	display: flex;
-	align-items: center;
-	> svg.components-spinner {
-		margin-top: 0;
+.qlse__checkbox {
+	&--loading {
+		display: flex;
+		align-items: center;
+		> svg.components-spinner {
+			margin-top: 0;
+		}
+	}
+	&--disabled .components-base-control__field {
+		opacity: 0.5;
+		pointer-events: none;
 	}
 }

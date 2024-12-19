@@ -88,6 +88,7 @@ export const Metabox = () => {
 				</div>
 			) : (
 				<CheckboxControl
+					className={excludedAll && 'qlse__checkbox--disabled'}
 					__nextHasNoMarginBottom
 					help={
 						excludedAll
