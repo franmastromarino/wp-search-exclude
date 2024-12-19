@@ -1,0 +1,7 @@
+.qlse__checkbox--loading {
+	display: flex;
+	align-items: center;
+	> svg.components-spinner {
+		margin-top: 0;
+	}
+}
