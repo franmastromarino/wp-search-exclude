@@ -5,7 +5,7 @@ import { useSettings } from '@qlse/store';
 /**
  * WordPress dependencies
  */
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 
 //TODO: uncomment when WP 6.6 is the minimum version required
 // import { PluginDocumentSettingPanel } from '@wordpress/editor';
@@ -41,7 +41,10 @@ export const Metabox = () => {
 	const postId = select('core/editor').getCurrentPostId();
 	const postType = select('core/editor').getCurrentPostType();
 	const isSavingRef = useRef(false);
-	const excluded = settings?.entries[postType]?.ids;
+	const excludedAll = settings?.entries[postType]?.all;
+	const excludedIds = settings?.entries[postType]?.ids;
+
+	const isExcluded = excludedIds?.includes(postId) || excludedAll;
 
 	useEffect(() => {
 		const unsubscribe = subscribe(() => {
@@ -62,9 +65,9 @@ export const Metabox = () => {
 	}, [settings]);
 
 	const handleChange = () => {
-		const updatedExcluded = excluded.includes(postId)
-			? excluded.filter((excludedPostId) => excludedPostId !== postId)
-			: [...excluded, postId];
+		const updatedExcluded = excludedIds.includes(postId)
+			? excludedIds.filter((excludedPostId) => excludedPostId !== postId)
+			: [...excludedIds, postId];
 
 		setExclude(exclude ? undefined : true);
 
@@ -85,9 +88,22 @@ export const Metabox = () => {
 				</div>
 			) : (
 				<CheckboxControl
+					className={excludedAll && 'qlse__checkbox--disabled'}
 					__nextHasNoMarginBottom
+					help={
+						excludedAll
+							? sprintf(
+									__(
+										'All %s are excluded.',
+										'search-exclude'
+									),
+									postType
+							  )
+							: ''
+					}
 					label={__('Exclude from Search Results', 'search-exclude')}
-					checked={excluded?.includes(postId)}
+					isDisabled={excludedAll || isResolvingSettings}
+					checked={isExcluded}
 					onChange={handleChange}
 				/>
 			)}
