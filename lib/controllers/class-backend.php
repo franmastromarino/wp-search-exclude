@@ -190,6 +190,10 @@ class Backend {
 
 		$entries = Models_Settings::instance()->get()->get( 'entries' );
 
+		if ( $entries[ $post_type ]['all'] ) {
+			return true;
+		}
+
 		$excluded = isset( $entries[ $post_type ]['ids'] ) && is_array( $entries[ $post_type ]['ids'] )
 			? $entries[ $post_type ]['ids']
 			: array();

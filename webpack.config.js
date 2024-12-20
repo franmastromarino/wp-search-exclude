@@ -124,44 +124,48 @@ module.exports = [
 			minimize: isProduction,
 		},
 	},
-	// {
-	// 	...config,
-	// 	entry: {
-	// 		index: path.resolve(__dirname, 'packages', './gutenberg/style.scss'),
-	// 	},
-	// 	output: {
-	// 		filename: '[name].js',
-	// 		path: path.resolve(__dirname, 'build/gutenbergrg/css/'),
-	// 	},
-	// 	module: {
-	// 		...config.module,
-	// 		rules: [
-	// 			{
-	// 				test: /\.scss$/,
-	// 				use: [
-	// 					MiniCssExtractPlugin.loader,
-	// 					{
-	// 						loader: 'css-loader',
-	// 					},
-	// 					{
-	// 						loader: 'sass-loader',
-	// 						options: {
-	// 							sassOptions: {
-	// 								importer: globImporter(),
-	// 							},
-	// 						},
-	// 					},
-	// 				],
-	// 			},
-	// 		],
-	// 	},
-	// 	plugins: [
-	// 		new RemoveEmptyScriptsPlugin(),
-	// 		new MiniCssExtractPlugin({
-	// 			filename: 'style.css',
-	// 		}),
-	// 	],
-	// },
+	{
+		...config,
+		entry: {
+			index: path.resolve(
+				__dirname,
+				'packages',
+				'./gutenberg/style.scss'
+			),
+		},
+		output: {
+			filename: '[name].js',
+			path: path.resolve(__dirname, 'build/gutenberg/css/'),
+		},
+		module: {
+			...config.module,
+			rules: [
+				{
+					test: /\.scss$/,
+					use: [
+						MiniCssExtractPlugin.loader,
+						{
+							loader: 'css-loader',
+						},
+						{
+							loader: 'sass-loader',
+							options: {
+								sassOptions: {
+									importer: globImporter(),
+								},
+							},
+						},
+					],
+				},
+			],
+		},
+		plugins: [
+			new RemoveEmptyScriptsPlugin(),
+			new MiniCssExtractPlugin({
+				filename: 'style.css',
+			}),
+		],
+	},
 	//Settings
 	{
 		...config,

@@ -3,18 +3,28 @@ import { store as coreStore } from '@wordpress/core-data';
 
 export const usePostTypes = ({
 	postType = 'page',
-	limit = 50,
+	limit = 100,
+	page = 1,
 	searchTerm = undefined,
 	include = undefined,
 	exclude = undefined,
 } = {}) => {
 	return useSelect(
 		(select) => {
+			if (!searchTerm && (!include || include.length === 0)) {
+				return {
+					postTypes: [],
+					isResolvingPostTypes: false,
+					hasPostTypes: false,
+				};
+			}
 			const { getEntityRecords, isResolving } = select(coreStore);
 
 			// Build the query parameters
 			const query = {
 				per_page: limit,
+				page,
+				_fields: 'id,title.rendered',
 			};
 
 			// If we have IDs, include them in the query

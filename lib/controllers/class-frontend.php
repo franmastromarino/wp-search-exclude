@@ -16,52 +16,57 @@ class Frontend {
 		 * Search filter
 		 */
 
-		add_filter( 'pre_get_posts', array( $this, 'search_filter' ) );
-		add_filter( 'bbp_has_replies_query', array( $this, 'bbpress_flag_replies' ) );
+		add_action(
+			'init',
+			function () {
+			add_filter( 'pre_get_posts', array( $this, 'search_filter' ) );
+			add_filter( 'bbp_has_replies_query', array( $this, 'bbpress_flag_replies' ) );
+			}
+		);
 	}
 
 	public function search_filter( $query ) {
-		$settings_entity = Models_Settings::instance()->get();
-		$settings        = $settings_entity;
 
 		if ( is_admin() || wp_doing_ajax() || defined( 'REST_REQUEST' ) && REST_REQUEST ) {
-			return;
+			return $query;
 		}
 
-		$exclude =
+		$excluded = Models_Settings::instance()->get();
+
+		if ( ! isset( $excluded ) ) {
+			return $query;
+		}
+
+		$allow_exclude =
 		( ! is_admin() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) )
 		&& $query->is_search
 		&& ! $this->is_bbpress( $query );
 
-		$exclude = apply_filters( 'searchexclude_filter_search', $exclude, $query );
+		$allow_exclude = apply_filters( 'searchexclude_filter_search', $allow_exclude, $query );
 
-		// exclude posts by post type
-		if ( $exclude && isset( $settings ) ) {
+		if ( ! $allow_exclude ) {
+			return $query;
+		}
+
+		/**
+		 * Exclude posts by post type
+		 */
+		if ( isset( $excluded->entries ) ) {
 			$post__not_in = $query->get( 'post__not_in', array() );
-
-			if ( isset( $settings->entries ) ) {
-				foreach ( $settings->entries as $post_type => $setting ) {
-					$ids = isset( $setting['ids'] ) ? $setting['ids'] : array();
-					// Exclude all posts of this post type
-					if ( $setting['all'] ) {
-						$post__not_in = $this->exclude_all_posts_of_type( $post_type );
-						$query->set( 'post__not_in', $post__not_in );
-
-						// Exclude by ids
-					} else {
-						$post__not_in = array_merge( $post__not_in, $ids );
-					}
-				}
+			foreach ( $excluded->entries as $post_type => $excluded_post_type ) {
+				$post_type_ids = ! empty( $excluded_post_type['all'] ) ? $this->get_all_post_type_ids( $post_type ) : $excluded_post_type['ids'];
+				$post__not_in  = array_merge( $post__not_in, $post_type_ids );
 			}
-
 			$query->set( 'post__not_in', $post__not_in );
 		}
 
-		// exclude posts by taxonomies
-		if ( isset( $settings->taxonomies ) ) {
+		/**
+		 * Exclude posts by taxonomies
+		 */
+		if ( isset( $excluded->taxonomies ) ) {
 			$tax_query = $query->get( 'tax_query', array() );
 
-			foreach ( $settings->taxonomies as $taxonomy => $setting ) {
+			foreach ( $excluded->taxonomies as $taxonomy => $setting ) {
 				$ids = isset( $setting['ids'] ) ? $setting['ids'] : array();
 
 				// Exclude all taxonomies
@@ -103,27 +108,27 @@ class Frontend {
 				$query->set( 'tax_query', $tax_query );
 			}
 		}
-
-		// exclude posts by author
-		if ( isset( $settings->author ) ) {
-			$ids = isset( $settings->author['ids'] ) ? $settings->author['ids'] : array();
-			// exclude all posts by author
-			if ( $settings->author['all'] ) {
+		/**
+		 * Exclude posts by author
+		 */
+		if ( isset( $excluded->author ) ) {
+			$ids = isset( $excluded->author['ids'] ) ? $excluded->author['ids'] : array();
+			// Exclude all posts by author
+			if ( $excluded->author['all'] ) {
 				$query->set( 'post__in', array( 0 ) ); // This returns no posts
-
 				// Exclude by ids
 			} else {
-					$query->set( 'author__not_in', $ids );
+				$query->set( 'author__not_in', $ids );
 			}
-
-			return $query;
 		}
+
+		return $query;
 	}
 
 /**
  * Helper function to get all post IDs for a given post type.
  */
-	private function exclude_all_posts_of_type( $post_type ) {
+	private function get_all_post_type_ids( $post_type ) {
 		$all_posts = get_posts(
 			array(
 				'post_type'      => $post_type,
