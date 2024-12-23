@@ -190,6 +190,10 @@ class Backend {
 
 		$entries = Models_Settings::instance()->get()->get( 'entries' );
 
+		if ( $entries[ $post_type ]['all'] ) {
+			return true;
+		}
+
 		$excluded = isset( $entries[ $post_type ]['ids'] ) && is_array( $entries[ $post_type ]['ids'] )
 			? $entries[ $post_type ]['ids']
 			: array();
@@ -247,8 +251,20 @@ class Backend {
 	}
 
 	public function enqueue_scripts() {
+		$post_types = get_post_types(
+			array(
+				'public'            => true,
+				'show_in_nav_menus' => true,
+			),
+			'names'
+		);
+
+		$allowed_screens = array( 'settings_page_search_exclude' );
 		$current_screen  = get_current_screen()->id;
-		$allowed_screens = array( 'edit-page', 'edit-post', 'settings_page_search_exclude' );
+
+		foreach ( $post_types as $type ) {
+			$allowed_screens = array_merge( $allowed_screens, array( 'edit-' . $type ) );
+		};
 
 		if (
 			! in_array( $current_screen, $allowed_screens ) ) {

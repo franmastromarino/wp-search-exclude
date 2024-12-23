@@ -11,7 +11,6 @@ const PostTypesSelector = ({
 	disabled,
 }) => {
 	const value = settings.entries[postType]?.ids;
-
 	const ids = useMemo(
 		() => value?.map((item) => parseInt(item)),
 		[postType, settings.entries]
@@ -80,6 +79,7 @@ const PostTypesSelector = ({
 			}}
 			onInputChange={setSearchTerm}
 			disabled={disabled}
+			isLoading={isResolvingPostTypes}
 		/>
 	);
 };
