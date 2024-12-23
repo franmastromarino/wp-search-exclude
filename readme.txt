@@ -5,7 +5,7 @@ Tags: search exclude, search, wordpress search, exclude post, exclude page
 Requires at least: 4.7
 Requires PHP: 5.6
 Tested up to: 6.7
-Stable tag: 2.2.0
+Stable tag: 2.3.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -98,19 +98,25 @@ function filterForProducts($exclude, $query)
 
 == Changelog ==
 
+= 2.3.0 =
+* fix: php errors
+* fix: improve allowed screen logic
+* fix: scripts in custom post types
+* fix: advanced custom fields compatibility
+
 = 2.2.0 =
-* Fix php errors
+* fix: php errors
 
 = 2.1.9 =
-* Fix php errors
-* Fix compatibility with classic editor
+* fix: php errors
+* fix: compatibility with classic editor
 
 = 2.1.8 =
 * WordPress 6.7 compatibility
 
 = 2.1.7 =
-* Fix WordPress 6.1.3 compatibility
-* Fix big queries 
+* fix: WordPress 6.1.3 compatibility
+* fix: big queries 
 * Remove notification 
 
 = 2.1.6 =
@@ -135,7 +141,7 @@ function filterForProducts($exclude, $query)
 * WordPress compatibility
 
 = 2.0.9 =
-* Fix PHP errors
+* fix: PHP errors
 
 = 2.0.8 =
 * Translation strings
@@ -153,13 +159,13 @@ function filterForProducts($exclude, $query)
 * WordPress compatibility
 
 = 2.0.3 =
-* Fix strings translations
+* fix: strings translations
 
 = 2.0.2 =
-* Fix strings translations
+* fix: strings translations
 
 = 2.0.1 =
-* Fix strings translations
+* fix: strings translations
 
 = 2.0.0 =
 * i18n implemented
@@ -173,14 +179,14 @@ function filterForProducts($exclude, $query)
 * Author update.
 
 = 1.3.0 =
-* Fix and rework bulk edit: The `Bulk actions` dropdown now offers hide/show actions.
+* fix: and rework bulk edit: The `Bulk actions` dropdown now offers hide/show actions.
 
 = 1.2.7 =
 * This is a security release. All users are encouraged to upgrade.
-* Fix possible XSS vulnerability.
+* fix: possible XSS vulnerability.
 
 = 1.2.6 =
-* Fix compatibility with WordPress 5.5
+* fix: compatibility with WordPress 5.5
 
 = 1.2.5 =
 * Security release. More protection added.
