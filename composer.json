@@ -15,11 +15,13 @@
 		},
 		"allow-plugins": {
 			"quadlayers/wp-autoload": true,
-			"automattic/jetpack-composer-plugin": true
+			"automattic/jetpack-composer-plugin": true,
+			"automattic/jetpack-autoloader": true
 		}
 	},
 	"require": {
 		"php": ">=7.4.0",
+		"automattic/jetpack-autoloader": "^2",
 		"automattic/jetpack-composer-plugin": "*",
 		"automattic/jetpack-assets": "*",
 		"quadlayers/wp-dashboard-widget-news": "*",
@@ -34,14 +36,6 @@
 		"classmap": [
 			"lib/"
 		]
-	},
-	"autoload-dev": {
-		"exclude-from-classmap": [
-			"lib/"
-		]
-	},
-	"require-dev": {
-		"quadlayers/wp-autoload": "*"
 	},
 	"extra": {
 		"quadlayers/wp-autoload": {
