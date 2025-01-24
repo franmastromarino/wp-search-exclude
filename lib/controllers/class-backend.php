@@ -172,6 +172,13 @@ class Backend {
 		$exclude = (bool) $exclude;
 		$entries = Models_Settings::instance()->get()->get( 'entries' );
 
+		if ( ! isset( $entries[ $post_type ] ) ) {
+			$entries[ $post_type ] = array(
+				'all' => false,
+				'ids' => array(),
+			);
+		}
+
 		$excluded = isset( $entries[ $post_type ]['ids'] ) && is_array( $entries[ $post_type ]['ids'] )
 		? $entries[ $post_type ]['ids']
 		: array();
@@ -189,6 +196,10 @@ class Backend {
 		$post_type = get_post_type( $post_id );
 
 		$entries = Models_Settings::instance()->get()->get( 'entries' );
+
+		if ( ! isset( $entries[ $post_type ] ) ) {
+			return false;
+		}
 
 		if ( $entries[ $post_type ]['all'] ) {
 			return true;
@@ -264,7 +275,7 @@ class Backend {
 
 		foreach ( $post_types as $type ) {
 			$allowed_screens = array_merge( $allowed_screens, array( 'edit-' . $type ) );
-		};
+		}
 
 		if (
 			! in_array( $current_screen, $allowed_screens ) ) {
