@@ -27,12 +27,8 @@ const Header = () => {
 				)}
 			</p>
 			<p className="about-text">
-				<a href={QLSE_PREMIUM_SELL_URL} target="__blank">
-					{__('Premium', 'search-exclude')}
-				</a>
-				|
-				<a href={QLSE_DEMO_URL} target="__blank">
-					{__('Demo', 'search-exclude')}
+				<a href="https://quadlayers.com/" target="__blank">
+					{__('Quadlayers', 'search-exclude')}
 				</a>
 				|
 				<a href={QLSE_DOCUMENTATION_URL} target="__blank">
