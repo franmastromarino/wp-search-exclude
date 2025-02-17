@@ -13,7 +13,7 @@ final class Plugin {
 		/**
 		* Load plugin textdomain.
 		*/
-		load_plugin_textdomain( 'search-exclude', false, QLSE_PLUGIN_DIR . '/languages/' );
+		add_action( 'init', array( $this, 'load_textdomain' ) );
 		/**
 		 * On activation
 		 */
@@ -24,6 +24,10 @@ final class Plugin {
 		Controllers\Frontend::instance();
 		Controllers\Gutenberg::instance();
 		Controllers\Settings::instance();
+	}
+
+	public function load_textdomain() {
+		load_plugin_textdomain( 'search-exclude', false, QLSE_PLUGIN_DIR . '/languages/' );
 	}
 
 	public function activate() {
