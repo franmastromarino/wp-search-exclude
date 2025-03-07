@@ -27,7 +27,11 @@ class Frontend {
 
 	public function search_filter( $query ) {
 
-		if ( is_admin() || wp_doing_ajax() || defined( 'REST_REQUEST' ) && REST_REQUEST ) {
+		if ( is_admin() && ! wp_doing_ajax() ) {
+			return $query;
+		}
+
+		if ( function_exists( 'wp_is_serving_rest_request' ) && wp_is_serving_rest_request() ) {
 			return $query;
 		}
 
@@ -37,10 +41,7 @@ class Frontend {
 			return $query;
 		}
 
-		$allow_exclude =
-		( ! is_admin() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) )
-		&& $query->is_search
-		&& ! $this->is_bbpress( $query );
+		$allow_exclude = $query->is_search && ! $this->is_bbpress( $query );
 
 		$allow_exclude = apply_filters( 'searchexclude_filter_search', $allow_exclude, $query );
 
