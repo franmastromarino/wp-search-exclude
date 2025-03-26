@@ -66,29 +66,19 @@ class Frontend {
 		 */
 		if ( isset( $excluded->taxonomies ) ) {
 			$tax_query = $query->get( 'tax_query', array() );
+			$tax_query_modified = false;
 
 			foreach ( $excluded->taxonomies as $taxonomy => $setting ) {
 				$ids = isset( $setting['ids'] ) ? $setting['ids'] : array();
 
-				// Exclude all taxonomies
+				// Use more memory-efficient approach for taxonomies
 				if ( $setting['all'] ) {
-					$terms = get_terms(
-						array(
-							'taxonomy'   => $taxonomy,
-							'fields'     => 'ids',
-							'hide_empty' => false,
-						)
+					// Using NOT EXISTS is more efficient than fetching all terms
+					$tax_query[] = array(
+						'taxonomy' => $taxonomy,
+						'operator' => 'NOT EXISTS',
 					);
-
-					if ( ! is_wp_error( $terms ) && ! empty( $terms ) ) {
-						$tax_query[] = array(
-							'taxonomy' => $taxonomy,
-							'field'    => 'term_id',
-							'terms'    => $terms,
-							'operator' => 'NOT IN',
-						);
-					}
-					// Exclude by ids
+					$tax_query_modified = true;
 				} elseif ( ! empty( $ids ) ) {
 					$tax_query[] = array(
 						'taxonomy' => $taxonomy,
@@ -96,16 +86,45 @@ class Frontend {
 						'terms'    => $ids,
 						'operator' => 'NOT IN',
 					);
+					$tax_query_modified = true;
 				}
 			}
 
-			if ( ! empty( $tax_query ) ) {
+			if ( $tax_query_modified ) {
 				$existing_tax_query = $query->get( 'tax_query' );
+				
+				// Properly merge tax queries to prevent nesting issues
 				if ( ! empty( $existing_tax_query ) ) {
-					$tax_query = array_merge( array( $existing_tax_query ), $tax_query );
+					// If existing tax query doesn't have a relation, wrap it
+					if ( is_array( $existing_tax_query ) && ! isset( $existing_tax_query['relation'] ) ) {
+						$tax_query = array(
+							'relation' => 'AND',
+							$existing_tax_query,
+						);
+						// Add our new conditions
+						foreach ( $tax_query as $key => $condition ) {
+							if ( is_numeric( $key ) ) {
+								$tax_query[] = $condition;
+							}
+						}
+					} else {
+						// Otherwise create a properly structured query
+						$tax_query = array(
+							'relation' => 'AND',
+							$existing_tax_query,
+						);
+						
+						// Add our new conditions
+						foreach ( $tax_query as $condition ) {
+							if ( is_array( $condition ) ) {
+								$tax_query[] = $condition;
+							}
+						}
+					}
+				} else {
+					$tax_query['relation'] = 'AND';
 				}
-
-				$tax_query['relation'] = 'AND';
+				
 				$query->set( 'tax_query', $tax_query );
 			}
 		}
