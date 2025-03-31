@@ -71,18 +71,23 @@ class Entity_Options {
 	public function get_taxonomies() {
 		$taxonomies = get_taxonomies( array( 'public' => true ), 'objects' );
 		$array      = array();
+		
+		// Only check if taxonomy has terms without loading all terms
 		foreach ( $taxonomies as $taxonomy ) {
-			$terms = get_terms(
+			$has_terms = get_terms(
 				array(
 					'taxonomy'   => $taxonomy->name,
 					'hide_empty' => false,
+					'fields'     => 'ids',
+					'number'     => 1, // Only need to fetch 1 term to know if taxonomy has terms
 				)
 			);
 
-			if ( count( $terms ) ) {
-					$array[ $taxonomy->name ] = $taxonomy;
+			if ( ! is_wp_error( $has_terms ) && ! empty( $has_terms ) ) {
+				$array[ $taxonomy->name ] = $taxonomy;
 			}
 		}
+		
 		return $array;
 	}
 
