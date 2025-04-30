@@ -40,10 +40,9 @@ class Post extends Base {
 
 
 	public function get_rest_permission() {
-		// TODO: DESCOMENTAR
-		// if ( ! current_user_can( 'manage_options' ) ) {
-		// return false;
-		// }
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return false;
+		}
 		return true;
 	}
 }
