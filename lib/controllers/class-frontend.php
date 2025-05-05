@@ -65,7 +65,7 @@ class Frontend {
 		 * Exclude posts by taxonomies
 		 */
 		if ( isset( $excluded->taxonomies ) ) {
-			$tax_query = $query->get( 'tax_query', array() );
+			$tax_query          = $query->get( 'tax_query', array() );
 			$tax_query_modified = false;
 
 			foreach ( $excluded->taxonomies as $taxonomy => $setting ) {
@@ -74,13 +74,13 @@ class Frontend {
 				// Use more memory-efficient approach for taxonomies
 				if ( $setting['all'] ) {
 					// Using NOT EXISTS is more efficient than fetching all terms
-					$tax_query[] = array(
+					$tax_query[]        = array(
 						'taxonomy' => $taxonomy,
 						'operator' => 'NOT EXISTS',
 					);
 					$tax_query_modified = true;
 				} elseif ( ! empty( $ids ) ) {
-					$tax_query[] = array(
+					$tax_query[]        = array(
 						'taxonomy' => $taxonomy,
 						'field'    => 'term_id',
 						'terms'    => $ids,
@@ -92,7 +92,7 @@ class Frontend {
 
 			if ( $tax_query_modified ) {
 				$existing_tax_query = $query->get( 'tax_query' );
-				
+
 				// Properly merge tax queries to prevent nesting issues
 				if ( ! empty( $existing_tax_query ) ) {
 					// If existing tax query doesn't have a relation, wrap it
@@ -113,7 +113,7 @@ class Frontend {
 							'relation' => 'AND',
 							$existing_tax_query,
 						);
-						
+
 						// Add our new conditions
 						foreach ( $tax_query as $condition ) {
 							if ( is_array( $condition ) ) {
@@ -124,7 +124,7 @@ class Frontend {
 				} else {
 					$tax_query['relation'] = 'AND';
 				}
-				
+
 				$query->set( 'tax_query', $tax_query );
 			}
 		}

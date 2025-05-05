@@ -71,7 +71,7 @@ class Entity_Options {
 	public function get_taxonomies() {
 		$taxonomies = get_taxonomies( array( 'public' => true ), 'objects' );
 		$array      = array();
-		
+
 		// Only check if taxonomy has terms without loading all terms
 		foreach ( $taxonomies as $taxonomy ) {
 			$has_terms = get_terms(
@@ -87,7 +87,7 @@ class Entity_Options {
 				$array[ $taxonomy->name ] = $taxonomy;
 			}
 		}
-		
+
 		return $array;
 	}
 

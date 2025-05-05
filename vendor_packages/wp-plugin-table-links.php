@@ -13,6 +13,8 @@ if ( class_exists( 'QuadLayers\\WP_Plugin_Table_Links\\Load' ) ) {
 				array(
 					'text' => esc_html__( 'QuadLayers', 'search-exclude' ),
 					'url'  => QLSE_PURCHASE_URL,
+					'color' => 'blue',
+					'target' => '_blank',
 				),
 				array(
 					'place' => 'row_meta',

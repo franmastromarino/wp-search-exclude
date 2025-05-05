@@ -30,7 +30,8 @@
 		"quadlayers/wp-plugin-table-links": "*",
 		"quadlayers/wp-plugin-suggestions": "*",
 		"quadlayers/wp-plugin-install-tab": "*",
-		"franmastromarino/wp-orm": "dev-main"
+		"franmastromarino/wp-orm": "dev-main",
+		"franmastromarino/wp-plugin-feedback": "*"
 	},
 	"autoload": {
 		"classmap": [
