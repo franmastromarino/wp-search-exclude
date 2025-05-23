@@ -3,8 +3,6 @@
  */
 import {
 	QLSE_PLUGIN_NAME,
-	QLSE_PREMIUM_SELL_URL,
-	QLSE_DEMO_URL,
 	QLSE_DOCUMENTATION_URL,
 } from '../../../../helpers/constants';
 /**

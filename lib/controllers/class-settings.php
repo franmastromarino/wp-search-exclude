@@ -47,7 +47,6 @@ class Settings {
 				'QLSE_PLUGIN_URL'         => plugins_url( '/', QLSE_PLUGIN_FILE ),
 				'QLSE_PLUGIN_NAME'        => QLSE_PLUGIN_NAME,
 				'QLSE_PREMIUM_SELL_URL'   => QLSE_PREMIUM_SELL_URL,
-				// 'QLSE_DEMO_URL'           => QLSE_DEMO_URL,
 				'QLSE_DOCUMENTATION_URL'  => QLSE_DOCUMENTATION_URL,
 			)
 		);
