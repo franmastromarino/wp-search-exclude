@@ -91,16 +91,6 @@ class Entity_Options {
 	}
 
 	public static function instance() {
-
-			if ( ! is_wp_error( $has_terms ) && ! empty( $has_terms ) ) {
-				$array[ $taxonomy->name ] = $taxonomy;
-			}
-		}
-
-		return $array;
-	}
-
-	public static function instance() {
 		if ( ! isset( self::$instance ) ) {
 			self::$instance = new self();
 		}

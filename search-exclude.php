@@ -4,7 +4,7 @@
  * Plugin Name:             Search Exclude
  * Plugin URI:              https://wordpress.org/plugins/search-exclude
  * Description:             Hide any page or post from the WordPress search results by checking off the checkbox.
- * Version:                 2.5.5
+ * Version:                 2.5.6
  * Text Domain:             search-exclude
  * Author:                  QuadLayers
  * Author URI:              https://quadlayers.com
@@ -23,18 +23,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 *   Definition globals variables
 */
 define( 'QLSE_PLUGIN_NAME', 'Search Exclude' );
-define( 'QLSE_PLUGIN_VERSION', '2.5.5' );
+define( 'QLSE_PLUGIN_VERSION', '2.5.6' );
 define( 'QLSE_PLUGIN_FILE', __FILE__ );
 define( 'QLSE_PLUGIN_DIR', __DIR__ . DIRECTORY_SEPARATOR );
 define( 'QLSE_DOMAIN', 'qlse' );
 define( 'QLSE_PREFIX', QLSE_DOMAIN );
 define( 'QLSE_WORDPRESS_URL', 'https://wordpress.org/plugins/search-exclude/' );
 define( 'QLSE_REVIEW_URL', 'https://wordpress.org/support/plugin/search-exclude/reviews/?filter=5#new-post' );
-define( 'QLSE_PURCHASE_URL', 'https://quadlayers.com/?utm_source=qlse_admin' );
-define( 'QLSE_SUPPORT_URL', 'https://quadlayers.com/account/support/?utm_source=qlse_admin' );
-define( 'QLSE_DOCUMENTATION_URL', 'https://quadlayers.com/documentation/search-exclude/' );
 define( 'QLSE_GROUP_URL', 'https://www.facebook.com/groups/quadlayers' );
-define( 'QLSE_PREMIUM_SELL_URL', '' );
 define( 'QLSE_DEVELOPER', false );
 /**
  * Load composer autoload

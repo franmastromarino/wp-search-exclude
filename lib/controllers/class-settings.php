@@ -46,8 +46,6 @@ class Settings {
 				'QLSE_DISPLAY_TAXONOMIES' => $entity_options->get_taxonomies(),
 				'QLSE_PLUGIN_URL'         => plugins_url( '/', QLSE_PLUGIN_FILE ),
 				'QLSE_PLUGIN_NAME'        => QLSE_PLUGIN_NAME,
-				'QLSE_PREMIUM_SELL_URL'   => QLSE_PREMIUM_SELL_URL,
-				'QLSE_DOCUMENTATION_URL'  => QLSE_DOCUMENTATION_URL,
 			)
 		);
 	}
@@ -84,7 +82,7 @@ class Settings {
 
 
 	public static function instance() {
-		if ( is_null( self::$instance ) ) {
+		if ( ! isset( self::$instance ) ) {
 			self::$instance = new self();
 		}
 		return self::$instance;

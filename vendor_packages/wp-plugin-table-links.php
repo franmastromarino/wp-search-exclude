@@ -12,14 +12,14 @@ if ( class_exists( 'QuadLayers\\WP_Plugin_Table_Links\\Load' ) ) {
 				),
 				array(
 					'text' => esc_html__( 'QuadLayers', 'search-exclude' ),
-					'url'  => QLSE_PURCHASE_URL,
+					'url'  => 'https://quadlayers.com/?utm_source=qlse_plugin&utm_medium=plugin_table&utm_campaign=cross_sell&utm_content=premium_link',
 					'color' => 'blue',
 					'target' => '_blank',
 				),
 				array(
 					'place' => 'row_meta',
 					'text'  => esc_html__( 'Support', 'search-exclude' ),
-					'url'   => QLSE_SUPPORT_URL,
+					'url'   => 'https://quadlayers.com/account/support/?utm_source=qlse_plugin&utm_medium=plugin_table&utm_campaign=support&utm_content=support_link',
 				),
 			)
 		);	
