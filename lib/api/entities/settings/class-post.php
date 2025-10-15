@@ -40,7 +40,7 @@ class Post extends Base {
 
 
 	public function get_rest_permission() {
-		if ( ! current_user_can( 'edit_posts' ) ) {
+		if ( ! current_user_can( 'manage_options' ) ) {
 			return false;
 		}
 		return true;

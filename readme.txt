@@ -5,7 +5,7 @@ Tags: search exclude, search, wordpress search, exclude post, exclude page
 Requires at least: 4.7
 Requires PHP: 5.6
 Tested up to: 6.8
-Stable tag: 2.5.7
+Stable tag: 2.5.8
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -98,8 +98,12 @@ function filterForProducts($exclude, $query)
 
 == Changelog ==
 
+= 2.5.8 =
+* fix: security issues
+
 = 2.5.7 =
 * fix: php 7.2 errors
+
 = 2.5.6 =
 * fix: update dependencies 
 
