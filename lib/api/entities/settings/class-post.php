@@ -40,9 +40,12 @@ class Post extends Base {
 
 
 	public function get_rest_permission() {
-		if ( ! current_user_can( 'manage_options' ) ) {
+		$capability = apply_filters( 'searchexclude_filter_permissions', 'edit_others_pages' );
+
+		if ( ! current_user_can( $capability ) ) {
 			return false;
 		}
+
 		return true;
 	}
 }

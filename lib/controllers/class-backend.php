@@ -47,13 +47,15 @@ class Backend {
 		/**
 		 * Add bulk edit actions
 		 */
-		foreach ( get_post_types() as $post_type ) {
-			/**
-			 * Add dropdown
-			 */
-			add_filter( "bulk_actions-edit-$post_type", array( $this, 'bulk_edit' ) );
-			add_filter( "handle_bulk_actions-edit-$post_type", array( $this, 'bulk_action_handler' ), 10, 3 );
-		}
+		add_action(
+			'admin_init',
+			function () {
+				foreach ( get_post_types( array( 'show_ui' => true ), 'names' ) as $post_type ) {
+					add_filter( "bulk_actions-edit-$post_type", array( $this, 'bulk_edit' ) );
+					add_filter( "handle_bulk_actions-edit-$post_type", array( $this, 'bulk_action_handler' ), 10, 3 );
+				}
+			}
+		);
 		/**
 		 * Display messages
 		 */

@@ -1,9 +1,7 @@
 /**
  * External dependencies
  */
-import {
-	QLSE_PLUGIN_NAME,
-} from '../../../../helpers/constants';
+import { QLSE_PLUGIN_NAME } from '../../../../helpers/constants';
 /**
  * WordPress dependencies
  */
@@ -28,7 +26,10 @@ const Header = () => {
 					{__('Quadlayers', 'search-exclude')}
 				</a>
 				|
-				<a href="https://quadlayers.com/documentation/search-exclude/?utm_source=qlse_plugin&utm_medium=admin_header&utm_campaign=documentation&utm_content=documentation_link" target="__blank">
+				<a
+					href="https://quadlayers.com/documentation/search-exclude/?utm_source=qlse_plugin&utm_medium=admin_header&utm_campaign=documentation&utm_content=documentation_link"
+					target="__blank"
+				>
 					{__('Documentation', 'search-exclude')}
 				</a>
 			</p>
