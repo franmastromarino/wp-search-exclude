@@ -17,6 +17,7 @@ class Entity_Options {
 			'taxonomies' => $this->get_display_taxonomies(),
 			'author'     => $this->base,
 		);
+		error_log( 'args: ' . json_encode( $args, JSON_PRETTY_PRINT ) );
 		return $args;
 	}
 
@@ -41,8 +42,7 @@ class Entity_Options {
 	public function get_entries() {
 		$post_types = get_post_types(
 			array(
-				'public'            => true,
-				'show_in_nav_menus' => true,
+				'public' => true,
 			),
 			'objects'
 		);
