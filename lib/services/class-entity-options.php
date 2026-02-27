@@ -17,7 +17,6 @@ class Entity_Options {
 			'taxonomies' => $this->get_display_taxonomies(),
 			'author'     => $this->base,
 		);
-		error_log( 'args: ' . json_encode( $args, JSON_PRETTY_PRINT ) );
 		return $args;
 	}
 
