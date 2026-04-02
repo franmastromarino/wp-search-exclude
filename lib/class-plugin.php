@@ -13,7 +13,7 @@ final class Plugin {
 		/**
 		* Load plugin textdomain.
 		*/
-		add_action( 'init', array( $this, 'load_textdomain' ) );
+		add_action( 'init', array( $this, 'load_textdomain' ), 1 );
 		/**
 		 * On activation
 		 */
@@ -27,7 +27,7 @@ final class Plugin {
 	}
 
 	public function load_textdomain() {
-		load_plugin_textdomain( 'search-exclude', false, QLSE_PLUGIN_DIR . '/languages/' );
+		load_plugin_textdomain( 'search-exclude', false, dirname( QLSE_PLUGIN_BASENAME ) . '/languages' );
 	}
 
 	public function activate() {

@@ -288,12 +288,17 @@ class Backend {
 	}
 
 	public function enqueue_style() {
+		$entity_options  = Entity_Options::instance();
+		$post_types      = $entity_options->get_entries();
 		$current_screen  = get_current_screen()->id;
-		$allowed_screens = array( 'edit-page', 'edit-post', 'edit-product' );
+		$allowed_screens = array();
 
-		if (
-			! in_array( $current_screen, $allowed_screens ) ) {
-		return;
+		foreach ( $post_types as $type ) {
+			$allowed_screens[] = 'edit-' . $type->name;
+		}
+
+		if ( ! in_array( $current_screen, $allowed_screens ) ) {
+			return;
 		}
 
 		wp_enqueue_style( 'qlse-backend' );
@@ -306,6 +311,18 @@ class Backend {
 	}
 
 	public function add_column( $columns ) {
+		$screen = get_current_screen();
+		if ( ! $screen ) {
+			return $columns;
+		}
+
+		$entity_options = Entity_Options::instance();
+		$post_types     = $entity_options->get_entries();
+
+		if ( ! isset( $post_types[ $screen->post_type ] ) ) {
+			return $columns;
+		}
+
 		$columns['search_exclude'] = esc_html__( 'Search Excluded', 'search-exclude' );
 		return $columns;
 	}

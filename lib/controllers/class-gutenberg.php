@@ -35,6 +35,15 @@ class Gutenberg {
 	}
 
 	public function enqueue_scripts() {
+		$screen = get_current_screen();
+
+		if ( ! $screen || 'post' !== $screen->base ) {
+			return;
+		}
+
+		if ( ! function_exists( 'use_block_editor_for_post_type' ) || ! use_block_editor_for_post_type( $screen->post_type ) ) {
+			return;
+		}
 
 		wp_enqueue_script( 'qlse-gutenberg' );
 		wp_enqueue_style( 'qlse-gutenberg' );

@@ -46,6 +46,16 @@ class Entity_Options {
 			'objects'
 		);
 
+		$searchable_non_public = get_post_types(
+			array(
+				'public'              => false,
+				'exclude_from_search' => false,
+			),
+			'objects'
+		);
+
+		$post_types = array_merge( $post_types, $searchable_non_public );
+
 		if ( ! isset( $post_types['attachment'] ) ) {
 			$attachment = get_post_types(
 				array(
