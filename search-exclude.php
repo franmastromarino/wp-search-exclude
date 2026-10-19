@@ -4,13 +4,13 @@
  * Plugin Name:             Search Exclude
  * Plugin URI:              https://wordpress.org/plugins/search-exclude
  * Description:             Hide any page or post from the WordPress search results by checking off the checkbox.
- * Version:                 2.6.8
+ * Version:                 2.6.9
  * Text Domain:             search-exclude
  * Author:                  QuadLayers
  * Author URI:              https://quadlayers.com
  * License:                 GPLv3
  * Domain Path:             /languages
- * Request at least:        4.7
+ * Requires at least:       4.7
  * Tested up to:            7.1
  * Requires PHP:            5.6
  * WC requires at least:    4.0
@@ -25,7 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 *   Definition globals variables
 */
 define( 'QLSE_PLUGIN_NAME', 'Search Exclude' );
-define( 'QLSE_PLUGIN_VERSION', '2.6.8' );
+define( 'QLSE_PLUGIN_VERSION', '2.6.9' );
 define( 'QLSE_PLUGIN_FILE', __FILE__ );
 define( 'QLSE_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
 define( 'QLSE_PLUGIN_DIR', __DIR__ . DIRECTORY_SEPARATOR );
@@ -76,13 +76,14 @@ register_deactivation_hook(
 );
 
 /**
- * Declarate compatibility with WooCommerce Custom Order Tables
+ * Declare compatibility with WooCommerce features (HPOS and Cart & Checkout Blocks)
  */
 add_action(
 	'before_woocommerce_init',
 	function () {
 		if ( class_exists( '\Automattic\WooCommerce\Utilities\FeaturesUtil' ) ) {
 			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
+			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'cart_checkout_blocks', __FILE__, true );
 		}
 	}
 );
