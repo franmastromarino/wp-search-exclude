@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Plugin Name:             Search Exclude
  * Plugin URI:              https://wordpress.org/plugins/search-exclude
@@ -15,6 +14,8 @@
  * Requires PHP:            5.6
  * WC requires at least:    4.0
  * WC tested up to:         11.1
+ *
+ * @package search-exclude
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

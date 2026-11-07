@@ -14,7 +14,7 @@ class Routes_Library {
 	protected static $instance;
 
 	private function __construct() {
-		add_action( 'init', array( $this, '_rest_init' ) );
+		add_action( 'init', array( $this, 'rest_init' ) );
 	}
 
 	public static function get_namespace() {
@@ -35,7 +35,7 @@ class Routes_Library {
 		$this->routes[ $instance::get_name() ] = $instance;
 	}
 
-	public function _rest_init() {
+	public function rest_init() {
 		new Settings_Get();
 		new Settings_Post();
 	}

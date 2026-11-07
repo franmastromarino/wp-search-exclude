@@ -14,7 +14,6 @@ class Post extends Base {
 	public function callback( \WP_REST_Request $request ) {
 
 		try {
-			// throw new \Exception( esc_html__( 'Unknown error.', 'search-exclude' ), 500 );
 			$body = json_decode( $request->get_body(), true );
 
 			$status = Models_Settings::instance()->save( $body );
