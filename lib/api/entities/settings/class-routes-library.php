@@ -31,10 +31,21 @@ class Routes_Library {
 		}
 	}
 
+	/**
+	 * Registers a route instance so it can be looked up later by {@see get_routes()}.
+	 *
+	 * @param Route_Interface $instance The route instance to register.
+	 */
 	public function register( Route_Interface $instance ) {
 		$this->routes[ $instance::get_name() ] = $instance;
 	}
 
+	/**
+	 * Instantiates the settings REST route handlers.
+	 *
+	 * Hooked to `init`, before `rest_api_init`, so each handler's constructor
+	 * can register itself with this library and with WordPress's REST API.
+	 */
 	public function _rest_init() {
 		new Settings_Get();
 		new Settings_Post();

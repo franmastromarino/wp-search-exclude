@@ -169,6 +169,13 @@ class Backend {
 		$this->save_post_ids_to_search_exclude( array( intval( $post_id ) ), $exclude );
 	}
 
+	/**
+	 * Adds or removes a set of post IDs from the excluded-posts list for the
+	 * current request's post type.
+	 *
+	 * @param int[] $post_ids Post IDs to add to or remove from the excluded list.
+	 * @param bool  $exclude  True to exclude the given posts, false to re-include them.
+	 */
 	public function save_post_ids_to_search_exclude( $post_ids, $exclude ) {
 		$post_type = $_REQUEST['post_type'];
 
@@ -195,6 +202,12 @@ class Backend {
 		Models_Settings::instance()->save( array( 'entries' => $entries ) );
 	}
 
+	/**
+	 * Checks whether a post is currently excluded from search results.
+	 *
+	 * @param int $post_id The ID of the post to check.
+	 * @return bool True if the post is excluded, false otherwise.
+	 */
 	protected function is_excluded( $post_id ) {
 		$post_type = get_post_type( $post_id );
 
@@ -339,6 +352,14 @@ class Backend {
 		}
 	}
 
+	/**
+	 * Saves the "Exclude from Search Results" metabox checkbox state for a post.
+	 *
+	 * Hooked to `post_updated` and `edit_attachment`.
+	 *
+	 * @param int $post_id The ID of the post being saved.
+	 * @return int The same post ID, unchanged.
+	 */
 	public function post_save( $post_id ) {
 		if ( ! isset( $_POST['sep'] ) ) {
 			return $post_id;
@@ -372,6 +393,12 @@ class Backend {
 		);
 	}
 
+	/**
+	 * Saves the excluded-posts list submitted from the plugin's settings page.
+	 *
+	 * Hooked to `admin_init`. Requires the `search_exclude_submit` nonce and
+	 * the capability checked by {@see check_permissions()}.
+	 */
 	public function save_options() {
 		if ( ! isset( $_POST['search_exclude_submit'] ) ) {
 			return;
@@ -388,6 +415,13 @@ class Backend {
 		Models_Settings::instance()->save( array( 'excluded' => $excluded ) );
 	}
 
+	/**
+	 * Verifies the current user can manage the plugin's excluded-posts list,
+	 * and halts the request with a 401 response if not.
+	 *
+	 * The required capability defaults to `edit_others_pages` and can be
+	 * changed via the `searchexclude_filter_permissions` filter.
+	 */
 	private function check_permissions() {
 		$capability = apply_filters( 'searchexclude_filter_permissions', 'edit_others_pages' );
 

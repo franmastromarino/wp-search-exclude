@@ -11,6 +11,13 @@ class Post extends Base {
 
 	protected static $route_path = 'settings';
 
+	/**
+	 * Saves the settings payload sent in the request body as the plugin's
+	 * new settings (excluded entries, taxonomies, and author state).
+	 *
+	 * @param \WP_REST_Request $request The current REST request; its raw JSON body is the new settings.
+	 * @return \WP_REST_Response The save result, or a handled error response.
+	 */
 	public function callback( \WP_REST_Request $request ) {
 
 		try {

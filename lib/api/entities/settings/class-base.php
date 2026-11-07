@@ -5,6 +5,12 @@ namespace QuadLayers\QLSE\Api\Entities\Settings;
 use QuadLayers\QLSE\Api\Entities\Settings\Routes_Library as Settings_Routes_Library;
 use QuadLayers\QLSE\Api\Route as Route_Interface;
 
+/**
+ * Base class for the plugin's `/qlse/v1/settings` REST route handlers.
+ *
+ * Concrete routes (see {@see Get}, {@see Post}) extend this to provide their
+ * own HTTP method, args schema, and request callback.
+ */
 abstract class Base implements Route_Interface {
 	protected static $route_path = null;
 
@@ -13,6 +19,9 @@ abstract class Base implements Route_Interface {
 		Settings_Routes_Library::instance()->register( $this );
 	}
 
+	/**
+	 * Registers this route with WordPress on `rest_api_init`.
+	 */
 	public function register_rest_route() {
 		register_rest_route(
 			Settings_Routes_Library::get_namespace(),
@@ -54,6 +63,14 @@ abstract class Base implements Route_Interface {
 		);
 	}
 
+	/**
+	 * Normalizes a route callback's return value into a REST response,
+	 * converting an array shaped like `['code' => ..., 'message' => ...]`
+	 * into an error response.
+	 *
+	 * @param mixed $response The raw value returned by the route's callback.
+	 * @return \WP_REST_Response The normalized REST response.
+	 */
 	public function handle_response( $response ) {
 
 		if ( isset( $response['code'], $response['message'] ) ) {
@@ -76,6 +93,11 @@ abstract class Base implements Route_Interface {
 		return get_rest_url( $blog_id, $rest_path );
 	}
 
+	/**
+	 * Default REST permission check for this route.
+	 *
+	 * @return bool True if the current user has the required capability.
+	 */
 	public function get_rest_permission() {
 		$capability = apply_filters( 'searchexclude_filter_permissions', 'edit_others_pages' );
 

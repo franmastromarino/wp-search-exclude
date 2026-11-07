@@ -11,6 +11,13 @@ class Entity_Options {
 		'ids' => array(),
 	);
 
+	/**
+	 * Builds the default settings shape for a fresh install: every searchable
+	 * post type and public taxonomy, plus the author entry, each starting
+	 * unexcluded.
+	 *
+	 * @return array{entries: array, taxonomies: array, author: array} The default settings args.
+	 */
 	public function get_args() {
 		$args = array(
 			'entries'    => $this->get_display_entries(),
@@ -20,6 +27,11 @@ class Entity_Options {
 		return $args;
 	}
 
+	/**
+	 * Maps every searchable post type to the default (unexcluded) entry shape.
+	 *
+	 * @return array Post type name => default entry array.
+	 */
 	public function get_display_entries() {
 		$post_types = $this->get_entries();
 		$array      = array();
@@ -29,6 +41,11 @@ class Entity_Options {
 		return $array;
 	}
 
+	/**
+	 * Maps every public, non-empty taxonomy to the default (unexcluded) entry shape.
+	 *
+	 * @return array Taxonomy name => default entry array.
+	 */
 	public function get_display_taxonomies() {
 		$taxonomies = $this->get_taxonomies();
 		$array      = array();
@@ -38,6 +55,12 @@ class Entity_Options {
 		return $array;
 	}
 
+	/**
+	 * Gets every post type that search exclusion can apply to: public post
+	 * types, non-public types that are still searchable, and attachments.
+	 *
+	 * @return \WP_Post_Type[] Post type name => post type object.
+	 */
 	public function get_entries() {
 		$post_types = get_post_types(
 			array(
@@ -77,6 +100,11 @@ class Entity_Options {
 		return $result;
 	}
 
+	/**
+	 * Gets every public taxonomy that currently has at least one term.
+	 *
+	 * @return \WP_Taxonomy[] Taxonomy name => taxonomy object.
+	 */
 	public function get_taxonomies() {
 		$taxonomies = get_taxonomies( array( 'public' => true ), 'objects' );
 		$array      = array();
