@@ -11,6 +11,12 @@ class Get extends Base {
 
 	protected static $route_path = 'settings';
 
+	/**
+	 * Returns the plugin's current settings (excluded entries, taxonomies, and author state).
+	 *
+	 * @param \WP_REST_Request $request The current REST request (unused; this route takes no args).
+	 * @return \WP_REST_Response The settings, or a handled error response.
+	 */
 	public function callback( \WP_REST_Request $request ) {
 
 		try {
