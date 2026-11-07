@@ -81,7 +81,7 @@ class Entity_Options {
 		$taxonomies = get_taxonomies( array( 'public' => true ), 'objects' );
 		$array      = array();
 
-		// Only check if taxonomy has terms without loading all terms
+		// Only check if taxonomy has terms without loading all terms.
 		foreach ( $taxonomies as $taxonomy ) {
 			$term_count = get_terms(
 				array(
