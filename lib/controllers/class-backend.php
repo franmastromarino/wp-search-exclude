@@ -106,6 +106,7 @@ class Backend {
 
 		$count   = (int) $_GET['se_saved'];
 		$message = sprintf(
+			// translators: %d: number of items updated.
 			_n(
 				'%d item updated.',
 				'%d items updated.',
@@ -215,8 +216,8 @@ class Backend {
 		return false !== array_search( $post_id, $excluded );
 	}
 
+	// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- $params is read as $params['key'] inside the included view file via PHP's include scope-sharing.
 	protected function view( $view, $params = array() ) {
-		extract( $params );
 		include QLSE_PLUGIN_DIR . '/lib/views/' . $view . '.php';
 	}
 
@@ -416,7 +417,7 @@ class Backend {
 		}
 		add_meta_box(
 			'sep_metabox_id',
-			'Search Exclude',
+			esc_html__( 'Search Exclude', 'search-exclude' ),
 			function ( $post ) {
 				wp_nonce_field( 'sep_metabox_nonce', 'metabox_nonce' );
 				$this->view( 'metabox', array( 'exclude' => $this->is_excluded( $post->ID ) ) );

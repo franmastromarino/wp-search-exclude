@@ -1,5 +1,9 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 add_filter(
 	'default_option_qlse_settings',
 	function ( $value ) {

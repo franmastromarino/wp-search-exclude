@@ -31,7 +31,23 @@ class Post extends Base {
 	}
 
 	public static function get_rest_args() {
-		return array();
+		return array(
+			'entries'    => array(
+				'type'              => 'object',
+				'required'          => false,
+				'validate_callback' => 'rest_validate_request_arg',
+			),
+			'taxonomies' => array(
+				'type'              => 'object',
+				'required'          => false,
+				'validate_callback' => 'rest_validate_request_arg',
+			),
+			'author'     => array(
+				'type'              => 'object',
+				'required'          => false,
+				'validate_callback' => 'rest_validate_request_arg',
+			),
+		);
 	}
 
 	public static function get_rest_method() {

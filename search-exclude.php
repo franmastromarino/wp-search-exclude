@@ -32,7 +32,7 @@ define( 'QLSE_PLUGIN_DIR', __DIR__ . DIRECTORY_SEPARATOR );
 define( 'QLSE_DOMAIN', 'qlse' );
 define( 'QLSE_PREFIX', QLSE_DOMAIN );
 define( 'QLSE_WORDPRESS_URL', 'https://wordpress.org/plugins/search-exclude/' );
-define( 'QLSE_REVIEW_URL', 'https://wordpress.org/support/plugin/search-exclude/reviews/?filter=5#new-post' );
+define( 'QLSE_REVIEW_URL', 'https://wordpress.org/support/plugin/search-exclude/reviews/#new-post' );
 define( 'QLSE_GROUP_URL', 'https://www.facebook.com/groups/quadlayers' );
 define( 'QLSE_DEVELOPER', false );
 /**
