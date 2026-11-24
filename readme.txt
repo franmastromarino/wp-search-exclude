@@ -5,11 +5,11 @@ Tags: search exclude, search, wordpress search, exclude post, exclude page
 Requires at least: 4.7
 Requires PHP: 5.6
 Tested up to: 7.1
-Stable tag: 2.6.9
+Stable tag: 2.6.10
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 WC requires at least: 4.0
-WC tested up to: 11.1
+WC tested up to: 11.3.1
 
 Hide any post or page from the search results.
 
@@ -99,6 +99,9 @@ function filterForProducts($exclude, $query)
 2. screenshot-2.png
 
 == Changelog ==
+
+= 2.6.10 =
+* WooCommerce 11.3.1 compatibility
 
 = 2.6.9 =
 * fix: declare WooCommerce Cart & Checkout Blocks compatibility
