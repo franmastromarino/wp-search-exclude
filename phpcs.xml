@@ -52,7 +52,10 @@
 	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
 		<properties>
 			<property name="prefixes" type="array">
-				<element value="search-exclude" />
+				<element value="searchexclude" />
+				<element value="qlse" />
+				<element value="QLSE" />
+				<element value="QuadLayers" />
 			</property>
 		</properties>
 	</rule>

@@ -162,8 +162,8 @@ class Backend {
 	 *
 	 * Save post meta
 	 *
-	 * @param $post_id int the ID of the post
-	 * @param $exclude bool indicates whether post should be excluded from the search results or not
+	 * @param int  $post_id The ID of the post.
+	 * @param bool $exclude Whether the post should be excluded from the search results.
 	 */
 	protected function save_post_id_to_search_exclude( $post_id, $exclude ) {
 		$this->save_post_ids_to_search_exclude( array( intval( $post_id ) ), $exclude );
@@ -212,7 +212,7 @@ class Backend {
 			? $entries[ $post_type ]['ids']
 			: array();
 
-		return false !== array_search( $post_id, $excluded );
+		return false !== array_search( $post_id, $excluded, true );
 	}
 
 	protected function view( $view, $params = array() ) {
@@ -276,7 +276,7 @@ class Backend {
 		}
 
 		if (
-			! in_array( $current_screen, $allowed_screens ) ) {
+			! in_array( $current_screen, $allowed_screens, true ) ) {
 		return;
 		}
 
@@ -297,7 +297,7 @@ class Backend {
 			$allowed_screens[] = 'edit-' . $type->name;
 		}
 
-		if ( ! in_array( $current_screen, $allowed_screens ) ) {
+		if ( ! in_array( $current_screen, $allowed_screens, true ) ) {
 			return;
 		}
 
@@ -305,7 +305,7 @@ class Backend {
 	}
 
 	public function add_quick_edit_custom_box( $column_name ) {
-		if ( 'search_exclude' == $column_name ) {
+		if ( 'search_exclude' === $column_name ) {
 			$this->view( 'quick-edit' );
 		}
 	}
@@ -328,7 +328,7 @@ class Backend {
 	}
 
 	public function add_column_value( $column_name, $post_id ) {
-		if ( 'search_exclude' == $column_name ) {
+		if ( 'search_exclude' === $column_name ) {
 			$this->view(
 				'column-cell',
 				array(

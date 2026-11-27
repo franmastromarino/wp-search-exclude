@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Plugin Name:             Search Exclude
  * Plugin URI:              https://wordpress.org/plugins/search-exclude
