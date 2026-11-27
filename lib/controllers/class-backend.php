@@ -172,27 +172,36 @@ class Backend {
 	}
 
 	public function save_post_ids_to_search_exclude( $post_ids, $exclude ) {
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- called only from post_save() (nonce verified above) and bulk_action_handler() (nonce verified by WP core's bulk-posts action), or directly by third-party code via the searchexclude_hide_from_search hook.
-		$post_type = isset( $_REQUEST['post_type'] ) ? sanitize_key( wp_unslash( $_REQUEST['post_type'] ) ) : '';
-
 		$exclude = (bool) $exclude;
 		$entries = Models_Settings::instance()->get()->get( 'entries' );
 
-		if ( ! isset( $entries[ $post_type ] ) ) {
-			$entries[ $post_type ] = array(
-				'all' => false,
-				'ids' => array(),
-			);
+		// Group the IDs by their own post type, so callers that do not send `post_type` (e.g. third-party code using the searchexclude_hide_from_search hook) still store them under the right entry.
+		$ids_by_type = array();
+		foreach ( (array) $post_ids as $post_id ) {
+			$post_type = get_post_type( (int) $post_id );
+			if ( ! $post_type ) {
+				continue;
+			}
+			$ids_by_type[ $post_type ][] = (int) $post_id;
 		}
 
-		$excluded = isset( $entries[ $post_type ]['ids'] ) && is_array( $entries[ $post_type ]['ids'] )
-		? $entries[ $post_type ]['ids']
-		: array();
+		foreach ( $ids_by_type as $post_type => $ids ) {
+			if ( ! isset( $entries[ $post_type ] ) ) {
+				$entries[ $post_type ] = array(
+					'all' => false,
+					'ids' => array(),
+				);
+			}
 
-		if ( $exclude ) {
-			$entries[ $post_type ]['ids'] = array_values( array_unique( array_merge( $excluded, $post_ids ) ) );
-		} else {
-			$entries[ $post_type ]['ids'] = array_values( array_diff( $excluded, $post_ids ) );
+			$excluded = isset( $entries[ $post_type ]['ids'] ) && is_array( $entries[ $post_type ]['ids'] )
+			? $entries[ $post_type ]['ids']
+			: array();
+
+			if ( $exclude ) {
+				$entries[ $post_type ]['ids'] = array_values( array_unique( array_merge( $excluded, $ids ) ) );
+			} else {
+				$entries[ $post_type ]['ids'] = array_values( array_diff( $excluded, $ids ) );
+			}
 		}
 
 		Models_Settings::instance()->save( array( 'entries' => $entries ) );
