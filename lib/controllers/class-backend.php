@@ -352,26 +352,6 @@ class Backend {
 		return $post_id;
 	}
 
-	public function options() {
-		$excluded = Models_Settings::instance()->get()->get( 'excluded' );
-		$query    = new \WP_Query(
-			array(
-				'post_type'   => 'any',
-				'post_status' => 'any',
-				'post__in'    => $excluded,
-				'order'       => 'ASC',
-				'nopaging'    => true,
-			)
-		);
-		$this->view(
-			'options',
-			array(
-				'excluded' => $excluded,
-				'query'    => $query,
-			)
-		);
-	}
-
 	public function save_options() {
 		if ( ! isset( $_POST['search_exclude_submit'] ) ) {
 			return;
