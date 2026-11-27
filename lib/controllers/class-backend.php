@@ -100,10 +100,12 @@ class Backend {
 
 	public function bulk_action_notices() {
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- display-only count, not used to perform any action.
 		if ( empty( $_GET['se_saved'] ) ) {
 			return;
 		}
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- display-only count, not used to perform any action.
 		$count   = (int) $_GET['se_saved'];
 		$message = sprintf(
 			_n(
@@ -170,26 +172,36 @@ class Backend {
 	}
 
 	public function save_post_ids_to_search_exclude( $post_ids, $exclude ) {
-		$post_type = $_REQUEST['post_type'];
-
 		$exclude = (bool) $exclude;
 		$entries = Models_Settings::instance()->get()->get( 'entries' );
 
-		if ( ! isset( $entries[ $post_type ] ) ) {
-			$entries[ $post_type ] = array(
-				'all' => false,
-				'ids' => array(),
-			);
+		// Group the IDs by their own post type, so callers that do not send `post_type` (e.g. third-party code using the searchexclude_hide_from_search hook) still store them under the right entry.
+		$ids_by_type = array();
+		foreach ( (array) $post_ids as $post_id ) {
+			$post_type = get_post_type( (int) $post_id );
+			if ( ! $post_type ) {
+				continue;
+			}
+			$ids_by_type[ $post_type ][] = (int) $post_id;
 		}
 
-		$excluded = isset( $entries[ $post_type ]['ids'] ) && is_array( $entries[ $post_type ]['ids'] )
-		? $entries[ $post_type ]['ids']
-		: array();
+		foreach ( $ids_by_type as $post_type => $ids ) {
+			if ( ! isset( $entries[ $post_type ] ) ) {
+				$entries[ $post_type ] = array(
+					'all' => false,
+					'ids' => array(),
+				);
+			}
 
-		if ( $exclude ) {
-			$entries[ $post_type ]['ids'] = array_values( array_unique( array_merge( $excluded, $post_ids ) ) );
-		} else {
-			$entries[ $post_type ]['ids'] = array_values( array_diff( $excluded, $post_ids ) );
+			$excluded = isset( $entries[ $post_type ]['ids'] ) && is_array( $entries[ $post_type ]['ids'] )
+			? $entries[ $post_type ]['ids']
+			: array();
+
+			if ( $exclude ) {
+				$entries[ $post_type ]['ids'] = array_values( array_unique( array_merge( $excluded, $ids ) ) );
+			} else {
+				$entries[ $post_type ]['ids'] = array_values( array_diff( $excluded, $ids ) );
+			}
 		}
 
 		Models_Settings::instance()->save( array( 'entries' => $entries ) );
@@ -344,7 +356,15 @@ class Backend {
 			return $post_id;
 		}
 
-		$sep     = $_POST['sep'];
+		if ( ! isset( $_POST['metabox_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['metabox_nonce'] ) ), 'sep_metabox_nonce' ) ) {
+			return $post_id;
+		}
+
+		if ( ! current_user_can( 'edit_post', $post_id ) ) {
+			return $post_id;
+		}
+
+		$sep     = map_deep( wp_unslash( $_POST['sep'] ), 'sanitize_text_field' );
 		$exclude = ( isset( $sep['exclude'] ) ) ? filter_var( $sep['exclude'], FILTER_VALIDATE_BOOLEAN ) : false;
 
 		$this->save_post_id_to_search_exclude( $post_id, $exclude );
@@ -377,11 +397,11 @@ class Backend {
 			return;
 		}
 
-		$sep_exclude = isset( $_POST['sep_exclude'] ) ? $_POST['sep_exclude'] : array();
-
 		check_admin_referer( 'search_exclude_submit' );
 
 		$this->check_permissions();
+
+		$sep_exclude = isset( $_POST['sep_exclude'] ) ? map_deep( wp_unslash( $_POST['sep_exclude'] ), 'sanitize_text_field' ) : array();
 
 		$excluded = Helpers::filter_posts_ids( $sep_exclude );
 
