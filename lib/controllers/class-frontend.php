@@ -173,7 +173,7 @@ class Frontend {
 	 *
 	 * @return array The array of ``$args``.
 	 *
-	 * @see Workaround for bbPress and the `s` key. See: <http://bit.ly/1obLpv4>
+	 * @see Workaround for bbPress and the `s` key. See: <https://github.com/websharks/s2member/issues/321#issuecomment-54722088>
 	 */
 	public function bbpress_flag_replies( $args ) {
 		return array_merge( $args, array( '___s2_is_bbp_has_replies' => true ) );

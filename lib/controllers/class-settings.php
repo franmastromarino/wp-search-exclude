@@ -52,8 +52,8 @@ class Settings {
 
 	public function admin_menu() {
 		add_options_page(
-			'Search Exclude',
-			'Search Exclude',
+			esc_html__( 'Search Exclude', 'search-exclude' ),
+			esc_html__( 'Search Exclude', 'search-exclude' ),
 			'manage_options',
 			'search_exclude',
 			array( $this, 'admin_menu_settings' )

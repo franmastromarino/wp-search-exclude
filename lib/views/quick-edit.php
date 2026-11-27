@@ -1,3 +1,8 @@
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+?>
 <fieldset class="inline-edit-col-right">
 	<div class="inline-edit-col">
 		<div class="inline-edit-group">
