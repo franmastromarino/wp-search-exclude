@@ -16,7 +16,7 @@ class Entity_Options {
 	 * post type and public taxonomy, plus the author entry, each starting
 	 * unexcluded.
 	 *
-	 * @return array{entries: array, taxonomies: array, author: array} The default settings args.
+	 * @return array The default settings args, keyed by `entries`, `taxonomies` and `author`.
 	 */
 	public function get_args() {
 		$args = array(

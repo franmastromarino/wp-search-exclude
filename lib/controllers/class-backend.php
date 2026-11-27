@@ -173,6 +173,10 @@ class Backend {
 	 * Adds or removes a set of post IDs from the excluded-posts list for the
 	 * current request's post type.
 	 *
+	 * Also the callback of the public `searchexclude_hide_from_search` action.
+	 * The post type is taken from `$_REQUEST['post_type']`, not from each post,
+	 * so callers outside a list-table request should not rely on it.
+	 *
 	 * @param int[] $post_ids Post IDs to add to or remove from the excluded list.
 	 * @param bool  $exclude  True to exclude the given posts, false to re-include them.
 	 */
@@ -417,7 +421,9 @@ class Backend {
 
 	/**
 	 * Verifies the current user can manage the plugin's excluded-posts list,
-	 * and halts the request with a 401 response if not.
+	 * and halts the request with an error response if not. The status code is
+	 * an implementation detail and may change (403 would be more precise than
+	 * the current 401).
 	 *
 	 * The required capability defaults to `edit_others_pages` and can be
 	 * changed via the `searchexclude_filter_permissions` filter.

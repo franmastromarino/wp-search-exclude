@@ -6,7 +6,7 @@ use QuadLayers\QLSE\Api\Entities\Settings\Routes_Library as Settings_Routes_Libr
 use QuadLayers\QLSE\Api\Route as Route_Interface;
 
 /**
- * Base class for the plugin's `/qlse/v1/settings` REST route handlers.
+ * Base class for the plugin's `/quadlayers/search-exclude/settings` REST route handlers.
  *
  * Concrete routes (see {@see Get}, {@see Post}) extend this to provide their
  * own HTTP method, args schema, and request callback.
