@@ -25,6 +25,17 @@ class Frontend {
 		);
 	}
 
+	/**
+	 * Filters the main search query to remove posts, taxonomies, and authors
+	 * that have been marked as excluded from search results.
+	 *
+	 * Hooked to `pre_get_posts`. Skipped for admin requests (other than AJAX)
+	 * and for REST requests, and can be disabled entirely via the
+	 * `searchexclude_filter_search` filter.
+	 *
+	 * @param \WP_Query $query The query to filter.
+	 * @return \WP_Query The filtered query.
+	 */
 	public function search_filter( $query ) {
 
 		if ( is_admin() && ! wp_doing_ajax() ) {
