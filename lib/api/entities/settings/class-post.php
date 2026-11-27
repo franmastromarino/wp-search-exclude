@@ -17,6 +17,15 @@ class Post extends Base {
 			// throw new \Exception( esc_html__( 'Unknown error.', 'search-exclude' ), 500 );
 			$body = json_decode( $request->get_body(), true );
 
+			if ( ! is_array( $body ) ) {
+				return $this->handle_response(
+					array(
+						'code'    => 'invalid_body',
+						'message' => esc_html__( 'Invalid request body.', 'search-exclude' ),
+					)
+				);
+			}
+
 			$status = Models_Settings::instance()->save( $body );
 			return $this->handle_response( $status );
 

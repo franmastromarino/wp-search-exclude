@@ -1,6 +1,7 @@
 <fieldset class="inline-edit-col-right">
 	<div class="inline-edit-col">
 		<div class="inline-edit-group">
+			<?php wp_nonce_field( 'sep_metabox_nonce', 'metabox_nonce', false ); ?>
 			<label for="sep_exclude">
 				<input type="hidden" name="sep[hidden]" id="sep_hidden" value="1" />
 				<input type="checkbox" name="sep[exclude]" id="sep_exclude" value="1" />
