@@ -1,4 +1,8 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; ?>
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+?>
 <div class="misc-pub-section">
 	<label for="sep_exclude">
 		<input type="hidden" name="sep[hidden]" id="sep_hidden" value="1" />

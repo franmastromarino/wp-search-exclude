@@ -2,12 +2,12 @@
 
 namespace QuadLayers\QLSE;
 
+use QuadLayers\QLSE\Api\Entities\Settings\Routes_Library;
+use QuadLayers\QLSE\Models\Settings as Models_Settings;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-
-use QuadLayers\QLSE\Api\Entities\Settings\Routes_Library;
-use QuadLayers\QLSE\Models\Settings as Models_Settings;
 
 final class Plugin {
 
